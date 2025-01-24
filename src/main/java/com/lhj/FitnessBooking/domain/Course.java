@@ -5,11 +5,11 @@ import jakarta.persistence.*;
 import java.time.LocalTime;
 
 @Entity
-public class Class {
+public class Course {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "class_id")
+    @Column(name = "course_id")
     private Long id;
 
     @ManyToOne
