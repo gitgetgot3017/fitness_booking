@@ -16,5 +16,17 @@ public class History {
     @Column(name = "member_id")
     private Member member;
 
+    @ManyToOne
+    @Column(name = "course_id")
+    private Course course;
+
+    private int year;
+
+    private int month;
+
+    private int week;
+
     private LocalDateTime regDateTime;
+
+    private CourseStatus status;
 }

@@ -16,10 +16,6 @@ public class Course {
     @Column(name = "instructor_id")
     private Instructor instructor;
 
-    @ManyToOne
-    @Column(name = "member_id")
-    private Member member;
-
     private String name;
 
     @Enumerated(EnumType.STRING)
