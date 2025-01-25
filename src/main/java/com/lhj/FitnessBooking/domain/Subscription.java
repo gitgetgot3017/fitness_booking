@@ -13,12 +13,16 @@ public class Subscription {
     private Long id;
 
     @ManyToOne
-    @Column(name = "member_id")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     private LocalDateTime startDateTime;
 
     private LocalDateTime endDateTime;
 
-    private int count;
+    private int reservedCount; // 예약한 횟수
+
+    private int completedCount; // 수강한 횟수
+
+    private int availableCount; // 수강 가능한 횟수
 }

@@ -1,5 +1,5 @@
 package com.lhj.FitnessBooking.domain;
 
 public enum CourseStatus {
-    ENROLLED, CANCELED
+    RESERVED, ENROLLED, CANCELED
 }

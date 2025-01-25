@@ -13,11 +13,11 @@ public class History {
     private Long id;
 
     @ManyToOne
-    @Column(name = "member_id")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @ManyToOne
-    @Column(name = "course_id")
+    @JoinColumn(name = "course_id")
     private Course course;
 
     private int year;
