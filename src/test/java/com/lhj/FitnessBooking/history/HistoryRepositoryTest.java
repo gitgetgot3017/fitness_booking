@@ -1,0 +1,136 @@
+package com.lhj.FitnessBooking.history;
+
+import com.lhj.FitnessBooking.course.CourseRepository;
+import com.lhj.FitnessBooking.domain.*;
+import com.lhj.FitnessBooking.instructor.InstructorRepository;
+import com.lhj.FitnessBooking.member.MemberRepository;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
+
+import static com.lhj.FitnessBooking.domain.CourseStatus.*;
+import static com.lhj.FitnessBooking.domain.DayOfWeek.MON;
+import static org.assertj.core.api.Assertions.assertThat;
+
+@SpringBootTest
+class HistoryRepositoryTest {
+
+    @Autowired MemberRepository memberRepository;
+    @Autowired InstructorRepository instructorRepository;
+    @Autowired CourseRepository courseRepository;
+    @Autowired HistoryRepository historyRepository;
+
+    @DisplayName("홈 > 그룹예약: 수강 및 예약 날짜 조회(1)")
+    @Test
+    void getHistoryTest1() {
+
+        // given
+        Member member = new Member("2073", "01062802073", false, LocalDate.of(2024, 6, 18));
+        memberRepository.save(member);
+
+        Instructor instructor = new Instructor("지수");
+        instructorRepository.save(instructor);
+
+        Course course = new Course(instructor, "캐딜락", MON, LocalTime.of(9, 0));
+        courseRepository.save(course);
+
+        int year = 2025;
+        int month = 1;
+
+        historyRepository.save(new History(member, course, year, month, 1, LocalDateTime.of(2025, 1, 26, 8, 0), CANCELED));
+        historyRepository.save(new History(member, course, year, month, 2, LocalDateTime.of(2025, 1, 26, 9, 0), RESERVED));
+
+        // when
+        List<History> historyList = historyRepository.getHistory(member, year, month, ENROLLED, RESERVED);
+
+        // then
+        assertThat(historyList).hasSize(1);
+    }
+
+    @DisplayName("홈 > 그룹예약: 수강 및 예약 날짜 조회(2)")
+    @Test
+    void getHistoryTest2() {
+
+        // given
+        Member member = new Member("2073", "01062802073", false, LocalDate.of(2024, 6, 18));
+        memberRepository.save(member);
+
+        Instructor instructor = new Instructor("지수");
+        instructorRepository.save(instructor);
+
+        Course course = new Course(instructor, "캐딜락", MON, LocalTime.of(9, 0));
+        courseRepository.save(course);
+
+        int year = 2025;
+        int month = 1;
+
+        historyRepository.save(new History(member, course, year, month, 3, LocalDateTime.of(2025, 1, 26, 8, 0), ENROLLED));
+        historyRepository.save(new History(member, course, year, month, 4, LocalDateTime.of(2025, 1, 26, 9, 0), RESERVED));
+
+        // when
+        List<History> historyList = historyRepository.getHistory(member, year, month, ENROLLED, RESERVED);
+
+        // then
+        assertThat(historyList).hasSize(2);
+    }
+
+    @DisplayName("홈 > 그룹예약: 수강 및 예약 날짜 조회(3)")
+    @Test
+    public void getHistoryTest3() {
+
+        // given
+        Member member = new Member("2073", "01062802073", false, LocalDate.of(2024, 6, 18));
+        memberRepository.save(member);
+
+        Instructor instructor = new Instructor("지수");
+        instructorRepository.save(instructor);
+
+        Course course = new Course(instructor, "캐딜락", MON, LocalTime.of(9, 0));
+        courseRepository.save(course);
+
+        int year = 2025;
+        int month = 1;
+
+        historyRepository.save(new History(member, course, year, month, 1, LocalDateTime.of(2025, 1, 26, 8, 0), RESERVED));
+        historyRepository.save(new History(member, course, year, month, 2, LocalDateTime.of(2025, 1, 26, 9, 0), CANCELED));
+
+        // when
+        List<History> historyList = historyRepository.getHistory(member, year, month, ENROLLED, RESERVED);
+
+        // then
+        assertThat(historyList).hasSize(0);
+    }
+
+    @DisplayName("홈 > 그룹예약: 수강 및 예약 날짜 조회(4)")
+    @Test
+    public void getHistoryTest4() {
+
+        // given
+        Member member = new Member("2073", "01062802073", false, LocalDate.of(2024, 6, 18));
+        memberRepository.save(member);
+
+        Instructor instructor = new Instructor("지수");
+        instructorRepository.save(instructor);
+
+        Course course = new Course(instructor, "캐딜락", MON, LocalTime.of(9, 0));
+        courseRepository.save(course);
+
+        int year = 2025;
+        int month = 1;
+
+        historyRepository.save(new History(member, course, year, month, 3, LocalDateTime.of(2025, 1, 26, 8, 0), RESERVED));
+        historyRepository.save(new History(member, course, year, month, 4, LocalDateTime.of(2025, 1, 26, 9, 0), ENROLLED));
+
+        // when
+        List<History> historyList = historyRepository.getHistory(member, year, month, ENROLLED, RESERVED);
+
+        // then
+        assertThat(historyList).hasSize(2);
+    }
+}

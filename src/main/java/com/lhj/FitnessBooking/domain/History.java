@@ -1,10 +1,12 @@
 package com.lhj.FitnessBooking.domain;
 
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
 public class History {
 
     @Id
@@ -28,5 +30,16 @@ public class History {
 
     private LocalDateTime regDateTime;
 
+    @Enumerated(EnumType.STRING)
     private CourseStatus status;
+
+    public History(Member member, Course course, int year, int month, int week, LocalDateTime regDateTime, CourseStatus status) {
+        this.member = member;
+        this.course = course;
+        this.year = year;
+        this.month = month;
+        this.week = week;
+        this.regDateTime = regDateTime;
+        this.status = status;
+    }
 }
