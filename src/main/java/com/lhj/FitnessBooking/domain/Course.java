@@ -1,10 +1,12 @@
 package com.lhj.FitnessBooking.domain;
 
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
 
 @Entity
+@NoArgsConstructor
 public class Course {
 
     @Id
@@ -22,4 +24,11 @@ public class Course {
     private DayOfWeek dayOfWeek;
 
     private LocalTime startTime;
+
+    public Course(Instructor instructor, String name, DayOfWeek dayOfWeek, LocalTime startTime) {
+        this.instructor = instructor;
+        this.name = name;
+        this.dayOfWeek = dayOfWeek;
+        this.startTime = startTime;
+    }
 }
