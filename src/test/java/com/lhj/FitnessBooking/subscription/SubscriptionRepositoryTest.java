@@ -4,14 +4,12 @@ import com.lhj.FitnessBooking.domain.Member;
 import com.lhj.FitnessBooking.domain.Subscription;
 import com.lhj.FitnessBooking.dto.CourseMainHeader;
 import com.lhj.FitnessBooking.member.MemberRepository;
-import com.lhj.FitnessBooking.subscription.SubscriptionRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,7 +19,7 @@ class SubscriptionRepositoryTest {
     @Autowired private MemberRepository memberRepository;
     @Autowired private SubscriptionRepository subscriptionRepository;
 
-    @DisplayName("홈 > 그룹예약: 이용권 조회")
+    @DisplayName("홈 > 그룹예약: 회원 및 이용권 정보 조회")
     @Test
     void getSubscription() {
 
@@ -45,12 +43,11 @@ class SubscriptionRepositoryTest {
         subscriptionRepository.save(subscription4);
 
         // when
-        List<Subscription> subscriptions = subscriptionRepository.getSubscriptions(member, LocalDate.now());
-        Subscription subscription = subscriptions.get(0);
+        CourseMainHeader courseMainHeader = subscriptionRepository.getSubscription(member, LocalDate.now());
 
         // then
-        assertThat(subscription).isNotNull();
-        assertThat(subscription).extracting("endDate", "completedCount")
-                .containsExactly(LocalDate.of(2025, 2, 23), 74);
+        assertThat(courseMainHeader).isNotNull();
+        assertThat(courseMainHeader).extracting("memberName", "memberNum", "endDate", "completedCount")
+                .containsExactly("이현지", "2073", LocalDate.of(2025, 2, 23), 74);
     }
 }
