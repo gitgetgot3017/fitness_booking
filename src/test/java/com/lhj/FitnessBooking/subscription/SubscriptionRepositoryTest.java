@@ -2,6 +2,7 @@ package com.lhj.FitnessBooking.subscription;
 
 import com.lhj.FitnessBooking.domain.Member;
 import com.lhj.FitnessBooking.domain.Subscription;
+import com.lhj.FitnessBooking.dto.CourseMainHeader;
 import com.lhj.FitnessBooking.member.MemberRepository;
 import com.lhj.FitnessBooking.subscription.SubscriptionRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +26,7 @@ class SubscriptionRepositoryTest {
     void getSubscription() {
 
         // given
-        Member member = new Member("2073", "01062802073", false, LocalDate.of(2024, 6, 18));
+        Member member = new Member("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
         memberRepository.save(member);
 
         Subscription subscription1 = new Subscription(member, LocalDate.of(2024, 6, 18), LocalDate.of(2025, 2, 23), 0, 74, 77);

@@ -31,7 +31,7 @@ class HistoryRepositoryTest {
     void getHistoryTest1() {
 
         // given
-        Member member = new Member("2073", "01062802073", false, LocalDate.of(2024, 6, 18));
+        Member member = new Member("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
         memberRepository.save(member);
 
         Instructor instructor = new Instructor("지수");
@@ -58,7 +58,7 @@ class HistoryRepositoryTest {
     void getHistoryTest2() {
 
         // given
-        Member member = new Member("2073", "01062802073", false, LocalDate.of(2024, 6, 18));
+        Member member = new Member("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
         memberRepository.save(member);
 
         Instructor instructor = new Instructor("지수");
@@ -85,7 +85,7 @@ class HistoryRepositoryTest {
     public void getHistoryTest3() {
 
         // given
-        Member member = new Member("2073", "01062802073", false, LocalDate.of(2024, 6, 18));
+        Member member = new Member("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
         memberRepository.save(member);
 
         Instructor instructor = new Instructor("지수");
@@ -112,7 +112,7 @@ class HistoryRepositoryTest {
     public void getHistoryTest4() {
 
         // given
-        Member member = new Member("2073", "01062802073", false, LocalDate.of(2024, 6, 18));
+        Member member = new Member("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
         memberRepository.save(member);
 
         Instructor instructor = new Instructor("지수");

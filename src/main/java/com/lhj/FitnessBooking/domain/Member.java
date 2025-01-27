@@ -16,14 +16,17 @@ public class Member {
 
     private String memberNum;
 
+    private String name;
+
     private String phone;
 
     private boolean gender;
 
     private LocalDate regDate;
 
-    public Member(String memberNum, String phone, boolean gender, LocalDate regDate) {
+    public Member(String memberNum, String name, String phone, boolean gender, LocalDate regDate) {
         this.memberNum = memberNum;
+        this.name = name;
         this.phone = phone;
         this.gender = gender;
         this.regDate = regDate;
