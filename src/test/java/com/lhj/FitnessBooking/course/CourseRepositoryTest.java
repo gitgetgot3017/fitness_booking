@@ -11,12 +11,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import static com.lhj.FitnessBooking.domain.DayOfWeek.*;
-import static org.assertj.core.api.Assertions.*;
+import static com.lhj.FitnessBooking.domain.DayOfWeek.MON;
+import static com.lhj.FitnessBooking.domain.DayOfWeek.TUES;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 
 @SpringBootTest
 class CourseRepositoryTest {
@@ -48,27 +50,29 @@ class CourseRepositoryTest {
         Course course4 = new Course(instructor2, "체어", TUES, LocalTime.of(18, 0));
         courseRepository.save(course4);
 
-        courseHistoryRepository.save(new CourseHistory(course1, LocalDateTime.of(2025, 1, 26, 9, 0), 6));
-        courseHistoryRepository.save(new CourseHistory(course2, LocalDateTime.of(2025, 1, 26, 9, 0), 5));
-        courseHistoryRepository.save(new CourseHistory(course3, LocalDateTime.of(2025, 1, 26, 18, 0), 6));
-        courseHistoryRepository.save(new CourseHistory(course3, LocalDateTime.of(2025, 1, 26, 18, 0), 4));
-        courseHistoryRepository.save(new CourseHistory(course3, LocalDateTime.of(2025, 1, 26, 18, 0), 5));
-        courseHistoryRepository.save(new CourseHistory(course3, LocalDateTime.of(2025, 1, 26, 18, 0), 6));
-        courseHistoryRepository.save(new CourseHistory(course4, LocalDateTime.of(2025, 1, 26, 18, 0), 6));
-        courseHistoryRepository.save(new CourseHistory(course4, LocalDateTime.of(2025, 1, 26, 18, 0), 5));
-        courseHistoryRepository.save(new CourseHistory(course4, LocalDateTime.of(2025, 1, 26, 18, 0), 4));
-        courseHistoryRepository.save(new CourseHistory(course4, LocalDateTime.of(2025, 1, 26, 18, 0), 5));
+        courseHistoryRepository.save(new CourseHistory(course1, LocalDate.of(2025, 1, 26), 6));
+        courseHistoryRepository.save(new CourseHistory(course1, LocalDate.of(2025, 1, 26), 5));
+        courseHistoryRepository.save(new CourseHistory(course2, LocalDate.of(2025, 1, 26), 6));
+        courseHistoryRepository.save(new CourseHistory(course2, LocalDate.of(2025, 1, 26), 4));
+        courseHistoryRepository.save(new CourseHistory(course3, LocalDate.of(2025, 1, 26), 5));
+        courseHistoryRepository.save(new CourseHistory(course3, LocalDate.of(2025, 1, 26), 6));
+        courseHistoryRepository.save(new CourseHistory(course3, LocalDate.of(2025, 1, 26), 6));
+        courseHistoryRepository.save(new CourseHistory(course4, LocalDate.of(2025, 1, 26), 5));
+        courseHistoryRepository.save(new CourseHistory(course4, LocalDate.of(2025, 1, 26), 4));
+        courseHistoryRepository.save(new CourseHistory(course4, LocalDate.of(2025, 1, 26), 5));
 
         // when
-        List<CourseInfoTmp> courseInfoList = courseRepository.getCourses(1, TUES, LocalTime.of(12, 30));
+        List<CourseInfoTmp> courseInfoList = courseRepository.getCourses(LocalDate.of(2025, 1, 26), LocalTime.of(12, 30));
 
         // then
-        assertThat(courseInfoList).hasSize(4)
+        assertThat(courseInfoList).hasSize(6)
                 .extracting("instructorName", "courseName", "courseStartTime", "attendeeCount")
                 .containsExactlyInAnyOrder(
+                        tuple("지수", "리포머", LocalTime.of(18, 0), 5),
                         tuple("지수", "리포머", LocalTime.of(18, 0), 6),
-                        tuple("지수", "리포머", LocalTime.of(18, 0), 4),
-                        tuple("세미", "체어", LocalTime.of(18, 0), 6),
+                        tuple("지수", "리포머", LocalTime.of(18, 0), 6),
+                        tuple("세미", "체어", LocalTime.of(18, 0), 5),
+                        tuple("세미", "체어", LocalTime.of(18, 0), 4),
                         tuple("세미", "체어", LocalTime.of(18, 0), 5)
                 );
     }

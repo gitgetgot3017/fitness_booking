@@ -3,7 +3,7 @@ package com.lhj.FitnessBooking.domain;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor
@@ -18,13 +18,13 @@ public class CourseHistory {
     @JoinColumn(name = "course_id")
     private Course course;
 
-    private LocalDateTime dateTime;
+    private LocalDate date;
 
     private int count; // 수강한 인원
 
-    public CourseHistory(Course course, LocalDateTime dateTime, int count) {
+    public CourseHistory(Course course, LocalDate date, int count) {
         this.course = course;
-        this.dateTime = dateTime;
+        this.date = date;
         this.count = count;
     }
 }
