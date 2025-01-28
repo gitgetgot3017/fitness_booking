@@ -4,7 +4,7 @@ import com.lhj.FitnessBooking.courseHistory.CourseHistoryRepository;
 import com.lhj.FitnessBooking.domain.Course;
 import com.lhj.FitnessBooking.domain.CourseHistory;
 import com.lhj.FitnessBooking.domain.Instructor;
-import com.lhj.FitnessBooking.dto.CourseInfo;
+import com.lhj.FitnessBooking.dto.CourseInfoTmp;
 import com.lhj.FitnessBooking.instructor.InstructorRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -60,7 +60,7 @@ class CourseRepositoryTest {
         courseHistoryRepository.save(new CourseHistory(course4, LocalDateTime.of(2025, 1, 26, 18, 0), 4, 5));
 
         // when
-        List<CourseInfo> courseInfoList = courseRepository.getCourses(1, TUES, LocalTime.of(12, 30));
+        List<CourseInfoTmp> courseInfoList = courseRepository.getCourses(1, TUES, LocalTime.of(12, 30));
 
         // then
         assertThat(courseInfoList).hasSize(4)
