@@ -48,16 +48,16 @@ class CourseRepositoryTest {
         Course course4 = new Course(instructor2, "체어", TUES, LocalTime.of(18, 0));
         courseRepository.save(course4);
 
-        courseHistoryRepository.save(new CourseHistory(course1, LocalDateTime.of(2025, 1, 26, 9, 0), 1, 6));
-        courseHistoryRepository.save(new CourseHistory(course2, LocalDateTime.of(2025, 1, 26, 9, 0), 1, 5));
-        courseHistoryRepository.save(new CourseHistory(course3, LocalDateTime.of(2025, 1, 26, 18, 0), 1, 6));
-        courseHistoryRepository.save(new CourseHistory(course3, LocalDateTime.of(2025, 1, 26, 18, 0), 1, 4));
-        courseHistoryRepository.save(new CourseHistory(course3, LocalDateTime.of(2025, 1, 26, 18, 0), 2, 5));
-        courseHistoryRepository.save(new CourseHistory(course3, LocalDateTime.of(2025, 1, 26, 18, 0), 3, 6));
-        courseHistoryRepository.save(new CourseHistory(course4, LocalDateTime.of(2025, 1, 26, 18, 0), 1, 6));
-        courseHistoryRepository.save(new CourseHistory(course4, LocalDateTime.of(2025, 1, 26, 18, 0), 1, 5));
-        courseHistoryRepository.save(new CourseHistory(course4, LocalDateTime.of(2025, 1, 26, 18, 0), 2, 4));
-        courseHistoryRepository.save(new CourseHistory(course4, LocalDateTime.of(2025, 1, 26, 18, 0), 4, 5));
+        courseHistoryRepository.save(new CourseHistory(course1, LocalDateTime.of(2025, 1, 26, 9, 0), 6));
+        courseHistoryRepository.save(new CourseHistory(course2, LocalDateTime.of(2025, 1, 26, 9, 0), 5));
+        courseHistoryRepository.save(new CourseHistory(course3, LocalDateTime.of(2025, 1, 26, 18, 0), 6));
+        courseHistoryRepository.save(new CourseHistory(course3, LocalDateTime.of(2025, 1, 26, 18, 0), 4));
+        courseHistoryRepository.save(new CourseHistory(course3, LocalDateTime.of(2025, 1, 26, 18, 0), 5));
+        courseHistoryRepository.save(new CourseHistory(course3, LocalDateTime.of(2025, 1, 26, 18, 0), 6));
+        courseHistoryRepository.save(new CourseHistory(course4, LocalDateTime.of(2025, 1, 26, 18, 0), 6));
+        courseHistoryRepository.save(new CourseHistory(course4, LocalDateTime.of(2025, 1, 26, 18, 0), 5));
+        courseHistoryRepository.save(new CourseHistory(course4, LocalDateTime.of(2025, 1, 26, 18, 0), 4));
+        courseHistoryRepository.save(new CourseHistory(course4, LocalDateTime.of(2025, 1, 26, 18, 0), 5));
 
         // when
         List<CourseInfoTmp> courseInfoList = courseRepository.getCourses(1, TUES, LocalTime.of(12, 30));

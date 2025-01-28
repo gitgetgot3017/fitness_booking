@@ -20,14 +20,11 @@ public class CourseHistory {
 
     private LocalDateTime dateTime;
 
-    private int week;
-
     private int count; // 수강한 인원
 
-    public CourseHistory(Course course, LocalDateTime dateTime, int week, int count) {
+    public CourseHistory(Course course, LocalDateTime dateTime, int count) {
         this.course = course;
         this.dateTime = dateTime;
-        this.week = week;
         this.count = count;
     }
 }
