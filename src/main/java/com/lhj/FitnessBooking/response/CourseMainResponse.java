@@ -1,12 +1,12 @@
 package com.lhj.FitnessBooking.response;
 
 import com.lhj.FitnessBooking.dto.CourseInfo;
-import com.lhj.FitnessBooking.dto.CourseMainHistory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @AllArgsConstructor
@@ -21,7 +21,7 @@ public class CourseMainResponse {
     private int availableCount; // 수강 가능한 횟수
     private int reservedCount; // 예약한 횟수
 
-    List<CourseMainHistory> courseMainHistoryList;
+    Set<Integer> courseMainHistoryList;
 
     List<CourseInfo> courses;
 }

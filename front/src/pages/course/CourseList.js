@@ -13,6 +13,7 @@ function CourseList() {
     let [availableCount, setAvailableCount] = useState(0);
     let [reservedCount, setReservedCount] = useState(0);
     let [courses, setCourses] = useState([]);
+    let [courseMainHistoryList, setCourseMainHistoryList] = useState([]);
     let [date, setDate] = useState(new Date());
 
     useEffect(() => {
@@ -26,6 +27,7 @@ function CourseList() {
                 setCompletedCount(result.data.completedCount);
                 setAvailableCount(result.data.availableCount);
                 setReservedCount(result.data.reservedCount);
+                setCourseMainHistoryList(result.data.courseMainHistoryList);
                 setCourses(result.data.courses);
             })
             .catch((error) => {
@@ -83,6 +85,9 @@ function CourseList() {
                         let currentDay = i - firstDay + 1; // 현재 날짜 계산
                         if (currentDay <= 0 || currentDay > daysInMonth) {
                             return <div key={i} className="day empty"></div>;
+                        }
+                        if (courseMainHistoryList.includes(currentDay)) {
+                            return <div key={i} className="day registered">{currentDay}</div>;
                         }
                         return <div key={i} className="day">{currentDay}</div>;
                     })}

@@ -6,7 +6,6 @@ import com.lhj.FitnessBooking.domain.Member;
 import com.lhj.FitnessBooking.dto.CourseInfo;
 import com.lhj.FitnessBooking.dto.CourseInfoTmp;
 import com.lhj.FitnessBooking.dto.CourseMainHeader;
-import com.lhj.FitnessBooking.dto.CourseMainHistory;
 import com.lhj.FitnessBooking.history.HistoryRepository;
 import com.lhj.FitnessBooking.response.CourseMainResponse;
 import com.lhj.FitnessBooking.subscription.SubscriptionRepository;
@@ -18,9 +17,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import static com.lhj.FitnessBooking.domain.CourseStatus.*;
+import static com.lhj.FitnessBooking.domain.CourseStatus.ENROLLED;
+import static com.lhj.FitnessBooking.domain.CourseStatus.RESERVED;
 
 @Service
 @RequiredArgsConstructor
@@ -51,18 +53,17 @@ public class CourseService {
                 courseMainHeader.getCompletedCount(),
                 courseMainHeader.getAvailableCount(),
                 courseMainHeader.getReservedCount(),
-                changeHistoryToCourseMainHistory(historyList),
+                changeHistoryToDate(historyList),
                 changeCourseInfoTmpToCourseInfo(courses));
     }
 
-    private List<CourseMainHistory> changeHistoryToCourseMainHistory(List<History> historyList) {
+    private Set<Integer> changeHistoryToDate(List<History> historyList) {
 
-        List<CourseMainHistory> courseMainHistoryList = new ArrayList<>();
+        Set<Integer> dates = new HashSet<>();
         for (History history : historyList) {
-            int regDate = history.getRegDateTime().toLocalDate().getDayOfMonth();
-            courseMainHistoryList.add(new CourseMainHistory(regDate));
+            dates.add(history.getRegDateTime().getDayOfMonth());
         }
-        return courseMainHistoryList;
+        return dates;
     }
 
     private List<CourseInfo> changeCourseInfoTmpToCourseInfo(List<CourseInfoTmp> courseInfoTmpList) {
