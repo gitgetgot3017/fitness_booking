@@ -13,6 +13,7 @@ function CourseList() {
     let [availableCount, setAvailableCount] = useState(0);
     let [reservedCount, setReservedCount] = useState(0);
     let [courses, setCourses] = useState([]);
+    let [date, setDate] = useState(new Date());
 
     useEffect(() => {
         axios.get("/courses?year=2025&month=1&week=1&dayOfWeek=TUES")
@@ -61,9 +62,9 @@ function CourseList() {
 
             <div className="calendar">
                 <div className="calendar-header">
-                    <button>&lt;</button>
-                    <h2>2025.01</h2>
-                    <button>&gt;</button>
+                    <button className="calendar-button" onClick={() => setDate(new Date(date.getFullYear(), date.getMonth() - 1))}>&lt;</button>
+                    <h2>{date.getFullYear()}.{date.getMonth() + 1}</h2>
+                    <button className="calendar-button" onClick={() => setDate(new Date(date.getFullYear(), date.getMonth() + 1))}>&gt;</button>
                 </div>
                 <div className="calendar-grid">
                     <div className="weekday">Sun</div>
@@ -74,40 +75,17 @@ function CourseList() {
                     <div className="weekday">Fri</div>
                     <div className="weekday">Sat</div>
 
-                    <div className="day empty"></div>
-                    <div className="day empty"></div>
-                    <div className="day empty"></div>
-                    <div className="day">1</div>
-                    <div className="day">2</div>
-                    <div className="day">3</div>
-                    <div className="day">4</div>
-                    <div className="day">5</div>
-                    <div className="day">6</div>
-                    <div className="day">7</div>
-                    <div className="day">8</div>
-                    <div className="day">9</div>
-                    <div className="day">10</div>
-                    <div className="day">11</div>
-                    <div className="day">12</div>
-                    <div className="day">13</div>
-                    <div className="day">14</div>
-                    <div className="day">15</div>
-                    <div className="day">16</div>
-                    <div className="day">17</div>
-                    <div className="day">18</div>
-                    <div className="day">19</div>
-                    <div className="day">20</div>
-                    <div className="day">21</div>
-                    <div className="day">22</div>
-                    <div className="day">23</div>
-                    <div className="day">24</div>
-                    <div className="day">25</div>
-                    <div className="day">26</div>
-                    <div className="day">27</div>
-                    <div className="day">28</div>
-                    <div className="day">29</div>
-                    <div className="day">30</div>
-                    <div className="day">31</div>
+                    {Array.from({ length: 42 }, (_, i) => {
+                        let firstDateOfMonth = new Date(date.getFullYear(), date.getMonth(), 1); // 첫째 날
+                        let firstDay = firstDateOfMonth.getDay(); // 첫째 날의 요일
+                        let daysInMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate(); // 해당 달의 날짜 수
+
+                        let currentDay = i - firstDay + 1; // 현재 날짜 계산
+                        if (currentDay <= 0 || currentDay > daysInMonth) {
+                            return <div key={i} className="day empty"></div>;
+                        }
+                        return <div key={i} className="day">{currentDay}</div>;
+                    })}
                 </div>
             </div>
 
