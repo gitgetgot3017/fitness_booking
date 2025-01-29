@@ -32,23 +32,45 @@ public class CourseService {
     private final HistoryRepository historyRepository;
     private final CourseRepository courseRepository;
 
+    /**
+     * 수강권 만료의 이유로 수강권이 존재하지 않는 회원: 이용 내역만 보여준다. try 일부 -> finally
+     * 수강권이 존재하는 회원: try 전체 -> finally
+     */
     public CourseMainResponse showCourseMain(Member member, LocalDate date) {
 
         LocalDate today = LocalDate.now();
 
-        CourseMainHeader courseMainHeader = subscriptionRepository.getSubscription(member, LocalDate.now());
-        List<History> history = historyRepository.getHistory(member, today.getYear(), today.getMonthValue(), ENROLLED, RESERVED);
+        CourseMainHeader courseMainHeader = null;
         List<CourseInfoTmp> courses = null;
-        if (date.isEqual(today)) { // 오늘의 수업 조회
-            courses = courseRepository.getTodayCourses(today, LocalTime.now());
-        } else if (date.isEqual(today.plusDays(1))) { // 내일의 수업 조회
-            courses = courseRepository.getTomorrowCourses(today);
-        }
+        try {
+            courseMainHeader = subscriptionRepository.getSubscription(member, LocalDate.now());
 
-        return changeIntoCourseMainResponse(courseMainHeader, history, courses);
+            if (date.isEqual(today)) { // 오늘의 수업 조회
+                courses = courseRepository.getTodayCourses(today, LocalTime.now());
+            } else if (date.isEqual(today.plusDays(1))) { // 내일의 수업 조회
+                courses = courseRepository.getTomorrowCourses(today);
+            }
+        } finally {
+            List<History> history = historyRepository.getHistory(member, today.getYear(), today.getMonthValue(), ENROLLED, RESERVED);
+            return changeIntoCourseMainResponse(courseMainHeader, history, courses);
+        }
     }
 
     private CourseMainResponse changeIntoCourseMainResponse(CourseMainHeader courseMainHeader, List<History> historyList, List<CourseInfoTmp> courseInfoTmpList) {
+
+        if (courseMainHeader == null) {
+            return new CourseMainResponse(
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    0,
+                    0,
+                    0,
+                    changeHistoryToDate(historyList),
+                    changeCourseInfoTmpToCourseInfo(courseInfoTmpList));
+        }
 
         return new CourseMainResponse(
                 courseMainHeader.getMemberName(),
