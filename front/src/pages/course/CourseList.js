@@ -16,8 +16,11 @@ function CourseList() {
     let [courseMainHistoryList, setCourseMainHistoryList] = useState([]);
     let [date, setDate] = useState(new Date());
 
+    let params = new URLSearchParams();
+    params.append("date", date.toISOString().slice(0, 10));
+
     useEffect(() => {
-        axios.get("/courses?year=2025&month=1&week=1&dayOfWeek=TUES")
+        axios.get("/courses", { params })
             .then((result) => {
                 setMemberName(result.data.memberName);
                 setMemberNum(result.data.memberNum);
