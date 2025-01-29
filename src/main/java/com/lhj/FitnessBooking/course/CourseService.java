@@ -1,6 +1,5 @@
 package com.lhj.FitnessBooking.course;
 
-import com.lhj.FitnessBooking.domain.DayOfWeek;
 import com.lhj.FitnessBooking.domain.History;
 import com.lhj.FitnessBooking.domain.Member;
 import com.lhj.FitnessBooking.dto.CourseInfo;
@@ -33,16 +32,23 @@ public class CourseService {
     private final HistoryRepository historyRepository;
     private final CourseRepository courseRepository;
 
-    public CourseMainResponse showCourseMain(Member member, int year, int month, int week, DayOfWeek dayOfWeek) {
+    public CourseMainResponse showCourseMain(Member member, LocalDate date) {
+
+        LocalDate today = LocalDate.now();
 
         CourseMainHeader courseMainHeader = subscriptionRepository.getSubscription(member, LocalDate.now());
-        List<History> history = historyRepository.getHistory(member, year, month, ENROLLED, RESERVED);
-        List<CourseInfoTmp> courses = courseRepository.getCourses(week, dayOfWeek, LocalTime.now());
+        List<History> history = historyRepository.getHistory(member, today.getYear(), today.getMonthValue(), ENROLLED, RESERVED);
+        List<CourseInfoTmp> courses = null;
+        if (date.isEqual(today)) { // 오늘의 수업 조회
+            courses = courseRepository.getTodayCourses(today, LocalTime.now());
+        } else if (date.isEqual(today.plusDays(1))) { // 내일의 수업 조회
+            courses = courseRepository.getTomorrowCourses(today);
+        }
 
         return changeIntoCourseMainResponse(courseMainHeader, history, courses);
     }
 
-    private CourseMainResponse changeIntoCourseMainResponse(CourseMainHeader courseMainHeader, List<History> historyList, List<CourseInfoTmp> courses) {
+    private CourseMainResponse changeIntoCourseMainResponse(CourseMainHeader courseMainHeader, List<History> historyList, List<CourseInfoTmp> courseInfoTmpList) {
 
         return new CourseMainResponse(
                 courseMainHeader.getMemberName(),
@@ -54,7 +60,7 @@ public class CourseService {
                 courseMainHeader.getAvailableCount(),
                 courseMainHeader.getReservedCount(),
                 changeHistoryToDate(historyList),
-                changeCourseInfoTmpToCourseInfo(courses));
+                changeCourseInfoTmpToCourseInfo(courseInfoTmpList));
     }
 
     private Set<Integer> changeHistoryToDate(List<History> historyList) {
@@ -67,6 +73,10 @@ public class CourseService {
     }
 
     private List<CourseInfo> changeCourseInfoTmpToCourseInfo(List<CourseInfoTmp> courseInfoTmpList) {
+
+        if (courseInfoTmpList == null) {
+            return new ArrayList<>();
+        }
 
         List<CourseInfo> courseInfoList = new ArrayList<>();
         for (CourseInfoTmp courseInfoTmp : courseInfoTmpList) {
