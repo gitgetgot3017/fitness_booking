@@ -14,11 +14,13 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     @Query("select new com.lhj.FitnessBooking.dto.CourseInfoTmp(i.name, c.name, c.startTime, ch.count) " +
             "from Instructor i join Course c on i = c.instructor join CourseHistory ch on c = ch.course " +
-            "where ch.date = :date and :startTime < c.startTime")
+            "where ch.date = :date and :startTime < c.startTime " +
+            "order by c.startTime")
     List<CourseInfoTmp> getTodayCourses(@Param("date") LocalDate date, @Param("startTime") LocalTime startTime);
 
     @Query("select new com.lhj.FitnessBooking.dto.CourseInfoTmp(i.name, c.name, c.startTime, ch.count) " +
             "from Instructor i join Course c on i = c.instructor join CourseHistory ch on c = ch.course " +
-            "where ch.date = :date")
+            "where ch.date = :date " +
+            "order by c.startTime")
     List<CourseInfoTmp> getTomorrowCourses(@Param("date") LocalDate date);
 }

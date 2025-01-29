@@ -81,8 +81,8 @@ class CourseRepositoryTest {
         Instructor instructor1 = saveInstructor("지수");
         Instructor instructor2 = saveInstructor("세미");
 
-        Course course1 = saveCourse(instructor1, "캐딜락", TUES, LocalTime.of(9, 0));
-        Course course2 = saveCourse(instructor1, "바렐", TUES, LocalTime.of(9, 0));
+        Course course1 = saveCourse(instructor1, "캐딜락", TUES, LocalTime.of(20, 0));
+        Course course2 = saveCourse(instructor1, "바렐", TUES, LocalTime.of(20, 0));
         Course course3 = saveCourse(instructor1, "리포머", TUES, LocalTime.of(18, 0));
         Course course4 = saveCourse(instructor2, "체어", TUES, LocalTime.of(18, 0));
 
@@ -103,17 +103,17 @@ class CourseRepositoryTest {
         // then
         assertThat(courseInfoList).hasSize(10)
                 .extracting("instructorName", "courseName", "courseStartTime", "attendeeCount")
-                .containsExactlyInAnyOrder(
-                        tuple("지수", "캐딜락", LocalTime.of(9, 0), 6),
-                        tuple("지수", "캐딜락", LocalTime.of(9, 0), 5),
-                        tuple("지수", "바렐", LocalTime.of(9, 0), 6),
-                        tuple("지수", "바렐", LocalTime.of(9, 0), 4),
+                .containsExactly(
                         tuple("지수", "리포머", LocalTime.of(18, 0), 5),
                         tuple("지수", "리포머", LocalTime.of(18, 0), 6),
                         tuple("지수", "리포머", LocalTime.of(18, 0), 6),
                         tuple("세미", "체어", LocalTime.of(18, 0), 5),
                         tuple("세미", "체어", LocalTime.of(18, 0), 4),
-                        tuple("세미", "체어", LocalTime.of(18, 0), 5)
+                        tuple("세미", "체어", LocalTime.of(18, 0), 5),
+                        tuple("지수", "캐딜락", LocalTime.of(20, 0), 6),
+                        tuple("지수", "캐딜락", LocalTime.of(20, 0), 5),
+                        tuple("지수", "바렐", LocalTime.of(20, 0), 6),
+                        tuple("지수", "바렐", LocalTime.of(20, 0), 4)
                 );
     }
 
