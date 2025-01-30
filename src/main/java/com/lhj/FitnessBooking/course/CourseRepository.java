@@ -23,4 +23,8 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             "where ch.date = :date " +
             "order by c.startTime")
     List<CourseInfoTmp> getTomorrowCourses(@Param("date") LocalDate date);
+
+    @Query("select ch.count " +
+            "from Course c join CourseHistory ch on c = ch.course where ch.date = :date and c.id = :courseId")
+    int getCourseCount(@Param("date") LocalDate date, @Param("courseId") Long courseId);
 }
