@@ -1,7 +1,6 @@
 package com.lhj.FitnessBooking.course;
 
 import com.lhj.FitnessBooking.domain.Course;
-import com.lhj.FitnessBooking.dto.CourseDetailCourseInfoTmp;
 import com.lhj.FitnessBooking.dto.CourseInfoTmp;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -30,8 +29,8 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             "from Course c join CourseHistory ch on c = ch.course where ch.date = :date and c.id = :courseId")
     int getCourseCount(@Param("date") LocalDate date, @Param("courseId") Long courseId);
 
-    @Query("select new com.lhj.FitnessBooking.dto.CourseDetailCourseInfoTmp(i.name, c.name, c.startTime, ch.count) " +
+    @Query("select new com.lhj.FitnessBooking.dto.CourseInfoTmp(i.name, c.name, c.startTime, ch.count) " +
             "from Instructor i join Course c on i = c.instructor join CourseHistory ch on c = ch.course " +
             "where ch.date = :date and c.id = :courseId")
-    Optional<CourseDetailCourseInfoTmp> getCourseDetailCourseInfo(@Param("date") LocalDate date, @Param("courseId") Long courseId);
+    Optional<CourseInfoTmp> getCourseDetailCourseInfo(@Param("date") LocalDate date, @Param("courseId") Long courseId);
 }

@@ -1,8 +1,8 @@
-import './CourseList.css';
+import './CourseMain.css';
 import {useEffect, useState} from "react";
 import axios from "axios";
 
-function CourseList() {
+function CourseMain() {
 
     let [memberName, setMemberName] = useState('');
     let [memberNum, setMemberNum] = useState('');
@@ -128,4 +128,4 @@ function CourseList() {
     );
 }
 
-export default CourseList;
+export default CourseMain;

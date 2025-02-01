@@ -7,6 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class CourseInfo {
 
+    private Long courseId;
     private String instructorName;
     private String courseName;
     private String courseStartTime;

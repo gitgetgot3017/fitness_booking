@@ -9,6 +9,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 public class CourseInfoTmp {
 
+    private Long courseId;
     private String instructorName;
     private String courseName;
     private LocalTime courseStartTime;

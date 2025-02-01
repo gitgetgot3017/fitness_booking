@@ -1,12 +1,14 @@
 import './App.css';
 import { Routes, Route } from 'react-router-dom';
-import CourseList from './pages/course/CourseList';
+import CourseMain from './pages/course/CourseMain';
+import CourseDetail from "./pages/course/CourseDetail";
 
 function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/courses" element={<CourseList></CourseList>}></Route>
+        <Route path="/courses" element={<CourseMain></CourseMain>}></Route>
+        <Route path="/courses/detail" element={<CourseDetail></CourseDetail>}></Route>
       </Routes>
     </div>
   );

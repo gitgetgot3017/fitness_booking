@@ -1,6 +1,7 @@
 package com.lhj.FitnessBooking.course;
 
 import com.lhj.FitnessBooking.domain.Member;
+import com.lhj.FitnessBooking.dto.CourseDetailResponse;
 import com.lhj.FitnessBooking.member.MemberRepository;
 import com.lhj.FitnessBooking.response.CourseMainResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,5 +25,12 @@ public class CourseController {
 
         Member member = memberRepository.findById(1L).get(); // TODO: member를 어떻게 구할 것인가
         return courseService.showCourseMain(member, date);
+    }
+
+    @GetMapping("/detail")
+    public CourseDetailResponse shorCourseDetail(@RequestParam LocalDate date, @RequestParam Long courseId) {
+
+        Member member = memberRepository.findById(1L).get(); // TODO: member를 어떻게 구할 것인가
+        return courseService.showCourseDetail(member, date, courseId);
     }
 }

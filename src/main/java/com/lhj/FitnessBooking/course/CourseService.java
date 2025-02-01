@@ -1,11 +1,14 @@
 package com.lhj.FitnessBooking.course;
 
+import com.lhj.FitnessBooking.course.exception.CannotAccessException;
+import com.lhj.FitnessBooking.course.exception.NotExistCourseException;
+import com.lhj.FitnessBooking.courseHistory.CourseHistoryRepository;
+import com.lhj.FitnessBooking.domain.Course;
 import com.lhj.FitnessBooking.domain.History;
 import com.lhj.FitnessBooking.domain.Member;
-import com.lhj.FitnessBooking.dto.CourseInfo;
-import com.lhj.FitnessBooking.dto.CourseInfoTmp;
-import com.lhj.FitnessBooking.dto.CourseMainHeader;
+import com.lhj.FitnessBooking.dto.*;
 import com.lhj.FitnessBooking.history.HistoryRepository;
+import com.lhj.FitnessBooking.reservation.ReservationRepository;
 import com.lhj.FitnessBooking.response.CourseMainResponse;
 import com.lhj.FitnessBooking.subscription.SubscriptionRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +34,8 @@ public class CourseService {
     private final SubscriptionRepository subscriptionRepository;
     private final HistoryRepository historyRepository;
     private final CourseRepository courseRepository;
+    private final CourseHistoryRepository courseHistoryRepository;
+    private final ReservationRepository reservationRepository;
 
     /**
      * 수강권 만료의 이유로 수강권이 존재하지 않는 회원: 이용 내역만 보여준다. try 일부 -> finally
@@ -69,7 +74,7 @@ public class CourseService {
                     0,
                     0,
                     changeHistoryToDate(historyList),
-                    changeCourseInfoTmpToCourseInfo(courseInfoTmpList));
+                    changeAllCourseInfoTmpToCourseInfo(courseInfoTmpList));
         }
 
         return new CourseMainResponse(
@@ -82,7 +87,7 @@ public class CourseService {
                 courseMainHeader.getAvailableCount(),
                 courseMainHeader.getReservedCount(),
                 changeHistoryToDate(historyList),
-                changeCourseInfoTmpToCourseInfo(courseInfoTmpList));
+                changeAllCourseInfoTmpToCourseInfo(courseInfoTmpList));
     }
 
     private Set<Integer> changeHistoryToDate(List<History> historyList) {
@@ -94,7 +99,43 @@ public class CourseService {
         return dates;
     }
 
-    private List<CourseInfo> changeCourseInfoTmpToCourseInfo(List<CourseInfoTmp> courseInfoTmpList) {
+    /**
+     * 수강권 만료의 이유로 수강권이 존재하지 않는 회원: 홈>그룹예약>예약상세 페이지 접근 불가
+     */
+    public CourseDetailResponse showCourseDetail(Member member, LocalDate date, Long courseId) {
+
+        CourseMainHeader courseMainHeader;
+        try {
+            courseMainHeader = subscriptionRepository.getSubscription(member, LocalDate.now());
+        } catch (NullPointerException e) {
+            throw new CannotAccessException("비회원은 접근할 수 없습니다");
+        }
+
+        CourseInfoTmp courseInfoTmp = courseRepository.getCourseDetailCourseInfo(date, courseId)
+                .orElseThrow(() -> new NotExistCourseException("해당 날짜에는 해당 수업이 존재하지 않습니다"));
+        List<History> cancelCount = historyRepository.getCancelCount(member, date);
+
+        return changeIntoCourseMainResponse(courseMainHeader, date, courseInfoTmp, cancelCount);
+    }
+
+    private CourseDetailResponse changeIntoCourseMainResponse(CourseMainHeader courseMainHeader, LocalDate date, CourseInfoTmp courseInfoTmp, List<History> cancelCount) {
+
+        return new CourseDetailResponse(
+                courseMainHeader.getMemberName(),
+                courseMainHeader.getMemberNum(),
+                courseMainHeader.getSubscriptionName(),
+                courseMainHeader.getStartDate(),
+                courseMainHeader.getEndDate(),
+                courseMainHeader.getCompletedCount(),
+                courseMainHeader.getAvailableCount(),
+                courseMainHeader.getReservedCount(),
+                date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                changeCourseInfoTmpToCourseInfo(courseInfoTmp),
+                3 - cancelCount.size()
+        );
+    }
+
+    private List<CourseInfo> changeAllCourseInfoTmpToCourseInfo(List<CourseInfoTmp> courseInfoTmpList) {
 
         if (courseInfoTmpList == null) {
             return new ArrayList<>();
@@ -102,14 +143,19 @@ public class CourseService {
 
         List<CourseInfo> courseInfoList = new ArrayList<>();
         for (CourseInfoTmp courseInfoTmp : courseInfoTmpList) {
-            courseInfoList.add(new CourseInfo(
-                    courseInfoTmp.getInstructorName(),
-                    courseInfoTmp.getCourseName(),
-                    courseInfoTmp.getCourseStartTime().format(DateTimeFormatter.ofPattern("HH:mm")),
-                    courseInfoTmp.getCourseStartTime().plusMinutes(50).format(DateTimeFormatter.ofPattern("HH:mm")),
-                    courseInfoTmp.getAttendeeCount()
-            ));
+            courseInfoList.add(changeCourseInfoTmpToCourseInfo(courseInfoTmp));
         }
         return courseInfoList;
+    }
+
+    private CourseInfo changeCourseInfoTmpToCourseInfo(CourseInfoTmp courseInfoTmp) {
+        return new CourseInfo(
+                courseInfoTmp.getCourseId(),
+                courseInfoTmp.getInstructorName(),
+                courseInfoTmp.getCourseName(),
+                courseInfoTmp.getCourseStartTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+                courseInfoTmp.getCourseStartTime().plusMinutes(50).format(DateTimeFormatter.ofPattern("HH:mm")),
+                courseInfoTmp.getAttendeeCount()
+        );
     }
 }
