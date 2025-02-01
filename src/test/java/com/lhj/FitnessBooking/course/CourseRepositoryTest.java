@@ -1,6 +1,5 @@
 package com.lhj.FitnessBooking.course;
 
-import com.lhj.FitnessBooking.course.exception.ClassCapacityExceededException;
 import com.lhj.FitnessBooking.courseHistory.CourseHistoryRepository;
 import com.lhj.FitnessBooking.domain.Course;
 import com.lhj.FitnessBooking.domain.CourseHistory;
@@ -18,8 +17,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import static com.lhj.FitnessBooking.domain.DayOfWeek.SAT;
 import static com.lhj.FitnessBooking.domain.DayOfWeek.TUES;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 
 @SpringBootTest
 class CourseRepositoryTest {
@@ -132,6 +133,20 @@ class CourseRepositoryTest {
 
         // then
         assertThat(courseCount).isEqualTo(5);
+    }
+
+    @DisplayName("홈>그룹예약>예약상세: 수강 정보 확인")
+    @Test
+    void getCourseDetailCourseInfo() {
+
+        // given
+        Instructor instructor = saveInstructor("지수");
+        Course course = courseRepository.save(new Course(instructor, "캐딜락", SAT, LocalTime.of(11, 0)));
+        courseHistoryRepository.save(new CourseHistory(course, LocalDate.of(2025, 2, 1), 6));
+
+        // when, then
+        courseRepository.getCourseDetailCourseInfo(LocalDate.of(2025, 2, 1), course.getId())
+                .isPresent();
     }
 
     private Instructor saveInstructor(String name) {
