@@ -118,6 +118,7 @@ function CourseMain() {
 
             <div className="tab-content" id="available">
                 <div className="time-group">
+                    {/* 임시 코드 */}
                     <div className="reservation-item" style={{marginBottom: "20px"}} onClick={() => {
                         window.localStorage.setItem("courseId", 62);
                         navigate("/courses/detail");
@@ -133,6 +134,7 @@ function CourseMain() {
                             <h2>6 / 6</h2>
                         </div>
                     </div>
+                    {/* 임시 코드 */}
                     {
                         courses.map(function(course, i) {
                             return (

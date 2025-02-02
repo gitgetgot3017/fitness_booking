@@ -1,6 +1,5 @@
 import './CourseDetail.css';
 import {useEffect, useState} from "react";
-import {useSelector} from "react-redux";
 import axios from "axios";
 
 function CourseDetail() {
@@ -16,8 +15,6 @@ function CourseDetail() {
     let [courseDate, setCourseDate] = useState('');
     let [course, setCourse] = useState(null);
     let [cancelableCount, setCancelableCount] = useState(0);
-
-    let state = useSelector((state) => {return state});
 
     let params = new URLSearchParams();
     params.append("date", window.localStorage.getItem("courseDate"));
