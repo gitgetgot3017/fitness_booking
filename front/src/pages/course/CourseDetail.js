@@ -1,5 +1,6 @@
 import './CourseDetail.css';
 import {useEffect, useState} from "react";
+import {useSelector} from "react-redux";
 import axios from "axios";
 
 function CourseDetail() {
@@ -13,12 +14,14 @@ function CourseDetail() {
     let [availableCount, setAvailableCount] = useState(0);
     let [reservedCount, setReservedCount] = useState(0);
     let [courseDate, setCourseDate] = useState('');
-    let [course, setCourse] = useState();
+    let [course, setCourse] = useState(null);
     let [cancelableCount, setCancelableCount] = useState(0);
 
+    let state = useSelector((state) => {return state});
+
     let params = new URLSearchParams();
-    params.append("date", '2025-02-01'); // TODO
-    params.append("courseId", 62); // TODO
+    params.append("date", window.localStorage.getItem("courseDate"));
+    params.append("courseId", window.localStorage.getItem("courseId"));
 
     useEffect(() => {
         axios.get("/courses/detail", { params })
@@ -72,22 +75,26 @@ function CourseDetail() {
                 <p>{courseDate}</p>
             </div>
 
-            <div className="tab-content" id="available">
-                <div className="time-group">
-                    <div className="reservation-item">
-                        <div className="left" style={{display: "flex", alignItems: "center"}}>
-                            <img alt="지수 프로필" style={{marginRight: "10px"}} />
-                            <div>
-                                <p><strong>{course.instructorName}({course.courseName})</strong></p>
-                                <p>{course.courseStartTime} - {course.courseEndTime}</p>
+            {
+                course ?
+                    <div className="tab-content" id="available">
+                        <div className="time-group">
+                            <div className="reservation-item">
+                                <div className="left" style={{display: "flex", alignItems: "center"}}>
+                                    <img alt="지수 프로필" style={{marginRight: "10px"}} />
+                                    <div>
+                                        <p><strong>{course.instructorName}({course.courseName})</strong></p>
+                                        <p>{course.courseStartTime} - {course.courseEndTime}</p>
+                                    </div>
+                                </div>
+                                <div className="right">
+                                    <h2>{course.attendeeCount} / 6</h2>
+                                </div>
                             </div>
                         </div>
-                        <div className="right">
-                            <h2>{course.attendeeCount} / 6</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                    </div> :
+                    null
+            }
 
             <div>
 

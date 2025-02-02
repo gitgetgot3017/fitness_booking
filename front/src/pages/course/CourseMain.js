@@ -1,5 +1,7 @@
 import './CourseMain.css';
 import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {useDispatch} from "react-redux";
 import axios from "axios";
 
 function CourseMain() {
@@ -15,6 +17,9 @@ function CourseMain() {
     let [courses, setCourses] = useState([]);
     let [courseMainHistoryList, setCourseMainHistoryList] = useState([]);
     let [date, setDate] = useState(new Date());
+
+    let navigate = useNavigate ();
+    let dispatch = useDispatch();
 
     let params = new URLSearchParams();
     params.append("date", date.toISOString().slice(0, 10));
@@ -40,6 +45,15 @@ function CourseMain() {
                 }
             });
     }, []);
+
+    function storeCourseDate(currentDay) {
+        let yyyy = date.getFullYear()
+        let mm = String(date.getMonth() + 1).padStart(2, "0");
+        let dd = String(currentDay).padStart(2, "0");
+
+        let formattedDate = `${yyyy}-${mm}-${dd}`;
+        window.localStorage.setItem("courseDate", formattedDate);
+    }
 
     return (
         <div className="container">
@@ -90,9 +104,9 @@ function CourseMain() {
                             return <div key={i} className="day empty"></div>;
                         }
                         if (courseMainHistoryList.includes(currentDay)) {
-                            return <div key={i} className="day registered">{currentDay}</div>;
+                            return <div key={i} className="day registered" onClick={() => {storeCourseDate(currentDay)}}>{currentDay}</div>;
                         }
-                        return <div key={i} className="day">{currentDay}</div>;
+                        return <div key={i} className="day" onClick={() => {storeCourseDate(currentDay)}}>{currentDay}</div>;
                     })}
                 </div>
             </div>
@@ -104,10 +118,28 @@ function CourseMain() {
 
             <div className="tab-content" id="available">
                 <div className="time-group">
+                    <div className="reservation-item" style={{marginBottom: "20px"}} onClick={() => {
+                        window.localStorage.setItem("courseId", 62);
+                        navigate("/courses/detail");
+                    }}>
+                        <div className="left" style={{display: "flex", alignItems: "center"}}>
+                            <img style={{marginRight: "10px"}} />
+                            <div>
+                                <p><strong>지수(캐딜락)</strong></p>
+                                <p>23:00 - 23:50</p>
+                            </div>
+                        </div>
+                        <div className="right">
+                            <h2>6 / 6</h2>
+                        </div>
+                    </div>
                     {
                         courses.map(function(course, i) {
                             return (
-                                <div className="reservation-item" key={i} style={{marginBottom: "20px"}}>
+                                <div className="reservation-item" key={i} style={{marginBottom: "20px"}} onClick={() => {
+                                    window.localStorage.setItem("courseId", course.courseId);
+                                    navigate("/courses/detail");
+                                }}>
                                     <div className="left" style={{display: "flex", alignItems: "center"}}>
                                         <img style={{marginRight: "10px"}} />
                                         <div>

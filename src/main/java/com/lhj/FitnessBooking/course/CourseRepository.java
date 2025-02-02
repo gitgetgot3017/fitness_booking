@@ -13,13 +13,13 @@ import java.util.Optional;
 
 public interface CourseRepository extends JpaRepository<Course, Long> {
 
-    @Query("select new com.lhj.FitnessBooking.dto.CourseInfoTmp(i.name, c.name, c.startTime, ch.count) " +
+    @Query("select new com.lhj.FitnessBooking.dto.CourseInfoTmp(c.id, i.name, c.name, c.startTime, ch.count) " +
             "from Instructor i join Course c on i = c.instructor join CourseHistory ch on c = ch.course " +
             "where ch.date = :date and :startTime < c.startTime " +
             "order by c.startTime")
     List<CourseInfoTmp> getTodayCourses(@Param("date") LocalDate date, @Param("startTime") LocalTime startTime);
 
-    @Query("select new com.lhj.FitnessBooking.dto.CourseInfoTmp(i.name, c.name, c.startTime, ch.count) " +
+    @Query("select new com.lhj.FitnessBooking.dto.CourseInfoTmp(c.id, i.name, c.name, c.startTime, ch.count) " +
             "from Instructor i join Course c on i = c.instructor join CourseHistory ch on c = ch.course " +
             "where ch.date = :date " +
             "order by c.startTime")
@@ -29,7 +29,7 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             "from Course c join CourseHistory ch on c = ch.course where ch.date = :date and c.id = :courseId")
     int getCourseCount(@Param("date") LocalDate date, @Param("courseId") Long courseId);
 
-    @Query("select new com.lhj.FitnessBooking.dto.CourseInfoTmp(i.name, c.name, c.startTime, ch.count) " +
+    @Query("select new com.lhj.FitnessBooking.dto.CourseInfoTmp(c.id, i.name, c.name, c.startTime, ch.count) " +
             "from Instructor i join Course c on i = c.instructor join CourseHistory ch on c = ch.course " +
             "where ch.date = :date and c.id = :courseId")
     Optional<CourseInfoTmp> getCourseDetailCourseInfo(@Param("date") LocalDate date, @Param("courseId") Long courseId);
