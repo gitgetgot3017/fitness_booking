@@ -1,5 +1,6 @@
 package com.lhj.FitnessBooking.course;
 
+import com.lhj.FitnessBooking.course.exception.NotExistCourseException;
 import com.lhj.FitnessBooking.courseHistory.CourseHistoryRepository;
 import com.lhj.FitnessBooking.domain.Course;
 import com.lhj.FitnessBooking.domain.CourseHistory;
@@ -7,11 +8,13 @@ import com.lhj.FitnessBooking.domain.DayOfWeek;
 import com.lhj.FitnessBooking.domain.Instructor;
 import com.lhj.FitnessBooking.dto.CourseInfoTmp;
 import com.lhj.FitnessBooking.instructor.InstructorRepository;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -23,7 +26,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 @SpringBootTest
+@Transactional
 class CourseRepositoryTest {
+
+    @Autowired EntityManager em;
 
     @Autowired InstructorRepository instructorRepository;
     @Autowired CourseRepository courseRepository;
@@ -147,6 +153,46 @@ class CourseRepositoryTest {
         // when, then
         courseRepository.getCourseDetailCourseInfo(LocalDate.of(2025, 2, 1), course.getId())
                 .isPresent();
+    }
+
+    @DisplayName("수강 인원 1명 늘리기")
+    @Test
+    void increaseCourseCount() {
+
+        // given
+        Instructor instructor = saveInstructor("지수");
+        Course course = courseRepository.save(new Course(instructor, "캐딜락", SAT, LocalTime.of(11, 0)));
+        CourseHistory courseHistory = courseHistoryRepository.save(new CourseHistory(course, LocalDate.of(2025, 2, 2), 4));
+
+        // when
+        courseRepository.increaseCourseCount(LocalDate.of(2025, 2, 2), course);
+
+        em.clear();
+
+        // then
+        CourseHistory updatedCourseHistory = courseHistoryRepository.findById(courseHistory.getId())
+                .orElseThrow(() -> new NotExistCourseException("해당 수업은 존재하지 않습니다."));
+        assertThat(updatedCourseHistory.getCount()).isEqualTo(5);
+    }
+
+    @DisplayName("수강 인원 1명 줄이기")
+    @Test
+    void decreaseCourseCount() {
+
+        // given
+        Instructor instructor = saveInstructor("지수");
+        Course course = courseRepository.save(new Course(instructor, "캐딜락", SAT, LocalTime.of(11, 0)));
+        CourseHistory courseHistory = courseHistoryRepository.save(new CourseHistory(course, LocalDate.of(2025, 2, 2), 4));
+
+        // when
+        courseRepository.decreaseCourseCount(LocalDate.of(2025, 2, 2), course);
+
+        em.clear();
+
+        // then
+        CourseHistory updatedCourseHistory = courseHistoryRepository.findById(courseHistory.getId())
+                .orElseThrow(() -> new NotExistCourseException("해당 수업은 존재하지 않습니다."));
+        assertThat(updatedCourseHistory.getCount()).isEqualTo(3);
     }
 
     private Instructor saveInstructor(String name) {
