@@ -15,6 +15,15 @@ function CourseDetail() {
     let [courseDate, setCourseDate] = useState('');
     let [course, setCourse] = useState(null);
     let [cancelableCount, setCancelableCount] = useState(0);
+    let [errorState, setErrorState] = useState({
+        'enrollmentLimitExceeded': false,
+        'duplicateEnrollment': false,
+        'classCapacityExceeded': false,
+        'reservationCapacityExceeded': false,
+        'cancellationLimitExceeded': false,
+        'exceeded4HourLimit': false,
+        'courseExpiration': false
+    });
 
     let params = new URLSearchParams();
     params.append("date", window.localStorage.getItem("courseDate"));
@@ -23,17 +32,28 @@ function CourseDetail() {
     useEffect(() => {
         axios.get("/courses/detail", { params })
             .then((result) => {
-                setMemberName(result.data.memberName);
-                setMemberNum(result.data.memberNum);
-                setSubscriptionName(result.data.subscriptionName);
-                setStartDate(result.data.startDate);
-                setEndDate(result.data.endDate);
-                setCompletedCount(result.data.completedCount);
-                setAvailableCount(result.data.availableCount);
-                setReservedCount(result.data.reservedCount);
-                setCourseDate(result.data.courseDate);
-                setCourse(result.data.course);
-                setCancelableCount(result.data.cancelableCount);
+                console.log(result.data);
+                setMemberName(result.data.courseDetailInfo.memberName);
+                setMemberNum(result.data.courseDetailInfo.memberNum);
+                setSubscriptionName(result.data.courseDetailInfo.subscriptionName);
+                setStartDate(result.data.courseDetailInfo.startDate);
+                setEndDate(result.data.courseDetailInfo.endDate);
+                setCompletedCount(result.data.courseDetailInfo.completedCount);
+                setAvailableCount(result.data.courseDetailInfo.availableCount);
+                setReservedCount(result.data.courseDetailInfo.reservedCount);
+                setCourseDate(result.data.courseDetailInfo.courseDate);
+                setCourse(result.data.courseDetailInfo.course);
+                setCancelableCount(result.data.courseDetailInfo.cancelableCount);
+
+                setErrorState({
+                    enrollmentLimitExceeded: result.data.errorResponse.enrollmentLimitExceeded,
+                    duplicateEnrollment: result.data.errorResponse.duplicateEnrollment,
+                    classCapacityExceeded: result.data.errorResponse.classCapacityExceeded,
+                    reservationCapacityExceeded: result.data.errorResponse.reservationCapacityExceeded,
+                    cancellationLimitExceeded: result.data.errorResponse.cancellationLimitExceeded,
+                    exceeded4HourLimit: result.data.errorResponse.exceeded4HourLimit,
+                    courseExpiration: result.data.errorResponse.courseExpiration
+                });
             })
             .catch((error) => {
                 console.error("상세 정보 가져오는 중 에러 발생:", error.response ? error.response.data : error.message);
@@ -116,7 +136,31 @@ function CourseDetail() {
             <div className="reservation-footer">
                 <div className="buttons">
                     <button className="close">닫기</button>
-                    <button className="reserve">예약</button>
+                    {
+                        errorState.duplicateEnrollment ?
+                            ( // 해당 수업을 이미 신청한 경우
+                                errorState.cancellationLimitExceeded ?
+                                    null : // 이미 취소를 3번 한 경우
+                                    (
+                                        errorState.exceeded4HourLimit ?
+                                            null : // 수업 4시간 전이 아닌 경우
+                                            <button className="reserve">수강 취소</button>
+                                    )
+                            ) :
+                            ( // 해당 수업을 신청하지 않은 경우
+                                errorState.enrollmentLimitExceeded || errorState.courseExpiration ?
+                                    null : // 하루 최대 수강 횟수를 다 채운 경우 또는 전체 수강 횟수를 다 채운 경우
+                                    (
+                                        errorState.classCapacityExceeded ?
+                                            ( // 수강 정원이 다 찬 경우
+                                                errorState.reservationCapacityExceeded ? // 예약 정원이 다 찬 경우
+                                                    null :
+                                                    <button className="reserve">알림 신청</button>
+                                            ) :
+                                            <button className="reserve">예약</button>
+                                    )
+                            )
+                    }
                 </div>
             </div>
 
