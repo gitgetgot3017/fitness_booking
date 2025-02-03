@@ -1,10 +1,12 @@
 package com.lhj.FitnessBooking.domain;
 
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@NoArgsConstructor
 @Entity
 public class Reservation {
 
@@ -24,4 +26,11 @@ public class Reservation {
     private Member member;
 
     private LocalDateTime reserveDateTime;
+
+    public Reservation(LocalDate courseDate, Course course, Member member, LocalDateTime reserveDateTime) {
+        this.courseDate = courseDate;
+        this.course = course;
+        this.member = member;
+        this.reserveDateTime = reserveDateTime;
+    }
 }

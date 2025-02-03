@@ -1,13 +1,11 @@
 package com.lhj.FitnessBooking.courseHistory;
 
 import com.lhj.FitnessBooking.course.CourseRepository;
-import com.lhj.FitnessBooking.course.exception.EnrollmentLimitExceededException;
 import com.lhj.FitnessBooking.domain.Course;
 import com.lhj.FitnessBooking.domain.CourseHistory;
 import com.lhj.FitnessBooking.domain.DayOfWeek;
 import com.lhj.FitnessBooking.domain.Instructor;
 import com.lhj.FitnessBooking.instructor.InstructorRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.lhj.FitnessBooking.domain.DayOfWeek.TUES;
-import static org.assertj.core.api.Assertions.*;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 class CourseHistoryRepositoryTest {
