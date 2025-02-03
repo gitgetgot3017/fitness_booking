@@ -28,7 +28,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             "order by c.startTime")
     List<CourseInfoTmp> getTomorrowCourses(@Param("date") LocalDate date);
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select ch.count " +
             "from Course c join CourseHistory ch on c = ch.course where ch.date = :date and c.id = :courseId")
     int getCourseCount(@Param("date") LocalDate date, @Param("courseId") Long courseId);
