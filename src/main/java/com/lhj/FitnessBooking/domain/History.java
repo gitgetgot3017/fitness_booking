@@ -28,19 +28,16 @@ public class History {
 
     private int month;
 
-    private int week;
-
     private LocalDateTime regDateTime;
 
     @Enumerated(EnumType.STRING)
     private CourseStatus status;
 
-    public History(Member member, Course course, int year, int month, int week, LocalDateTime regDateTime, CourseStatus status) {
+    public History(Member member, Course course, int year, int month, LocalDateTime regDateTime, CourseStatus status) {
         this.member = member;
         this.course = course;
         this.year = year;
         this.month = month;
-        this.week = week;
         this.regDateTime = regDateTime;
         this.status = status;
     }
