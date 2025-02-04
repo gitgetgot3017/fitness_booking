@@ -4,15 +4,19 @@ import com.lhj.FitnessBooking.domain.Member;
 import com.lhj.FitnessBooking.domain.Subscription;
 import com.lhj.FitnessBooking.dto.CourseMainHeader;
 import com.lhj.FitnessBooking.member.MemberRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Transactional
 @SpringBootTest
 class SubscriptionRepositoryTest {
 
@@ -24,8 +28,7 @@ class SubscriptionRepositoryTest {
     void getSubscription() {
 
         // given
-        Member member = new Member("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
-        memberRepository.save(member);
+        Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
 
         Subscription subscription1 = new Subscription(member, LocalDate.of(2024, 6, 18), LocalDate.of(2025, 2, 23), 0, 74, 77);
         subscriptionRepository.save(subscription1);
@@ -49,5 +52,38 @@ class SubscriptionRepositoryTest {
         assertThat(courseMainHeader).isNotNull();
         assertThat(courseMainHeader).extracting("memberName", "memberNum", "endDate", "completedCount")
                 .containsExactly("이현지", "2073", LocalDate.of(2025, 2, 23), 74);
+    }
+
+    @DisplayName("예약 횟수 증가시키기")
+    @Test
+    void increaseReservedCount() {
+
+        // given
+        Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
+        saveSubscription(member, LocalDate.of(2024, 6, 18), LocalDate.of(2025, 2, 23), 1, 75, 77);
+
+        CourseMainHeader beforeSubscription = subscriptionRepository.getSubscription(member, LocalDate.of(2025, 2, 4));
+        int reservedCount = beforeSubscription.getReservedCount();
+
+        // when
+        subscriptionRepository.increaseReservedCount(member);
+
+        // then
+        CourseMainHeader afterSubscription = subscriptionRepository.getSubscription(member, LocalDate.of(2025, 2, 4));
+        assertThat(afterSubscription.getReservedCount()).isEqualTo(reservedCount + 1);
+    }
+
+    private Member saveMember(String memberNum, String name, String phone, boolean gender, LocalDate regDate) {
+
+        Member member = new Member(memberNum, name, phone, gender, regDate);
+        memberRepository.save(member);
+        return member;
+    }
+
+    private Subscription saveSubscription(Member member, LocalDate startDate, LocalDate endDate, int reservedCount, int completedCount, int availableCount) {
+
+        Subscription subscription = new Subscription(member, startDate, endDate, reservedCount, completedCount, availableCount);
+        subscriptionRepository.save(subscription);
+        return subscription;
     }
 }
