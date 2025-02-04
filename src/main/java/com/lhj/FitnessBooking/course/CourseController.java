@@ -38,4 +38,11 @@ public class CourseController {
         Member member = memberRepository.findById(1L).get(); // TODO: member를 어떻게 구할 것인가
         courseService.reserveCourse(member, request.getDate(), request.getCourseId());
     }
+
+    @PostMapping("/notifications")
+    public void waitCourse(@RequestBody ReserveCourseRequest request) {
+
+        Member member = memberRepository.findById(1L).get(); // TODO: member를 어떻게 구할 것인가
+        courseService.waitCourse(member, request.getDate(), request.getCourseId());
+    }
 }

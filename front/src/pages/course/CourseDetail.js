@@ -157,7 +157,25 @@ function CourseDetail() {
                                             ( // 수강 정원이 다 찬 경우
                                                 errorState.reservationCapacityExceeded ? // 예약 정원이 다 찬 경우
                                                     null :
-                                                    <button className="reserve">알림 신청</button>
+                                                    <button className="reserve" onClick={() => {
+                                                        axios.post("/courses/notifications", {
+                                                            date: window.localStorage.getItem("courseDate"),
+                                                            courseId: window.localStorage.getItem("courseId")
+                                                        }, {
+                                                            headers: { "Content-Type": "application/json" }
+                                                        })
+                                                            .then(() => {
+                                                                alert("알림 신청하였습니다.");
+                                                                navigate("/courses");
+                                                            })
+                                                            .catch((error) => {
+                                                                console.error("알림 신청 중 에러 발생:", error.response ? error.response.data : error.message);
+                                                                if (error.response) {
+                                                                    console.error("에러 상태 코드:", error.response.status);
+                                                                }
+                                                                console.log(error.response.data.message);
+                                                            });
+                                                    }}>알림 신청</button>
                                             ) :
                                             <button className="reserve" onClick={() => {
                                                 axios.post("/courses/reservations", {

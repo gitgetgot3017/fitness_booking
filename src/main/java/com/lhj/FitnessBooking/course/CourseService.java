@@ -240,4 +240,13 @@ public class CourseService {
         History history = new History(member, course, date.getYear(), date.getMonthValue(), LocalDateTime.now(), RESERVED);
         historyRepository.save(history);
     }
+
+    public void waitCourse(Member member, LocalDate date, Long courseId) {
+
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new NotExistCourseException("해당 수업은 존재하지 않습니다."));
+
+        Reservation reservation = new Reservation(date, course, member , LocalDateTime.now());
+        reservationRepository.save(reservation);
+    }
 }
