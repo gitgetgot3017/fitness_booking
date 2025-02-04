@@ -1,6 +1,7 @@
 package com.lhj.FitnessBooking.course;
 
 import com.lhj.FitnessBooking.course.exception.CannotAccessException;
+import com.lhj.FitnessBooking.course.exception.ClassCapacityExceededException;
 import com.lhj.FitnessBooking.course.exception.NotExistCourseException;
 import com.lhj.FitnessBooking.courseHistory.CourseHistoryRepository;
 import com.lhj.FitnessBooking.domain.*;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -223,5 +225,19 @@ public class CourseService {
         if (historyRepository.ifBefore4hour(member, date, course, LocalTime.now()).isEmpty()) {
             errorResponse.put("exceeded4HourLimit", "수업 시작 4시간 전까지만 취소 가능합니다.");
         }
+    }
+
+    public void reserveCourse(Member member, LocalDate date, Long courseId) {
+
+        int courseCount = courseRepository.getCourseCountWithLock(date, courseId);
+        if (courseCount >= 6) {
+            return;
+        }
+
+        Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotExistCourseException("존재하지 않는 수업입니다."));
+        courseRepository.increaseCourseCount(date, course);
+
+        History history = new History(member, course, date.getYear(), date.getMonthValue(), LocalDateTime.now(), RESERVED);
+        historyRepository.save(history);
     }
 }

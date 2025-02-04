@@ -32,6 +32,11 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             "from Course c join CourseHistory ch on c = ch.course where ch.date = :date and c.id = :courseId")
     int getCourseCount(@Param("date") LocalDate date, @Param("courseId") Long courseId);
 
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("select ch.count " +
+            "from Course c join CourseHistory ch on c = ch.course where ch.date = :date and c.id = :courseId")
+    int getCourseCountWithLock(@Param("date") LocalDate date, @Param("courseId") Long courseId);
+
     @Query("select new com.lhj.FitnessBooking.dto.CourseInfoTmp(c.id, i.name, c.name, c.startTime, ch.count) " +
             "from Instructor i join Course c on i = c.instructor join CourseHistory ch on c = ch.course " +
             "where ch.date = :date and c.id = :courseId")

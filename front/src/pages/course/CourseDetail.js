@@ -1,6 +1,7 @@
 import './CourseDetail.css';
 import {useEffect, useState} from "react";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 function CourseDetail() {
 
@@ -25,6 +26,8 @@ function CourseDetail() {
         'courseExpiration': false
     });
 
+    let navigate = useNavigate();
+
     let params = new URLSearchParams();
     params.append("date", window.localStorage.getItem("courseDate"));
     params.append("courseId", window.localStorage.getItem("courseId"));
@@ -32,7 +35,6 @@ function CourseDetail() {
     useEffect(() => {
         axios.get("/courses/detail", { params })
             .then((result) => {
-                console.log(result.data);
                 setMemberName(result.data.courseDetailInfo.memberName);
                 setMemberNum(result.data.courseDetailInfo.memberNum);
                 setSubscriptionName(result.data.courseDetailInfo.subscriptionName);
@@ -157,7 +159,25 @@ function CourseDetail() {
                                                     null :
                                                     <button className="reserve">알림 신청</button>
                                             ) :
-                                            <button className="reserve">예약</button>
+                                            <button className="reserve" onClick={() => {
+                                                axios.post("/courses/reservations", {
+                                                        date: window.localStorage.getItem("courseDate"),
+                                                        courseId: window.localStorage.getItem("courseId")
+                                                    }, {
+                                                        headers: { "Content-Type": "application/json" }
+                                                    })
+                                                    .then(() => {
+                                                        alert("수강 예약하였습니다.");
+                                                        navigate("/courses");
+                                                    })
+                                                    .catch((error) => {
+                                                        console.error("예약 중 에러 발생:", error.response ? error.response.data : error.message);
+                                                        if (error.response) {
+                                                            console.error("에러 상태 코드:", error.response.status);
+                                                        }
+                                                        console.log(error.response.data.message);
+                                                    });
+                                            }}>예약</button>
                                     )
                             )
                     }
