@@ -48,8 +48,8 @@ class HistoryRepositoryTest {
         int year = 2025;
         int month = 1;
 
-        historyRepository.save(new History(member, course, year, month, LocalDateTime.of(2025, 1, 26, 8, 0), CANCELED));
-        historyRepository.save(new History(member, course, year, month, LocalDateTime.of(2025, 1, 26, 9, 0), RESERVED));
+        historyRepository.save(new History(member, LocalDate.of(year, month, 26), course, year, month, LocalDateTime.of(2025, 1, 26, 8, 0), CANCELED));
+        historyRepository.save(new History(member, LocalDate.of(year, month, 26), course, year, month, LocalDateTime.of(2025, 1, 26, 9, 0), RESERVED));
 
         // when
         List<History> historyList = historyRepository.getHistory(member, year, month, ENROLLED, RESERVED);
@@ -75,8 +75,8 @@ class HistoryRepositoryTest {
         int year = 2025;
         int month = 1;
 
-        historyRepository.save(new History(member, course, year, month, LocalDateTime.of(2025, 1, 26, 8, 0), ENROLLED));
-        historyRepository.save(new History(member, course, year, month, LocalDateTime.of(2025, 1, 26, 9, 0), RESERVED));
+        historyRepository.save(new History(member, LocalDate.of(year, month, 26), course, year, month, LocalDateTime.of(2025, 1, 26, 8, 0), ENROLLED));
+        historyRepository.save(new History(member, LocalDate.of(year, month, 26), course, year, month, LocalDateTime.of(2025, 1, 26, 9, 0), RESERVED));
 
         // when
         List<History> historyList = historyRepository.getHistory(member, year, month, ENROLLED, RESERVED);
@@ -102,8 +102,8 @@ class HistoryRepositoryTest {
         int year = 2025;
         int month = 1;
 
-        historyRepository.save(new History(member, course, year, month, LocalDateTime.of(2025, 1, 26, 8, 0), RESERVED));
-        historyRepository.save(new History(member, course, year, month, LocalDateTime.of(2025, 1, 26, 9, 0), CANCELED));
+        historyRepository.save(new History(member, LocalDate.of(year, month, 26), course, year, month, LocalDateTime.of(2025, 1, 26, 8, 0), RESERVED));
+        historyRepository.save(new History(member, LocalDate.of(year, month, 26), course, year, month, LocalDateTime.of(2025, 1, 26, 9, 0), CANCELED));
 
         // when
         List<History> historyList = historyRepository.getHistory(member, year, month, ENROLLED, RESERVED);
@@ -129,8 +129,8 @@ class HistoryRepositoryTest {
         int year = 2025;
         int month = 1;
 
-        historyRepository.save(new History(member, course, year, month, LocalDateTime.of(2025, 1, 26, 8, 0), RESERVED));
-        historyRepository.save(new History(member, course, year, month, LocalDateTime.of(2025, 1, 26, 9, 0), ENROLLED));
+        historyRepository.save(new History(member, LocalDate.of(year, month, 26), course, year, month, LocalDateTime.of(2025, 1, 26, 8, 0), RESERVED));
+        historyRepository.save(new History(member, LocalDate.of(year, month, 26), course, year, month, LocalDateTime.of(2025, 1, 26, 9, 0), ENROLLED));
 
         // when
         List<History> historyList = historyRepository.getHistory(member, year, month, ENROLLED, RESERVED);
@@ -148,10 +148,10 @@ class HistoryRepositoryTest {
         Course course1 = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
         Course course2 = saveCourse("바렐", TUES, LocalTime.of(20, 0));
 
-        historyRepository.save(new History(member, course1, 2025, 1, LocalDateTime.of(2025, 1, 31, 16, 29), RESERVED));
-        historyRepository.save(new History(member, course1, 2025, 1, LocalDateTime.of(2025, 1, 31, 16, 29), CANCELED));
-        historyRepository.save(new History(member, course2, 2025, 1, LocalDateTime.of(2025, 1, 31, 16, 29), RESERVED));
-        historyRepository.save(new History(member, course2, 2025, 1, LocalDateTime.of(2025, 2, 1, 16, 29), CANCELED));
+        historyRepository.save(new History(member, LocalDate.of(2025, 1, 26), course1, 2025, 1, LocalDateTime.of(2025, 1, 31, 16, 29), RESERVED));
+        historyRepository.save(new History(member, LocalDate.of(2025, 1, 26), course1, 2025, 1, LocalDateTime.of(2025, 1, 31, 16, 29), CANCELED));
+        historyRepository.save(new History(member, LocalDate.of(2025, 1, 26), course2, 2025, 1, LocalDateTime.of(2025, 1, 31, 16, 29), RESERVED));
+        historyRepository.save(new History(member, LocalDate.of(2025, 1, 26), course2, 2025, 1, LocalDateTime.of(2025, 2, 1, 16, 29), CANCELED));
 
         // when
         List<History> cancelCount = historyRepository.getCancelCount(member, LocalDate.of(2025, 1, 31));
@@ -213,7 +213,7 @@ class HistoryRepositoryTest {
 
     private History saveHistory(Member member, Course course, int year, int month, LocalDateTime regDateTime, CourseStatus status) {
 
-        History history = new History(member, course, year, month, regDateTime, status);
+        History history = new History(member, LocalDate.of(year, month, 26), course, year, month, regDateTime, status);
         historyRepository.save(history);
         return history;
     }

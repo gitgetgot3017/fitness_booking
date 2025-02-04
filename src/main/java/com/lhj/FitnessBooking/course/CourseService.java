@@ -1,7 +1,6 @@
 package com.lhj.FitnessBooking.course;
 
 import com.lhj.FitnessBooking.course.exception.CannotAccessException;
-import com.lhj.FitnessBooking.course.exception.ClassCapacityExceededException;
 import com.lhj.FitnessBooking.course.exception.NotExistCourseException;
 import com.lhj.FitnessBooking.courseHistory.CourseHistoryRepository;
 import com.lhj.FitnessBooking.domain.*;
@@ -33,6 +32,7 @@ public class CourseService {
     private final CourseRepository courseRepository;
     private final CourseHistoryRepository courseHistoryRepository;
     private final ReservationRepository reservationRepository;
+    private final SmsService smsService;
 
     /**
      * 수강권 만료의 이유로 수강권이 존재하지 않는 회원: 이용 내역만 보여준다. try 일부 -> finally
@@ -237,7 +237,7 @@ public class CourseService {
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotExistCourseException("존재하지 않는 수업입니다."));
         courseRepository.increaseCourseCount(date, course);
 
-        historyRepository.save(new History(member, course, date.getYear(), date.getMonthValue(), LocalDateTime.now(), RESERVED));
+        historyRepository.save(new History(member, date, course, date.getYear(), date.getMonthValue(), LocalDateTime.now(), RESERVED));
         subscriptionRepository.increaseReservedCount(member);
     }
 

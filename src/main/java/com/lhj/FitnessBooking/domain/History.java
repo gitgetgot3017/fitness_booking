@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -20,6 +21,8 @@ public class History {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    private LocalDate courseDate;
+
     @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;
@@ -33,8 +36,9 @@ public class History {
     @Enumerated(EnumType.STRING)
     private CourseStatus status;
 
-    public History(Member member, Course course, int year, int month, LocalDateTime regDateTime, CourseStatus status) {
+    public History(Member member, LocalDate courseDate, Course course, int year, int month, LocalDateTime regDateTime, CourseStatus status) {
         this.member = member;
+        this.courseDate = courseDate;
         this.course = course;
         this.year = year;
         this.month = month;
