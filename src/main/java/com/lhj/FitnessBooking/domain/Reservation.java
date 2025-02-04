@@ -1,11 +1,13 @@
 package com.lhj.FitnessBooking.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@Getter
 @NoArgsConstructor
 @Entity
 public class Reservation {

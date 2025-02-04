@@ -177,7 +177,7 @@ public class CourseService {
      * 3. 수강 횟수가 남아 있어야 한다.
      * 4. 해당 수업의 여석이 존재해야 한다.
      *
-     * 수강 예약하기 위한 조건
+     * 수강 대기하기 위한 조건
      * 5. 해당 수업의 예약 여석이 존재해야 한다.
      */
     private void validateCourseAvailability(Map<String, String> errorResponse, LocalDate date, Long courseId, int leftCount) {
@@ -203,8 +203,10 @@ public class CourseService {
 
         List<Reservation> reservations = reservationRepository.findByCourseDateAndCourse(date, course);
         if (reservations.size() >= 6) {
-            errorResponse.put("reservationCapacityExceeded", "예약 정원을 초과하였습니다.");
+            errorResponse.put("reservationCapacityExceeded", "대기 정원을 초과하였습니다.");
+            return;
         }
+        errorResponse.put("alreadyWaitCourse", "대기 신청을 하였습니다."); // 대기 취소를 하기 위함
     }
 
     /**
@@ -278,5 +280,11 @@ public class CourseService {
         }
         smsService.sendSms(member.getPhone(), date, courseId);
         reservationRepository.deleteReservations(date, course);
+    }
+
+    public void cancelWaiting(LocalDate date, Long courseId, Member member) {
+
+        Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotExistCourseException("존재하지 않는 수업입니다."));
+        reservationRepository.deleteReservation(date, course, member);
     }
 }

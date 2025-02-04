@@ -71,6 +71,27 @@ class ReservationRepositoryTest {
         assertThat(reservations).isEmpty();
     }
 
+    @DisplayName("특정 수업에 대한 특정 회원의 대기 삭제하기")
+    @Test
+    void deleteReservation() {
+
+        // given
+        Member member1 = saveMember("1073", "일현지", "01052802073", true, LocalDate.of(2025, 1, 31));
+        Member member2 = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
+        Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
+
+        reservationRepository.save(new Reservation(LocalDate.of(2025, 2, 4), course, member1, LocalDateTime.of(2025, 2, 4, 22, 18)));
+        reservationRepository.save(new Reservation(LocalDate.of(2025, 2, 4), course, member2, LocalDateTime.of(2025, 2, 4, 22, 18)));
+
+        // when
+        reservationRepository.deleteReservation(LocalDate.of(2025, 2, 4), course, member1);
+
+        // then
+        List<Reservation> reservations = reservationRepository.findByCourseDateAndCourse(LocalDate.of(2025, 2, 4), course);
+        assertThat(reservations).hasSize(1);
+        assertThat(reservations.get(0).getMember()).isEqualTo(member2);
+    }
+
     private Member saveMember(String memberNum, String name, String phone, boolean gender, LocalDate regDate) {
 
         Member member = new Member(memberNum, name, phone, gender, regDate);

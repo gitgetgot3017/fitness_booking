@@ -52,4 +52,11 @@ public class CourseController {
         Member member = memberRepository.findById(1L).get(); // TODO: member를 어떻게 구할 것인가
         courseService.cancelCourse(member, request.getDate(), request.getCourseId());
     }
+
+    @DeleteMapping("/notifications/cancellation")
+    public void cancelWaiting(@RequestBody ReserveCourseRequest request) {
+
+        Member member = memberRepository.findById(1L).get(); // TODO: member를 어떻게 구할 것인가
+        courseService.cancelWaiting(request.getDate(), request.getCourseId(), member);
+    }
 }
