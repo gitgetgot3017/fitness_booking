@@ -277,5 +277,6 @@ public class CourseService {
             return;
         }
         smsService.sendSms(member.getPhone(), date, courseId);
+        reservationRepository.deleteReservations(date, course);
     }
 }
