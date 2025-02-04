@@ -73,6 +73,25 @@ class SubscriptionRepositoryTest {
         assertThat(afterSubscription.getReservedCount()).isEqualTo(reservedCount + 1);
     }
 
+    @DisplayName("예약 횟수 감소시키기")
+    @Test
+    void decreaseReservedCount() {
+
+        // given
+        Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
+        saveSubscription(member, LocalDate.of(2024, 6, 18), LocalDate.of(2025, 2, 23), 1, 75, 77);
+
+        CourseMainHeader beforeSubscription = subscriptionRepository.getSubscription(member, LocalDate.of(2025, 2, 4));
+        int reservedCount = beforeSubscription.getReservedCount();
+
+        // when
+        subscriptionRepository.decreaseReservedCount(member);
+
+        // then
+        CourseMainHeader afterSubscription = subscriptionRepository.getSubscription(member, LocalDate.of(2025, 2, 4));
+        assertThat(afterSubscription.getReservedCount()).isEqualTo(reservedCount - 1);
+    }
+
     private Member saveMember(String memberNum, String name, String phone, boolean gender, LocalDate regDate) {
 
         Member member = new Member(memberNum, name, phone, gender, regDate);

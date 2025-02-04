@@ -22,4 +22,10 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
             "set s.reservedCount = s.reservedCount + 1 " +
             "where s.member = :member and s.reservedCount + s.completedCount < s.availableCount")
     void increaseReservedCount(@Param("member") Member member);
+
+    @Modifying
+    @Query("update Subscription s " +
+            "set s.reservedCount = s.reservedCount - 1 " +
+            "where s.member = :member and s.reservedCount + s.completedCount < s.availableCount")
+    void decreaseReservedCount(@Param("member") Member member);
 }

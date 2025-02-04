@@ -19,8 +19,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static com.lhj.FitnessBooking.domain.CourseStatus.ENROLLED;
-import static com.lhj.FitnessBooking.domain.CourseStatus.RESERVED;
+import static com.lhj.FitnessBooking.domain.CourseStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -227,6 +226,12 @@ public class CourseService {
         }
     }
 
+    /**
+     * 수강 예약을 하려면?
+     * 1. 수강 정원 1명 증가시키기
+     * 2. history에 RESERVED 추가
+     * 3. subscription의 reservedCount + 1
+     */
     public void reserveCourse(Member member, LocalDate date, Long courseId) {
 
         int courseCount = courseRepository.getCourseCountWithLock(date, courseId);
@@ -248,5 +253,29 @@ public class CourseService {
 
         Reservation reservation = new Reservation(date, course, member , LocalDateTime.now());
         reservationRepository.save(reservation);
+    }
+
+    /**
+     * 수강 취소를 하려면?
+     * 1. 수강 정원 1명 감소시키기
+     * 2. hisotry에 CANCELED 추가
+     * 3. subscription의 reservedCount - 1
+     * 4. 대기자가 존재할 시, (1) 대기자 전원에게 문자 메시지 발송 (2) reservation에서 대기자 전원 제거
+     */
+    public void cancelCourse(Member member, LocalDate date, Long courseId) {
+
+        Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotExistCourseException("존재하지 않는 수업입니다."));
+        courseRepository.decreaseCourseCount(date, course);
+
+        History history = new History(member, date, course, date.getYear(), date.getMonthValue(), LocalDateTime.now(), CANCELED);
+        historyRepository.save(history);
+
+        subscriptionRepository.decreaseReservedCount(member);
+
+        List<Reservation> reservations = reservationRepository.findByCourseDateAndCourse(date, course);
+        if (reservations.size() == 0) {
+            return;
+        }
+        smsService.sendSms(member.getPhone(), date, courseId);
     }
 }

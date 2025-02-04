@@ -146,7 +146,25 @@ function CourseDetail() {
                                     (
                                         errorState.exceeded4HourLimit ?
                                             null : // 수업 4시간 전이 아닌 경우
-                                            <button className="reserve">수강 취소</button>
+                                            <button className="reserve" onClick={() => {
+                                                axios.post("/courses/cancelation", {
+                                                    date: window.localStorage.getItem("courseDate"),
+                                                    courseId: window.localStorage.getItem("courseId")
+                                                }, {
+                                                    headers: { "Content-Type": "application/json" }
+                                                })
+                                                    .then(() => {
+                                                        alert("알림 신청하였습니다.");
+                                                        navigate("/courses");
+                                                    })
+                                                    .catch((error) => {
+                                                        console.error("알림 신청 중 에러 발생:", error.response ? error.response.data : error.message);
+                                                        if (error.response) {
+                                                            console.error("에러 상태 코드:", error.response.status);
+                                                        }
+                                                        console.log(error.response.data.message);
+                                                    });
+                                            }}>수강 취소</button>
                                     )
                             ) :
                             ( // 해당 수업을 신청하지 않은 경우
