@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -22,15 +21,12 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
             "from History h " +
             "where h.member = :member " +
             "and h.year = :year and h.month = :month " +
-            "and (h.status = :status1 or (h.status = :status2 and h.id in (select max(subH.id) from History subH where subH.member = :member and subH.status <> :status1 group by subH.course)))"
+            "and (h.status = 'ENROLLED' or (h.status = 'RESERVED' and h.id in (select max(subH.id) from History subH where subH.member = :member and subH.status <> 'ENROLLED' group by subH.course)))"
     )
     List<History> getHistory(@Param("member") Member member,
                              @Param("year") int year,
-                             @Param("month") int month,
-                             @Param("status1") CourseStatus status1, // ENROLLED
-                             @Param("status2") CourseStatus status2); // RESERVED
+                             @Param("month") int month);
 
-    // TODO: 커밋2
     @Query("select h " +
             "from History h " +
             "where h.member = :member and function('DATE', h.regDateTime) = :date and h.status = 'CANCELED'")

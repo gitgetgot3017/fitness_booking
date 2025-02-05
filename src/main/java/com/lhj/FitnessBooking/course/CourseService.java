@@ -52,7 +52,7 @@ public class CourseService {
                 courses = courseRepository.getTomorrowCourses(today);
             }
         } finally {
-            List<History> history = historyRepository.getHistory(member, today.getYear(), today.getMonthValue(), ENROLLED, RESERVED);
+            List<History> history = historyRepository.getHistory(member, today.getYear(), today.getMonthValue());
             return changeIntoCourseMainResponse(courseMainHeader, history, courses);
         }
     }
