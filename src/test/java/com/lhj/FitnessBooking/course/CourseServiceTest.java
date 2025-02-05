@@ -6,7 +6,9 @@ import com.lhj.FitnessBooking.dto.CourseMainHeader;
 import com.lhj.FitnessBooking.history.HistoryRepository;
 import com.lhj.FitnessBooking.instructor.InstructorRepository;
 import com.lhj.FitnessBooking.member.MemberRepository;
+import com.lhj.FitnessBooking.reservation.ReservationRepository;
 import com.lhj.FitnessBooking.subscription.SubscriptionRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import java.util.List;
 
 import static com.lhj.FitnessBooking.domain.CourseStatus.RESERVED;
 import static com.lhj.FitnessBooking.domain.DayOfWeek.TUES;
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -29,6 +32,7 @@ class CourseServiceTest {
     @Autowired CourseHistoryRepository courseHistoryRepository;
     @Autowired HistoryRepository historyRepository;
     @Autowired SubscriptionRepository subscriptionRepository;
+    @Autowired ReservationRepository reservationRepository;
 
     @Autowired CourseService courseService;
 
@@ -88,6 +92,27 @@ class CourseServiceTest {
         assertThat(historyList).hasSize(0);
 
         assertThat(subscriptionRepository.getSubscription(member, courseDate).getReservedCount()).isEqualTo(reservedCount);
+    }
+
+    @DisplayName("수강 대기하기")
+    @Test
+    void waitCourse() {
+
+        // given
+        Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
+
+        Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
+        LocalDate courseDate = LocalDate.of(2025, 2, 5);
+        Long courseId = course.getId();
+
+        // when
+        courseService.waitCourse(member, courseDate, courseId);
+
+        // then
+        List<Reservation> reservations = reservationRepository.findAll();
+        assertThat(reservations).hasSize(1);
+        assertThat(reservations.get(0).getCourse().getId()).isEqualTo(courseId);
+        assertThat(reservations.get(0).getCourseDate()).isEqualTo(courseDate);
     }
 
     private Member saveMember(String memberNum, String name, String phone, boolean gender, LocalDate regDate) {
