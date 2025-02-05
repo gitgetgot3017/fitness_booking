@@ -289,4 +289,9 @@ public class CourseService {
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotExistCourseException("존재하지 않는 수업입니다."));
         reservationRepository.deleteReservation(date, course, member);
     }
+
+    public List<History> showCourseHistory(Member member, LocalDate date) {
+
+        return historyRepository.getHistory(member, date.getYear(), date.getMonthValue());
+    }
 }

@@ -19,8 +19,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-import static com.lhj.FitnessBooking.domain.CourseStatus.CANCELED;
-import static com.lhj.FitnessBooking.domain.CourseStatus.RESERVED;
+import static com.lhj.FitnessBooking.domain.CourseStatus.*;
 import static com.lhj.FitnessBooking.domain.DayOfWeek.TUES;
 import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -170,6 +169,28 @@ class CourseServiceTest {
         // then
         List<Reservation> reservations = reservationRepository.findAll();
         assertThat(reservations).hasSize(0);
+    }
+
+    @DisplayName("수강 기록 요청하기")
+    @Test
+    void showCourseHistory() {
+
+        // given
+        Course course1 = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
+        Course course2 = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
+        Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
+
+        historyRepository.save(new History(member, LocalDate.of(2025, 2, 5), course1, 2025, 2, LocalDateTime.of(2025, 2, 5, 23, 34), RESERVED));
+        historyRepository.save(new History(member, LocalDate.of(2025, 2, 5), course1, 2025, 2, LocalDateTime.of(2025, 2, 5, 23, 34), CANCELED));
+        historyRepository.save(new History(member, LocalDate.of(2025, 2, 5), course2, 2025, 2, LocalDateTime.of(2025, 2, 5, 23, 34), CANCELED));
+        historyRepository.save(new History(member, LocalDate.of(2025, 2, 5), course2, 2025, 2, LocalDateTime.of(2025, 2, 5, 23, 34), RESERVED));
+        historyRepository.save(new History(member, LocalDate.of(2025, 2, 5), course2, 2025, 2, LocalDateTime.of(2025, 2, 5, 23, 34), ENROLLED));
+
+        // when
+        List<History> historyList = courseService.showCourseHistory(member, LocalDate.of(2025, 2, 5));
+
+        // then
+        assertThat(historyList).hasSize(2);
     }
 
     private Member saveMember(String memberNum, String name, String phone, boolean gender, LocalDate regDate) {

@@ -59,4 +59,11 @@ public class CourseController {
         Member member = memberRepository.findById(1L).get(); // TODO: member를 어떻게 구할 것인가
         courseService.cancelWaiting(request.getDate(), request.getCourseId(), member);
     }
+
+    @GetMapping("/history")
+    public void showCourseHistory(@RequestParam LocalDate date) {
+
+        Member member = memberRepository.findById(1L).get(); // TODO: member를 어떻게 구할 것인가
+        courseService.showCourseHistory(member, date);
+    }
 }
