@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -149,6 +150,27 @@ class CourseServiceTest {
         assertThat(reservations).hasSize(0);
     }
 
+    @DisplayName("수강 대기 취소하기")
+    @Test
+    void cancelWaiting() {
+
+        // given
+        Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
+
+        Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
+        LocalDate courseDate = LocalDate.of(2025, 2, 5);
+        Long courseId = course.getId();
+
+        Reservation reservation = new Reservation(courseDate, course, member, LocalDateTime.of(2025, 2, 5, 17, 15));
+        reservationRepository.save(reservation);
+
+        // when
+        courseService.cancelWaiting(courseDate, courseId, member);
+
+        // then
+        List<Reservation> reservations = reservationRepository.findAll();
+        assertThat(reservations).hasSize(0);
+    }
 
     private Member saveMember(String memberNum, String name, String phone, boolean gender, LocalDate regDate) {
 
