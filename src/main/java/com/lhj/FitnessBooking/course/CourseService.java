@@ -244,7 +244,9 @@ public class CourseService {
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotExistCourseException("존재하지 않는 수업입니다."));
         courseRepository.increaseCourseCount(date, course);
 
-        historyRepository.save(new History(member, date, course, date.getYear(), date.getMonthValue(), LocalDateTime.now(), RESERVED));
+        History history = new History(member, date, course, date.getYear(), date.getMonthValue(), LocalDateTime.now(), RESERVED);
+        historyRepository.save(history);
+
         subscriptionRepository.increaseReservedCount(member);
     }
 
