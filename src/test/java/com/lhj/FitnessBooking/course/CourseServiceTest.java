@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import static com.lhj.FitnessBooking.domain.CourseStatus.CANCELED;
 import static com.lhj.FitnessBooking.domain.CourseStatus.RESERVED;
 import static com.lhj.FitnessBooking.domain.DayOfWeek.TUES;
 import static org.assertj.core.api.Assertions.*;
@@ -114,6 +115,40 @@ class CourseServiceTest {
         assertThat(reservations.get(0).getCourse().getId()).isEqualTo(courseId);
         assertThat(reservations.get(0).getCourseDate()).isEqualTo(courseDate);
     }
+
+    @DisplayName("수강 취소하기")
+    @Test
+    void cancelCourse() {
+
+        // given
+        Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
+        CourseHistory courseHistory = saveCourseHistory(course, LocalDate.of(2025, 2, 5), 6);
+
+        Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
+        LocalDate courseDate = LocalDate.of(2025, 2, 5);
+        Long courseId = course.getId();
+
+        saveSubscription(member, LocalDate.of(2024, 6, 18), LocalDate.of(2025, 2, 23), 2, 73, 77);
+        CourseMainHeader subscription = subscriptionRepository.getSubscription(member, courseDate);
+        int reservedCount = subscription.getReservedCount();
+
+        // when
+        courseService.cancelCourse(member, courseDate, courseId);
+
+        // then
+        int courseCount = courseRepository.getCourseCount(courseDate, courseId);
+        assertThat(courseCount).isEqualTo(courseHistory.getCount() - 1);
+
+        List<History> historyList = historyRepository.findAll();
+        assertThat(historyList).hasSize(1);
+        assertThat(historyList.get(0).getStatus()).isSameAs(CANCELED);
+
+        assertThat(subscriptionRepository.getSubscription(member, courseDate).getReservedCount()).isEqualTo(reservedCount - 1);
+
+        List<Reservation> reservations = reservationRepository.findAll();
+        assertThat(reservations).hasSize(0);
+    }
+
 
     private Member saveMember(String memberNum, String name, String phone, boolean gender, LocalDate regDate) {
 
