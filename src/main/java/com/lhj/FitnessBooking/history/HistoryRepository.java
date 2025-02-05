@@ -1,10 +1,10 @@
 package com.lhj.FitnessBooking.history;
 
 import com.lhj.FitnessBooking.domain.Course;
-import com.lhj.FitnessBooking.domain.CourseStatus;
 import com.lhj.FitnessBooking.domain.History;
 import com.lhj.FitnessBooking.domain.Member;
 import com.lhj.FitnessBooking.dto.CheckBefore4HourDto;
+import com.lhj.FitnessBooking.dto.CourseHistoryTmp;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,9 +23,23 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
             "and h.year = :year and h.month = :month " +
             "and (h.status = 'ENROLLED' or (h.status = 'RESERVED' and h.id in (select max(subH.id) from History subH where subH.member = :member and subH.status <> 'ENROLLED' group by subH.course)))"
     )
-    List<History> getHistory(@Param("member") Member member,
+    List<History> getHistoryDate(@Param("member") Member member,
                              @Param("year") int year,
                              @Param("month") int month);
+
+    @Query(
+            "select new com.lhj.FitnessBooking.dto.CourseHistoryTmp(h.courseDate, i.name, c.name, c.startTime, ch.count) " +
+            "from History h " +
+            "join Course c on h.course = c " +
+            "join Instructor i on c.instructor = i " +
+            "join CourseHistory ch on ch.date = h.courseDate " +
+            "where h.member = :member " +
+            "and h.year = :year and h.month = :month " +
+            "and (h.status = 'ENROLLED' or (h.status = 'RESERVED' and h.id in (select max(subH.id) from History subH where subH.member = :member and subH.status <> 'ENROLLED' group by subH.course)))"
+    )
+    List<CourseHistoryTmp> getHistory(@Param("member") Member member,
+                                      @Param("year") int year,
+                                      @Param("month") int month);
 
     @Query("select h " +
             "from History h " +

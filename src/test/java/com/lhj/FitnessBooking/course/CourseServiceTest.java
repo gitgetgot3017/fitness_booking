@@ -2,6 +2,7 @@ package com.lhj.FitnessBooking.course;
 
 import com.lhj.FitnessBooking.courseHistory.CourseHistoryRepository;
 import com.lhj.FitnessBooking.domain.*;
+import com.lhj.FitnessBooking.dto.CourseHistoryDto;
 import com.lhj.FitnessBooking.dto.CourseMainHeader;
 import com.lhj.FitnessBooking.history.HistoryRepository;
 import com.lhj.FitnessBooking.instructor.InstructorRepository;
@@ -179,6 +180,8 @@ class CourseServiceTest {
         Course course1 = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
         Course course2 = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
         Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
+        saveCourseHistory(course1, LocalDate.of(2025, 2, 5), 5);
+        saveCourseHistory(course2, LocalDate.of(2025, 2, 5), 4);
 
         historyRepository.save(new History(member, LocalDate.of(2025, 2, 5), course1, 2025, 2, LocalDateTime.of(2025, 2, 5, 23, 34), RESERVED));
         historyRepository.save(new History(member, LocalDate.of(2025, 2, 5), course1, 2025, 2, LocalDateTime.of(2025, 2, 5, 23, 34), CANCELED));
@@ -187,7 +190,7 @@ class CourseServiceTest {
         historyRepository.save(new History(member, LocalDate.of(2025, 2, 5), course2, 2025, 2, LocalDateTime.of(2025, 2, 5, 23, 34), ENROLLED));
 
         // when
-        List<History> historyList = courseService.showCourseHistory(member, LocalDate.of(2025, 2, 5));
+        List<CourseHistoryDto> historyList = courseService.showCourseHistory(member, LocalDate.of(2025, 2, 5));
 
         // then
         assertThat(historyList).hasSize(2);

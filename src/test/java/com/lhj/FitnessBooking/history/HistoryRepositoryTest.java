@@ -4,6 +4,7 @@ import com.lhj.FitnessBooking.course.CourseRepository;
 import com.lhj.FitnessBooking.courseHistory.CourseHistoryRepository;
 import com.lhj.FitnessBooking.domain.*;
 import com.lhj.FitnessBooking.dto.CheckBefore4HourDto;
+import com.lhj.FitnessBooking.dto.CourseHistoryTmp;
 import com.lhj.FitnessBooking.instructor.InstructorRepository;
 import com.lhj.FitnessBooking.member.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -33,7 +34,7 @@ class HistoryRepositoryTest {
 
     @DisplayName("홈 > 그룹예약: 수강 및 예약 날짜 조회(1)")
     @Test
-    void getHistoryTest1() {
+    void getHistoryDateTest1() {
 
         // given
         Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
@@ -51,7 +52,7 @@ class HistoryRepositoryTest {
         historyRepository.save(new History(member, LocalDate.of(year, month, 26), course, year, month, LocalDateTime.of(2025, 1, 26, 9, 0), RESERVED));
 
         // when
-        List<History> historyList = historyRepository.getHistory(member, year, month);
+        List<History> historyList = historyRepository.getHistoryDate(member, year, month);
 
         // then
         assertThat(historyList).hasSize(1);
@@ -59,7 +60,7 @@ class HistoryRepositoryTest {
 
     @DisplayName("홈 > 그룹예약: 수강 및 예약 날짜 조회(2)")
     @Test
-    void getHistoryTest2() {
+    void getHistoryDateTest2() {
 
         // given
         Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
@@ -77,7 +78,7 @@ class HistoryRepositoryTest {
         historyRepository.save(new History(member, LocalDate.of(year, month, 26), course, year, month, LocalDateTime.of(2025, 1, 26, 9, 0), RESERVED));
 
         // when
-        List<History> historyList = historyRepository.getHistory(member, year, month);
+        List<History> historyList = historyRepository.getHistoryDate(member, year, month);
 
         // then
         assertThat(historyList).hasSize(2);
@@ -85,7 +86,7 @@ class HistoryRepositoryTest {
 
     @DisplayName("홈 > 그룹예약: 수강 및 예약 날짜 조회(3)")
     @Test
-    public void getHistoryTest3() {
+    public void getHistoryDateTest3() {
 
         // given
         Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
@@ -103,7 +104,7 @@ class HistoryRepositoryTest {
         historyRepository.save(new History(member, LocalDate.of(year, month, 26), course, year, month, LocalDateTime.of(2025, 1, 26, 9, 0), CANCELED));
 
         // when
-        List<History> historyList = historyRepository.getHistory(member, year, month);
+        List<History> historyList = historyRepository.getHistoryDate(member, year, month);
 
         // then
         assertThat(historyList).hasSize(1);
@@ -111,7 +112,7 @@ class HistoryRepositoryTest {
 
     @DisplayName("홈 > 그룹예약: 수강 및 예약 날짜 조회(4)")
     @Test
-    public void getHistoryTest4() {
+    public void getHistoryDateTest4() {
 
         // given
         Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
@@ -129,7 +130,7 @@ class HistoryRepositoryTest {
         historyRepository.save(new History(member, LocalDate.of(year, month, 26), course, year, month, LocalDateTime.of(2025, 1, 26, 9, 0), ENROLLED));
 
         // when
-        List<History> historyList = historyRepository.getHistory(member, year, month);
+        List<History> historyList = historyRepository.getHistoryDate(member, year, month);
 
         // then
         assertThat(historyList).hasSize(2);
@@ -137,7 +138,7 @@ class HistoryRepositoryTest {
 
     @DisplayName("홈 > 그룹예약: 수강 및 예약 날짜 조회(5)")
     @Test
-    public void getHistoryTest5() {
+    public void getHistoryDateTest5() {
 
         // given
         Member member1 = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
@@ -157,10 +158,38 @@ class HistoryRepositoryTest {
         historyRepository.save(new History(member2, LocalDate.of(year, month, 26), course, year, month, LocalDateTime.of(2025, 1, 26, 9, 0), RESERVED));
 
         // when
-        List<History> historyList = historyRepository.getHistory(member1, year, month);
+        List<History> historyList = historyRepository.getHistoryDate(member1, year, month);
 
         // then
         assertThat(historyList).hasSize(1);
+    }
+
+    @DisplayName("수강 기록 조회")
+    @Test
+    void getHistory() {
+
+        // given
+        Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
+        Course course = saveCourse("지수", "캐딜락", MON, LocalTime.of(9, 0));
+        saveCourseHistory(course, LocalDate.of(2025, 1, 30), 4);
+        saveCourseHistory(course, LocalDate.of(2025, 1, 31), 5);
+        saveCourseHistory(course, LocalDate.of(2025, 2, 3), 5);
+        saveCourseHistory(course, LocalDate.of(2025, 2, 4), 5);
+        saveCourseHistory(course, LocalDate.of(2025, 2, 5), 5);
+        saveCourseHistory(course, LocalDate.of(2025, 2, 6), 5);
+
+        saveHistory(member, LocalDate.of(2025, 1, 30), course, 2025, 1, LocalDateTime.of(2025, 1, 30, 12, 35), ENROLLED);
+        saveHistory(member, LocalDate.of(2025, 1, 31), course, 2025, 1, LocalDateTime.of(2025, 1, 31, 12, 35), ENROLLED);
+        saveHistory(member, LocalDate.of(2025, 2, 3), course, 2025, 2, LocalDateTime.of(2025, 2, 3, 12, 35), RESERVED);
+        saveHistory(member, LocalDate.of(2025, 2, 4), course, 2025, 2, LocalDateTime.of(2025, 2, 4, 12, 35), CANCELED);
+        saveHistory(member, LocalDate.of(2025, 2, 6), course, 2025, 2, LocalDateTime.of(2025, 4, 5, 12, 35), RESERVED);
+        saveHistory(member, LocalDate.of(2025, 2, 6), course, 2025, 2, LocalDateTime.of(2025, 4, 6, 12, 35), ENROLLED);
+
+        // when
+        List<CourseHistoryTmp> historyTmpList = historyRepository.getHistory(member, 2025, 2);
+
+        // then
+        assertThat(historyTmpList).hasSize(2);
     }
 
     @DisplayName("수강 취소 횟수 구하기")
@@ -169,8 +198,8 @@ class HistoryRepositoryTest {
 
         // given
         Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
-        Course course1 = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
-        Course course2 = saveCourse("바렐", TUES, LocalTime.of(20, 0));
+        Course course1 = saveCourse("지수", "캐딜락", TUES, LocalTime.of(18, 0));
+        Course course2 = saveCourse("지수", "바렐", TUES, LocalTime.of(20, 0));
 
         historyRepository.save(new History(member, LocalDate.of(2025, 1, 26), course1, 2025, 1, LocalDateTime.of(2025, 1, 31, 16, 29), RESERVED));
         historyRepository.save(new History(member, LocalDate.of(2025, 1, 26), course1, 2025, 1, LocalDateTime.of(2025, 1, 31, 16, 29), CANCELED));
@@ -190,8 +219,8 @@ class HistoryRepositoryTest {
 
         // given
         Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
-        Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
-        saveHistory(member, course, 2025, 1, LocalDateTime.of(2025, 1, 30, 8, 0), RESERVED);
+        Course course = saveCourse("지수", "캐딜락", TUES, LocalTime.of(18, 0));
+        saveHistory(member, LocalDate.of(2025, 1, 31), course, 2025, 1, LocalDateTime.of(2025, 1, 30, 8, 0), RESERVED);
         saveCourseHistory(course, LocalDate.of(2025, 1, 31), 5);
 
         // when
@@ -207,8 +236,8 @@ class HistoryRepositoryTest {
 
         // given
         Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
-        Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
-        saveHistory(member, course, 2025, 1, LocalDateTime.of(2025, 1, 30, 8, 0), RESERVED);
+        Course course = saveCourse("지수", "캐딜락", TUES, LocalTime.of(18, 0));
+        saveHistory(member, LocalDate.of(2025, 1, 31), course, 2025, 1, LocalDateTime.of(2025, 1, 30, 8, 0), RESERVED);
         saveCourseHistory(course, LocalDate.of(2025, 1, 31), 5);
 
         // when
@@ -225,19 +254,19 @@ class HistoryRepositoryTest {
         return member;
     }
 
-    private Course saveCourse(String name, DayOfWeek dayOfWeek, LocalTime startTime) {
+    private Course saveCourse(String instructorName, String courseName, DayOfWeek dayOfWeek, LocalTime startTime) {
 
-        Instructor instructor = new Instructor(name);
+        Instructor instructor = new Instructor(instructorName);
         instructorRepository.save(instructor);
 
-        Course course = new Course(instructor, name, dayOfWeek, startTime);
+        Course course = new Course(instructor, courseName, dayOfWeek, startTime);
         courseRepository.save(course);
         return course;
     }
 
-    private History saveHistory(Member member, Course course, int year, int month, LocalDateTime regDateTime, CourseStatus status) {
+    private History saveHistory(Member member, LocalDate courseDate, Course course, int year, int month, LocalDateTime regDateTime, CourseStatus status) {
 
-        History history = new History(member, LocalDate.of(year, month, 26), course, year, month, regDateTime, status);
+        History history = new History(member, courseDate, course, year, month, regDateTime, status);
         historyRepository.save(history);
         return history;
     }

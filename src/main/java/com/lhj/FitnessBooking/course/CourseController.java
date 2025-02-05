@@ -2,6 +2,8 @@ package com.lhj.FitnessBooking.course;
 
 import com.lhj.FitnessBooking.domain.Member;
 import com.lhj.FitnessBooking.dto.CourseDetailResponse;
+import com.lhj.FitnessBooking.dto.CourseHistoryDto;
+import com.lhj.FitnessBooking.dto.CourseHistoryTmp;
 import com.lhj.FitnessBooking.member.MemberRepository;
 import com.lhj.FitnessBooking.request.ReserveCourseRequest;
 import com.lhj.FitnessBooking.response.CourseMainResponse;
@@ -9,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -61,9 +64,9 @@ public class CourseController {
     }
 
     @GetMapping("/history")
-    public void showCourseHistory(@RequestParam LocalDate date) {
+    public List<CourseHistoryDto> showCourseHistory(@RequestParam LocalDate date) {
 
         Member member = memberRepository.findById(1L).get(); // TODO: member를 어떻게 구할 것인가
-        courseService.showCourseHistory(member, date);
+        return courseService.showCourseHistory(member, date);
     }
 }

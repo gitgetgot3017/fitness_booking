@@ -52,7 +52,7 @@ public class CourseService {
                 courses = courseRepository.getTomorrowCourses(today);
             }
         } finally {
-            List<History> history = historyRepository.getHistory(member, today.getYear(), today.getMonthValue());
+            List<History> history = historyRepository.getHistoryDate(member, today.getYear(), today.getMonthValue());
             return changeIntoCourseMainResponse(courseMainHeader, history, courses);
         }
     }
@@ -290,8 +290,25 @@ public class CourseService {
         reservationRepository.deleteReservation(date, course, member);
     }
 
-    public List<History> showCourseHistory(Member member, LocalDate date) {
+    public List<CourseHistoryDto> showCourseHistory(Member member, LocalDate date) {
 
-        return historyRepository.getHistory(member, date.getYear(), date.getMonthValue());
+        List<CourseHistoryTmp> courseHistoryTmpList = historyRepository.getHistory(member, date.getYear(), date.getMonthValue());
+        return changeAllCourseHistoryTmpToCourseHistoryDto(courseHistoryTmpList);
+    }
+
+    private List<CourseHistoryDto> changeAllCourseHistoryTmpToCourseHistoryDto(List<CourseHistoryTmp> courseHistoryTmpList) {
+
+        List<CourseHistoryDto> courseHistoryDtoList = new ArrayList<>();
+        for (CourseHistoryTmp courseHistoryTmp : courseHistoryTmpList) {
+            courseHistoryDtoList.add(new CourseHistoryDto(
+                    courseHistoryTmp.getCourseDate(),
+                    courseHistoryTmp.getInstructorName(),
+                    courseHistoryTmp.getCourseName(),
+                    courseHistoryTmp.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+                    courseHistoryTmp.getStartTime().plusMinutes(50).format(DateTimeFormatter.ofPattern("HH:mm")),
+                    courseHistoryTmp.getAttendeeCount()
+            ));
+        }
+        return courseHistoryDtoList;
     }
 }
