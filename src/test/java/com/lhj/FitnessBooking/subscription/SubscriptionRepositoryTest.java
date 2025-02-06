@@ -28,7 +28,7 @@ class SubscriptionRepositoryTest {
     void getSubscription() {
 
         // given
-        Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
+        Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
 
         Subscription subscription1 = new Subscription(member, LocalDate.of(2024, 6, 18), LocalDate.of(2025, 2, 23), 0, 74, 77);
         subscriptionRepository.save(subscription1);
@@ -59,7 +59,7 @@ class SubscriptionRepositoryTest {
     void increaseReservedCount() {
 
         // given
-        Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
+        Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
         saveSubscription(member, LocalDate.of(2024, 6, 18), LocalDate.of(2025, 2, 23), 1, 75, 77);
 
         CourseMainHeader beforeSubscription = subscriptionRepository.getSubscription(member, LocalDate.of(2025, 2, 4));
@@ -78,7 +78,7 @@ class SubscriptionRepositoryTest {
     void decreaseReservedCount() {
 
         // given
-        Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
+        Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
         saveSubscription(member, LocalDate.of(2024, 6, 18), LocalDate.of(2025, 2, 23), 1, 75, 77);
 
         CourseMainHeader beforeSubscription = subscriptionRepository.getSubscription(member, LocalDate.of(2025, 2, 4));
@@ -92,9 +92,9 @@ class SubscriptionRepositoryTest {
         assertThat(afterSubscription.getReservedCount()).isEqualTo(reservedCount - 1);
     }
 
-    private Member saveMember(String memberNum, String name, String phone, boolean gender, LocalDate regDate) {
+    private Member saveMember(String memberNum, String password, String name, String phone, boolean gender, LocalDate regDate) {
 
-        Member member = new Member(memberNum, name, phone, gender, regDate);
+        Member member = new Member(memberNum, password, name, phone, gender, regDate);
         memberRepository.save(member);
         return member;
     }

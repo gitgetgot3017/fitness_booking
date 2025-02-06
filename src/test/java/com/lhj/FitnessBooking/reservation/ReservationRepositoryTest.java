@@ -32,7 +32,7 @@ class ReservationRepositoryTest {
     void findByCourseDateAndCourse() {
 
         // given
-        Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
+        Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
         Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
 
         reservationRepository.save(new Reservation(LocalDate.of(2025, 2, 3), course, member, LocalDateTime.of(2025, 2, 3, 23, 12)));
@@ -54,9 +54,9 @@ class ReservationRepositoryTest {
     void deleteReservations() {
 
         // given
-        Member member1 = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
-        Member member2 = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
-        Member member3 = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
+        Member member1 = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
+        Member member2 = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
+        Member member3 = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
         Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
 
         reservationRepository.save(new Reservation(LocalDate.of(2025, 2, 4), course, member1, LocalDateTime.of(2025, 2, 4, 22, 18)));
@@ -76,8 +76,8 @@ class ReservationRepositoryTest {
     void deleteReservation() {
 
         // given
-        Member member1 = saveMember("1073", "일현지", "01052802073", true, LocalDate.of(2025, 1, 31));
-        Member member2 = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
+        Member member1 = saveMember("1073", "060820", "일현지", "01052802073", true, LocalDate.of(2025, 1, 31));
+        Member member2 = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
         Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
 
         reservationRepository.save(new Reservation(LocalDate.of(2025, 2, 4), course, member1, LocalDateTime.of(2025, 2, 4, 22, 18)));
@@ -92,9 +92,9 @@ class ReservationRepositoryTest {
         assertThat(reservations.get(0).getMember()).isEqualTo(member2);
     }
 
-    private Member saveMember(String memberNum, String name, String phone, boolean gender, LocalDate regDate) {
+    private Member saveMember(String memberNum, String password, String name, String phone, boolean gender, LocalDate regDate) {
 
-        Member member = new Member(memberNum, name, phone, gender, regDate);
+        Member member = new Member(memberNum, password, name, phone, gender, regDate);
         memberRepository.save(member);
         return member;
     }

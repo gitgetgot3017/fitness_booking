@@ -46,7 +46,7 @@ class CourseServiceTest {
         Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
         CourseHistory courseHistory = saveCourseHistory(course, LocalDate.of(2025, 2, 4), 5);
 
-        Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
+        Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
         LocalDate courseDate = LocalDate.of(2025, 2, 4);
         Long courseId = course.getId();
 
@@ -75,7 +75,7 @@ class CourseServiceTest {
         Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
         CourseHistory courseHistory = saveCourseHistory(course, LocalDate.of(2025, 2, 4), 6);
 
-        Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
+        Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
         LocalDate courseDate = LocalDate.of(2025, 2, 4);
         Long courseId = course.getId();
 
@@ -103,7 +103,7 @@ class CourseServiceTest {
         // given
         Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
 
-        Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
+        Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
         LocalDate courseDate = LocalDate.of(2025, 2, 5);
         Long courseId = course.getId();
 
@@ -125,7 +125,7 @@ class CourseServiceTest {
         Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
         CourseHistory courseHistory = saveCourseHistory(course, LocalDate.of(2025, 2, 5), 6);
 
-        Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
+        Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
         LocalDate courseDate = LocalDate.of(2025, 2, 5);
         Long courseId = course.getId();
 
@@ -157,7 +157,7 @@ class CourseServiceTest {
         // given
         Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
 
-        Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
+        Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
         LocalDate courseDate = LocalDate.of(2025, 2, 5);
         Long courseId = course.getId();
 
@@ -179,7 +179,7 @@ class CourseServiceTest {
         // given
         Course course1 = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
         Course course2 = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
-        Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
+        Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
         saveCourseHistory(course1, LocalDate.of(2025, 2, 5), 5);
         saveCourseHistory(course2, LocalDate.of(2025, 2, 5), 4);
 
@@ -196,9 +196,9 @@ class CourseServiceTest {
         assertThat(historyList).hasSize(2);
     }
 
-    private Member saveMember(String memberNum, String name, String phone, boolean gender, LocalDate regDate) {
+    private Member saveMember(String memberNum, String password, String name, String phone, boolean gender, LocalDate regDate) {
 
-        Member member = new Member(memberNum, name, phone, gender, regDate);
+        Member member = new Member(memberNum, password, name, phone, gender, regDate);
         memberRepository.save(member);
         return member;
     }

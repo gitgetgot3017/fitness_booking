@@ -37,7 +37,7 @@ class HistoryRepositoryTest {
     void getHistoryDateTest1() {
 
         // given
-        Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
+        Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
 
         Instructor instructor = new Instructor("지수");
         instructorRepository.save(instructor);
@@ -63,7 +63,7 @@ class HistoryRepositoryTest {
     void getHistoryDateTest2() {
 
         // given
-        Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
+        Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
 
         Instructor instructor = new Instructor("지수");
         instructorRepository.save(instructor);
@@ -89,7 +89,7 @@ class HistoryRepositoryTest {
     public void getHistoryDateTest3() {
 
         // given
-        Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
+        Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
 
         Instructor instructor = new Instructor("지수");
         instructorRepository.save(instructor);
@@ -115,7 +115,7 @@ class HistoryRepositoryTest {
     public void getHistoryDateTest4() {
 
         // given
-        Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
+        Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
 
         Instructor instructor = new Instructor("지수");
         instructorRepository.save(instructor);
@@ -141,8 +141,8 @@ class HistoryRepositoryTest {
     public void getHistoryDateTest5() {
 
         // given
-        Member member1 = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
-        Member member2 = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
+        Member member1 = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
+        Member member2 = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
 
         Instructor instructor = new Instructor("지수");
         instructorRepository.save(instructor);
@@ -169,7 +169,7 @@ class HistoryRepositoryTest {
     void getHistory() {
 
         // given
-        Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
+        Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
         Course course = saveCourse("지수", "캐딜락", MON, LocalTime.of(9, 0));
         saveCourseHistory(course, LocalDate.of(2025, 1, 30), 4);
         saveCourseHistory(course, LocalDate.of(2025, 1, 31), 5);
@@ -197,7 +197,7 @@ class HistoryRepositoryTest {
     void getCancelCount() {
 
         // given
-        Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
+        Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
         Course course1 = saveCourse("지수", "캐딜락", TUES, LocalTime.of(18, 0));
         Course course2 = saveCourse("지수", "바렐", TUES, LocalTime.of(20, 0));
 
@@ -218,7 +218,7 @@ class HistoryRepositoryTest {
     void ifBefore4hourSuccess() {
 
         // given
-        Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
+        Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
         Course course = saveCourse("지수", "캐딜락", TUES, LocalTime.of(18, 0));
         saveHistory(member, LocalDate.of(2025, 1, 31), course, 2025, 1, LocalDateTime.of(2025, 1, 30, 8, 0), RESERVED);
         saveCourseHistory(course, LocalDate.of(2025, 1, 31), 5);
@@ -235,7 +235,7 @@ class HistoryRepositoryTest {
     void ifBefore4hourFail() {
 
         // given
-        Member member = saveMember("2073", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
+        Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
         Course course = saveCourse("지수", "캐딜락", TUES, LocalTime.of(18, 0));
         saveHistory(member, LocalDate.of(2025, 1, 31), course, 2025, 1, LocalDateTime.of(2025, 1, 30, 8, 0), RESERVED);
         saveCourseHistory(course, LocalDate.of(2025, 1, 31), 5);
@@ -247,9 +247,9 @@ class HistoryRepositoryTest {
         assertThat(ifBefore4Hour).isEmpty();
     }
 
-    private Member saveMember(String memberNum, String name, String phone, boolean gender, LocalDate regDate) {
+    private Member saveMember(String memberNum, String password, String name, String phone, boolean gender, LocalDate regDate) {
 
-        Member member = new Member(memberNum, name, phone, gender, regDate);
+        Member member = new Member(memberNum, password, name, phone, gender, regDate);
         memberRepository.save(member);
         return member;
     }
