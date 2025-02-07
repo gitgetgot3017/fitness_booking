@@ -135,7 +135,7 @@ class CourseRepositoryTest {
         courseHistoryRepository.save(new CourseHistory(course, LocalDate.of(2025, 1, 30), 5));
 
         // when
-        int courseCount = courseRepository.getCourseCount(LocalDate.now(), course.getId());
+        int courseCount = courseRepository.getCourseCount(LocalDate.of(2025, 1, 30), course.getId());
 
         // then
         assertThat(courseCount).isEqualTo(5);
