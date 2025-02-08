@@ -1,7 +1,6 @@
 import './CourseMain.css';
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {useDispatch} from "react-redux";
 import axios from "axios";
 
 function CourseMain() {
@@ -19,13 +18,17 @@ function CourseMain() {
     let [date, setDate] = useState(new Date());
 
     let navigate = useNavigate ();
-    let dispatch = useDispatch();
 
-    let params = new URLSearchParams();
-    params.append("date", date.toISOString().slice(0, 10));
+    let accessToken = localStorage.getItem("accessToken");
 
     useEffect(() => {
-        axios.get("/courses", { params })
+        axios.get("/courses", {
+            params: {
+                "date": date.toISOString().slice(0, 10)
+            },
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }})
             .then((result) => {
                 setMemberName(result.data.memberName);
                 setMemberNum(result.data.memberNum);
@@ -127,6 +130,21 @@ function CourseMain() {
                             <img style={{marginRight: "10px"}} />
                             <div>
                                 <p><strong>지수(캐딜락)</strong></p>
+                                <p>22:00 - 22:50</p>
+                            </div>
+                        </div>
+                        <div className="right">
+                            <h2>5 / 6</h2>
+                        </div>
+                    </div>
+                    <div className="reservation-item" style={{marginBottom: "20px"}} onClick={() => {
+                        window.localStorage.setItem("courseId", 2);
+                        navigate("/courses/detail");
+                    }}>
+                        <div className="left" style={{display: "flex", alignItems: "center"}}>
+                            <img style={{marginRight: "10px"}} />
+                            <div>
+                                <p><strong>지수(캐딜락)</strong></p>
                                 <p>23:00 - 23:50</p>
                             </div>
                         </div>
@@ -139,6 +157,7 @@ function CourseMain() {
                         courses.map(function(course, i) {
                             return (
                                 <div className="reservation-item" key={i} style={{marginBottom: "20px"}} onClick={() => {
+                                    console.log(course.courseId); // TODO: 코드 지우기
                                     window.localStorage.setItem("courseId", course.courseId);
                                     navigate("/courses/detail");
                                 }}>

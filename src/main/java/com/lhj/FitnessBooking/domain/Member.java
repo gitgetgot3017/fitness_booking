@@ -28,6 +28,8 @@ public class Member {
 
     private LocalDate regDate;
 
+    private String refreshToken;
+
     public Member(String memberNum, String password, String name, String phone, boolean gender, LocalDate regDate) {
         this.memberNum = memberNum;
         this.password = password;
@@ -35,5 +37,9 @@ public class Member {
         this.phone = phone;
         this.gender = gender;
         this.regDate = regDate;
+    }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }
