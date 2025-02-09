@@ -46,8 +46,12 @@ function CourseMain() {
 
                 if (error.response.status == 401) {
                     if (error.response.data.error == "ACCESS_TOKEN_EXPIRED") {
-                        axios.patch("/refresh/token", {
-                                refreshToken: sessionStorage.getItem("refreshToken")
+                        axios.patch("/refresh/token",
+                            {
+                                refreshToken: localStorage.getItem("refreshToken") },
+                            { ...(accessToken && { headers: { Authorization: `Bearer ${accessToken}` } })
+                            }, {
+                                headers: { "Content-Type": "application/json" }
                             })
                             .then((result) => {
                                 window.localStorage.setItem("accessToken", result.data.accessToken);
