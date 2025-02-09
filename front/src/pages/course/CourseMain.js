@@ -23,12 +23,9 @@ function CourseMain() {
 
     useEffect(() => {
         axios.get("/courses", {
-            params: {
-                "date": date.toISOString().slice(0, 10)
-            },
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }})
+                params: {date: date.toISOString().slice(0, 10)},
+                ...(accessToken && {headers: {Authorization: `Bearer ${accessToken}`}})
+            })
             .then((result) => {
                 setMemberName(result.data.memberName);
                 setMemberNum(result.data.memberNum);
@@ -45,6 +42,30 @@ function CourseMain() {
                 console.error("메인 정보 가져오는 중 에러 발생:", error.response ? error.response.data : error.message);
                 if (error.response) {
                     console.error("에러 상태 코드:", error.response.status);
+                }
+
+                if (error.response.status == 401) {
+                    if (error.response.data.error == "ACCESS_TOKEN_EXPIRED") {
+                        axios.patch("/refresh/token", {
+                                refreshToken: sessionStorage.getItem("refreshToken")
+                            })
+                            .then((result) => {
+                                window.localStorage.setItem("accessToken", result.data.accessToken);
+                                window.localStorage.setItem("refreshToken", result.data.refreshToken);
+                            })
+                            .catch((error) => {
+                                console.error("토큰 갱신 요청 중 에러 발생:", error.response ? error.response.data : error.message);
+                                if (error.response) {
+                                    console.error("에러 상태 코드:", error.response.status);
+                                }
+
+                                if (error.response.status == 401) {
+                                    navigate("/members/login");
+                                }
+                            });
+                    } else if (error.response.data.error == "ACCESS_TOKEN_INVALID") {
+                        navigate("/members/login");
+                    }
                 }
             });
     }, []);
@@ -157,7 +178,6 @@ function CourseMain() {
                         courses.map(function(course, i) {
                             return (
                                 <div className="reservation-item" key={i} style={{marginBottom: "20px"}} onClick={() => {
-                                    console.log(course.courseId); // TODO: 코드 지우기
                                     window.localStorage.setItem("courseId", course.courseId);
                                     navigate("/courses/detail");
                                 }}>

@@ -3,7 +3,6 @@ package com.lhj.FitnessBooking.course;
 import com.lhj.FitnessBooking.domain.Member;
 import com.lhj.FitnessBooking.dto.CourseDetailResponse;
 import com.lhj.FitnessBooking.dto.CourseHistoryDto;
-import com.lhj.FitnessBooking.member.JwtService;
 import com.lhj.FitnessBooking.member.MemberRepository;
 import com.lhj.FitnessBooking.member.exception.NotExistMemberException;
 import com.lhj.FitnessBooking.request.ReserveCourseRequest;
@@ -31,7 +30,7 @@ public class CourseController {
     }
 
     @GetMapping("/detail")
-    public CourseDetailResponse shorCourseDetail(HttpServletRequest request, @RequestParam LocalDate date, @RequestParam Long courseId) {
+    public CourseDetailResponse showCourseDetail(HttpServletRequest request, @RequestParam LocalDate date, @RequestParam Long courseId) {
 
         Member member = getMember(request, memberRepository);
         return courseService.showCourseDetail(member, date, courseId);

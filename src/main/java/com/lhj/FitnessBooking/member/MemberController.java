@@ -1,5 +1,6 @@
 package com.lhj.FitnessBooking.member;
 
+import com.lhj.FitnessBooking.jwt.dto.Jwt;
 import com.lhj.FitnessBooking.member.dto.LoginRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;

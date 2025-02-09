@@ -1,4 +1,4 @@
-package com.lhj.FitnessBooking.member.exception;
+package com.lhj.FitnessBooking.jwt.exception;
 
 public class NotExistAccessTokenException extends RuntimeException {
 

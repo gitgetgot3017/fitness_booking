@@ -1,15 +1,16 @@
 package com.lhj.FitnessBooking.member;
 
 import com.lhj.FitnessBooking.domain.Member;
+import com.lhj.FitnessBooking.jwt.JwtService;
+import com.lhj.FitnessBooking.jwt.dto.Jwt;
 import com.lhj.FitnessBooking.member.dto.LoginRequest;
 import com.lhj.FitnessBooking.member.exception.LoginFailException;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +34,6 @@ public class MemberService {
         return jwt;
     }
 
-    @NotNull
     private Map<String, String> makeClaims(LoginRequest joinRequest) {
         Map<String, String> claims = new HashMap<>();
         claims.put("memberNum", joinRequest.getMemberNum());

@@ -1,15 +1,17 @@
 package com.lhj.FitnessBooking.interceptor;
 
-import com.lhj.FitnessBooking.member.JwtService;
-import com.lhj.FitnessBooking.member.exception.ExpiredAccessTokenException;
-import com.lhj.FitnessBooking.member.exception.NotExistAccessTokenException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lhj.FitnessBooking.jwt.JwtService;
+import com.lhj.FitnessBooking.jwt.exception.NotExistAccessTokenException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public class LoginCheckInterceptor implements HandlerInterceptor {
@@ -21,24 +23,34 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 
         try {
             String authorization = request.getHeader("Authorization");
-            if (authorization == null || !authorization.startsWith("Bearer ")) {
-                throw new NotExistAccessTokenException("access token이 존재하지 않습니다.");
+            if (authorization == null) {
+                throw new NotExistAccessTokenException("로그인이 필요합니다.");
             }
             String accessToken = authorization.replace("Bearer ", "");
 
             Claims claims = jwtService.getClaims(accessToken);
-            if (claims.getExpiration().before(new Date())) { // 만료된 토큰인 경우
-                throw new ExpiredAccessTokenException("access token이 만료되었습니다.");
-            }
 
             String memberNum = (String) claims.get("memberNum");
             request.setAttribute("memberNum", memberNum);
             return true;
 
-        } catch (NotExistAccessTokenException | ExpiredAccessTokenException e) {
+        } catch (ExpiredJwtException e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setContentType("application/jsoin");
-            response.getWriter().write("{\"accessTokenError\": \"" + e.getMessage() + "\"}");
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\": \"ACCESS_TOKEN_EXPIRED\"}");
+            return false;
+        } catch (RuntimeException e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "ACCESS_TOKEN_INVALID");
+            errorResponse.put("classType", e.getClass().toString());
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonErrorResponse = objectMapper.writeValueAsString(errorResponse);
+
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write(jsonErrorResponse);
+
             return false;
         }
     }

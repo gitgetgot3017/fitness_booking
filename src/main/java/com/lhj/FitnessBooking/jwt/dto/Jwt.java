@@ -1,4 +1,4 @@
-package com.lhj.FitnessBooking.member;
+package com.lhj.FitnessBooking.jwt.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
