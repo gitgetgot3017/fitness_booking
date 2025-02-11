@@ -8,8 +8,10 @@ import com.lhj.FitnessBooking.history.HistoryRepository;
 import com.lhj.FitnessBooking.instructor.InstructorRepository;
 import com.lhj.FitnessBooking.member.MemberRepository;
 import com.lhj.FitnessBooking.reservation.ReservationRepository;
+import com.lhj.FitnessBooking.reservation.exception.ReservationFailException;
 import com.lhj.FitnessBooking.subscription.SubscriptionRepository;
-import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +24,8 @@ import java.util.List;
 
 import static com.lhj.FitnessBooking.domain.CourseStatus.*;
 import static com.lhj.FitnessBooking.domain.DayOfWeek.TUES;
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 class CourseServiceTest {
@@ -73,27 +75,15 @@ class CourseServiceTest {
     void reserveCourseFail() {
 
         Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
-        CourseHistory courseHistory = saveCourseHistory(course, LocalDate.of(2025, 2, 4), 6);
+        saveCourseHistory(course, LocalDate.of(2025, 2, 4), 6);
 
         Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
         LocalDate courseDate = LocalDate.of(2025, 2, 4);
         Long courseId = course.getId();
 
-        saveSubscription(member, LocalDate.of(2024, 6, 18), LocalDate.of(2025, 2, 23), 2, 73, 77);
-        CourseMainHeader subscription = subscriptionRepository.getSubscription(member, courseDate);
-        int reservedCount = subscription.getReservedCount();
-
-        // when
-        courseService.reserveCourse(member, courseDate, courseId);
-
-        // then
-        int courseCount = courseRepository.getCourseCount(courseDate, courseId);
-        assertThat(courseCount).isEqualTo(courseHistory.getCount());
-
-        List<History> historyList = historyRepository.findAll();
-        assertThat(historyList).hasSize(0);
-
-        assertThat(subscriptionRepository.getSubscription(member, courseDate).getReservedCount()).isEqualTo(reservedCount);
+        // when, then
+        assertThatThrownBy(() -> courseService.reserveCourse(member, courseDate, courseId))
+                .isInstanceOf(ReservationFailException.class);
     }
 
     @DisplayName("수강 대기하기")

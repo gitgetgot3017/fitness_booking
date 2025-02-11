@@ -7,6 +7,7 @@ import com.lhj.FitnessBooking.domain.*;
 import com.lhj.FitnessBooking.dto.*;
 import com.lhj.FitnessBooking.history.HistoryRepository;
 import com.lhj.FitnessBooking.reservation.ReservationRepository;
+import com.lhj.FitnessBooking.reservation.exception.ReservationFailException;
 import com.lhj.FitnessBooking.response.CourseMainResponse;
 import com.lhj.FitnessBooking.subscription.SubscriptionRepository;
 import lombok.RequiredArgsConstructor;
@@ -238,7 +239,7 @@ public class CourseService {
 
         int courseCount = courseRepository.getCourseCountWithLock(date, courseId);
         if (courseCount >= 6) {
-            return;
+            throw new ReservationFailException("수강 인원 초과로 예약에 실패하셨습니다.");
         }
 
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotExistCourseException("존재하지 않는 수업입니다."));
