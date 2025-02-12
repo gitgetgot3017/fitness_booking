@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import CourseMain from './pages/course/CourseMain';
 import CourseDetail from "./pages/course/CourseDetail";
 import Login from "./pages/member/Login";
+import RegisterCourse from "./pages/admin/RegisterCourse";
 
 function App() {
   return (
@@ -12,6 +13,8 @@ function App() {
         <Route path="/courses/detail" element={<CourseDetail></CourseDetail>}></Route>
 
         <Route path="/members/login" element={<Login></Login>}></Route>
+
+        <Route path="/admin/register/courses" element={<RegisterCourse></RegisterCourse>}></Route>
       </Routes>
     </div>
   );

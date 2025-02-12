@@ -1,8 +1,10 @@
 package com.lhj.FitnessBooking.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
 @NoArgsConstructor
 public class Instructor {
