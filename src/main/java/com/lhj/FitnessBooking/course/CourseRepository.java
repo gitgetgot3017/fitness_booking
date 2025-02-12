@@ -1,6 +1,7 @@
 package com.lhj.FitnessBooking.course;
 
 import com.lhj.FitnessBooking.domain.Course;
+import com.lhj.FitnessBooking.domain.DayOfWeek;
 import com.lhj.FitnessBooking.dto.CourseInfoTmp;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -49,4 +50,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     @Modifying
     @Query("update CourseHistory ch set ch.count = ch.count - 1 where ch.date = :date and ch.course = :course")
     void decreaseCourseCount(@Param("date") LocalDate date, @Param("course") Course course);
+
+    List<Course> findByDayOfWeek(DayOfWeek dayOfWeek);
 }

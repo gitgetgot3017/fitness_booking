@@ -20,8 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import static com.lhj.FitnessBooking.domain.DayOfWeek.SAT;
-import static com.lhj.FitnessBooking.domain.DayOfWeek.TUES;
+import static com.lhj.FitnessBooking.domain.DayOfWeek.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
@@ -193,6 +192,26 @@ class CourseRepositoryTest {
         CourseHistory updatedCourseHistory = courseHistoryRepository.findById(courseHistory.getId())
                 .orElseThrow(() -> new NotExistCourseException("해당 수업은 존재하지 않습니다."));
         assertThat(updatedCourseHistory.getCount()).isEqualTo(3);
+    }
+
+    @DisplayName("특정 요일의 수업 전부 가져오기")
+    @Test
+    void findByDayOfWeek() {
+
+        // given
+        Instructor instructor = saveInstructor("지수");
+
+        courseRepository.save(new Course(instructor, "캐딜락", WED, LocalTime.of(18, 0)));
+        courseRepository.save(new Course(instructor, "캐딜락", WED, LocalTime.of(19, 0)));
+        courseRepository.save(new Course(instructor, "캐딜락", WED, LocalTime.of(20, 0)));
+        courseRepository.save(new Course(instructor, "캐딜락", THUR, LocalTime.of(18, 0)));
+        courseRepository.save(new Course(instructor, "캐딜락", SAT, LocalTime.of(10, 0)));
+
+        // when
+        List<Course> courses = courseRepository.findByDayOfWeek(WED);
+
+        // then
+        assertThat(courses).hasSize(3);
     }
 
     private Instructor saveInstructor(String name) {
