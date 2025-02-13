@@ -10,8 +10,8 @@ function RegisterCourse() {
     let [selectedInstructorNames, setSelectedInstructorNames] = useState("");
     let dayOfWeeks = [["월", "MON"], ["화", "TUES"], ["수", "WED"], ["목", "THUR"], ["금", "FRI"], ["토", "SAT"]];
     let [selectedDayOfWeeks, setSelectedDayOfWeeks] = useState([]);
-    let [startTime, setStarTime] = useState();
-    let [endTime, setEndTime] = useState();
+    let [startTimes, setStarTimes] = useState([true]);
+    let [endTimes, setEndTimes] = useState([]);
 
     useEffect(() => {
         axios.get("/instructors")
@@ -73,9 +73,38 @@ function RegisterCourse() {
                             }
                         </div>
                         <label>수업 시간:</label>
-                        <div className="time-container">
-                            <input type="time" id="start-time" onChange={(e) => setStarTime(e.target.value)} required /> ~
-                            <input type="time" id="end-time" onChange={(e) => setEndTime(e.target.value)} required />
+                        <div className="time-container" style={{flexDirection: "column"}}>
+                            {
+                                startTimes.map(function(startTime, i) {
+                                    return (
+                                        <div>
+                                            <input type="time" id="start-time" onChange={(e) => {
+                                                let copy = [...startTimes];
+                                                copy[i] = e.target.value;
+                                                setStarTimes(copy);
+                                            }} required />
+                                            ~
+                                            <input type="time" id="end-time" onClick={(e) => {
+                                                let copy = [...endTimes];
+                                                copy[i] = e.target.value;
+                                                setEndTimes(copy);
+                                            }} required />
+                                        </div>
+                                    );
+                                })
+                            }
+                        </div>
+                        <div>
+                            <button type="button" style={{marginRight: "10px", background: "#717d7e"}} onClick={() => {
+                                let copy = [...startTimes];
+                                copy.push(true);
+                                setStarTimes(copy);
+                            }}>시간 추가</button>
+                            <button type="button" style={{background: "#717d7e"}} onClick={() => {
+                                let copy = [...startTimes];
+                                copy.pop();
+                                setStarTimes(copy);
+                            }}>시간 삭제</button>
                         </div>
                         <button type="submit" onClick={(e) => {
                             e.preventDefault();
@@ -89,12 +118,12 @@ function RegisterCourse() {
                                     courseName: courseName,
                                     instructorName: selectedInstructorNames,
                                     dayOfWeeks: selectedDayOfWeeks,
-                                    startTime: startTime,
-                                    endTime: endTime
+                                    startTime: startTimes,
+                                    endTime: endTimes
                                 }, {
                                     headers: { "Content-Type": "application/json" }
                                 })
-                                .then((result) => {
+                                .then(() => {
                                     // TODO: 수업 조회 페이지 만든 후, 해당 페이지로 이동
                                 })
                                 .catch((error) => {
