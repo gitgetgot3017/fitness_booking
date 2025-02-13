@@ -9,8 +9,10 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -24,8 +26,17 @@ public class JwtService {
 
     private final MemberRepository memberRepository;
 
-    public byte[] secretKey = "IzNiO1zSXRe8l1pRFckh/x8cKcNtILKJlGCpGMzaCF8=".getBytes(); // TODO: application.yml에 적기
-    private Key key = Keys.hmacShaKeyFor(secretKey);
+    @Value("${jwt.secret}")
+    private String secretKeyString;
+
+    private byte[] secretKey;
+    private Key key;
+
+    @PostConstruct
+    public void init() {
+        secretKey = secretKeyString.getBytes();
+        key = Keys.hmacShaKeyFor(secretKey);
+    }
 
     private static final long accessTokenExpiration = 1000 * 60 * 15; // 15분
     private static final long refreshTokenExpiration = 1000 * 60 * 60 * 24 * 14; // 2주
