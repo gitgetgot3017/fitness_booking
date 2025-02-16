@@ -32,7 +32,7 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
     @Modifying
     @Query("update Subscription s " +
             "set s.completedCount = s.completedCount + 1, " +
-            "    s.reservedCount = s.reservedCount - 1" +
+            "    s.reservedCount = s.reservedCount - 1 " +
             "where s.member = :member " +
             "and s.reservedCount > 0 " + // 사용 전인 이용권이 아닌 경우
             "and s.completedCount < s.availableCount") // 만료된 이용권이 아닌 경우

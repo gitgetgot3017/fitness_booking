@@ -16,6 +16,7 @@ import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,6 +25,7 @@ import static com.lhj.FitnessBooking.domain.CourseStatus.ENROLLED;
 
 @Component
 @RequiredArgsConstructor
+@Transactional
 public class CourseStartJob implements Job {
 
     private final MemberRepository memberRepository;
