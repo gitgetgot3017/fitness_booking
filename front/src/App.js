@@ -4,6 +4,7 @@ import CourseMain from './pages/course/CourseMain';
 import CourseDetail from "./pages/course/CourseDetail";
 import Login from "./pages/member/Login";
 import RegisterCourse from "./pages/admin/RegisterCourse";
+import Notification from "./pages/notification/Notification";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/members/login" element={<Login></Login>}></Route>
 
         <Route path="/admin/register/courses" element={<RegisterCourse></RegisterCourse>}></Route>
+        <Route path="/notifications" element={<Notification></Notification>}></Route>
       </Routes>
     </div>
   );
