@@ -1,6 +1,6 @@
 package com.lhj.FitnessBooking.member;
 
-import com.lhj.FitnessBooking.jwt.dto.Jwt;
+import com.lhj.FitnessBooking.member.dto.LoginResponse;
 import com.lhj.FitnessBooking.member.dto.LoginRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
@@ -19,9 +19,9 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/login")
-    public HttpEntity<Jwt> login(@RequestBody LoginRequest joinRequest) {
+    public HttpEntity<LoginResponse> login(@RequestBody LoginRequest joinRequest) {
 
-        Jwt jwt = memberService.login(joinRequest);
-        return new ResponseEntity<>(jwt, HttpStatus.OK);
+        LoginResponse loginResponse = memberService.login(joinRequest);
+        return new ResponseEntity<>(loginResponse, HttpStatus.OK);
     }
 }
