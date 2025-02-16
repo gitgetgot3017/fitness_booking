@@ -26,16 +26,19 @@ public class Member {
 
     private boolean gender;
 
+    private MemberGrade grade;
+
     private LocalDate regDate;
 
     private String refreshToken;
 
-    public Member(String memberNum, String password, String name, String phone, boolean gender, LocalDate regDate) {
+    public Member(String memberNum, String password, String name, String phone, boolean gender, MemberGrade grade, LocalDate regDate) {
         this.memberNum = memberNum;
         this.password = password;
         this.name = name;
         this.phone = phone;
         this.gender = gender;
+        this.grade = grade;
         this.regDate = regDate;
     }
 
