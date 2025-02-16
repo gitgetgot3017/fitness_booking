@@ -26,6 +26,7 @@ public class Member {
 
     private boolean gender;
 
+    @Enumerated(EnumType.STRING)
     private MemberGrade grade;
 
     private LocalDate regDate;
