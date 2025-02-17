@@ -1,4 +1,4 @@
-package com.lhj.FitnessBooking.admin.dto;
+package com.lhj.FitnessBooking.admin.exception;
 
 public class ScheduleRegistrationException extends RuntimeException {
 

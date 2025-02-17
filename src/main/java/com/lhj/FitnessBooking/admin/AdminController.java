@@ -1,6 +1,7 @@
 package com.lhj.FitnessBooking.admin;
 
 import com.lhj.FitnessBooking.admin.dto.RegisterCourseDto;
+import com.lhj.FitnessBooking.admin.dto.RegisterInstructorDto;
 import com.lhj.FitnessBooking.domain.Member;
 import com.lhj.FitnessBooking.member.MemberRepository;
 import com.lhj.FitnessBooking.member.exception.NotExistMemberException;
@@ -24,5 +25,11 @@ public class AdminController {
                 .orElseThrow(() -> new NotExistMemberException("해당 멤버는 존재하지 않습니다."));
 
         adminService.registerCourses(member, registerCourseDto);
+    }
+
+    @PostMapping("/instructors")
+    public void registerInstructor(@ModelAttribute RegisterInstructorDto registerInstructorDto) {
+
+        adminService.registerInstructor(registerInstructorDto);
     }
 }
