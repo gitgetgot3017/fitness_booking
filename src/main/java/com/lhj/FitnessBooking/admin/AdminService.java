@@ -1,5 +1,10 @@
 package com.lhj.FitnessBooking.admin;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.util.IOUtils;
 import com.lhj.FitnessBooking.admin.dto.RegisterCourseDto;
 import com.lhj.FitnessBooking.admin.dto.RegisterInstructorDto;
 import com.lhj.FitnessBooking.admin.exception.ImageSaveFailureException;
@@ -18,8 +23,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.UUID;
@@ -31,10 +37,12 @@ public class AdminService {
 
     private final InstructorRepository instructorRepository;
     private final CourseRepository courseRepository;
+
     private final Scheduler scheduler;
 
-    @Value("${file.dir}")
-    private String fileDir;
+    @Value("${cloud.aws.s3.bucketName}")
+    private String bucketName;
+    private final AmazonS3 amazonS3;
 
     public void registerCourses(Member member, RegisterCourseDto registerCourseDto) {
 
@@ -91,21 +99,36 @@ public class AdminService {
 
     public void registerInstructor(RegisterInstructorDto registerInstructorDto) {
 
-        String imageUrl = storeImage(registerInstructorDto.getImage());
-
-        Instructor instructor = new Instructor(registerInstructorDto.getInstructorName(), imageUrl);
-        instructorRepository.save(instructor);
-    }
-
-    private String storeImage(MultipartFile file) {
-
-        String imageUrl = createStoreFileName(file.getOriginalFilename());
         try {
-            file.transferTo(new File(getFullPath(imageUrl)));
-            return imageUrl;
+            String imageUrl = storeImageToS3(registerInstructorDto.getImage());
+
+            Instructor instructor = new Instructor(registerInstructorDto.getInstructorName(), imageUrl);
+            instructorRepository.save(instructor);
         } catch (IOException e) {
             throw new ImageSaveFailureException("이미지 저장에 실패하였습니다.");
         }
+    }
+
+    private String storeImageToS3(MultipartFile file) throws IOException {
+
+        String imageUrl = createStoreFilePath(file.getOriginalFilename());
+
+        InputStream inputStream = file.getInputStream();
+
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType(file.getContentType());
+        metadata.setContentLength(file.getSize());
+
+        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, imageUrl, inputStream, metadata);
+
+        amazonS3.putObject(putObjectRequest); // s3에 이미지 데이터를 저장한다.
+
+        return amazonS3.getUrl(bucketName, imageUrl).toString();
+    }
+
+    private String createStoreFilePath(String originalFilename) {
+
+        return "fitness_booking_instructors/" + createStoreFileName(originalFilename);
     }
 
     private String createStoreFileName(String originalFilename) {
@@ -118,10 +141,5 @@ public class AdminService {
 
         int pos = originalFilename.lastIndexOf(".");
         return originalFilename.substring(pos + 1);
-    }
-
-    private String getFullPath(String filename) {
-
-        return fileDir + filename;
     }
 }
