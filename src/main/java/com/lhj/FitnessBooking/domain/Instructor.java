@@ -18,6 +18,10 @@ public class Instructor {
 
     private String imgUrl;
 
+    public Instructor(String name) {
+        this.name = name;
+    }
+
     public Instructor(String name, String imgUrl) {
         this.name = name;
         this.imgUrl = imgUrl;

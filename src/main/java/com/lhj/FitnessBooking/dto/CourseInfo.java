@@ -9,6 +9,7 @@ public class CourseInfo {
 
     private Long courseId;
     private String instructorName;
+    private String instructorImgUrl;
     private String courseName;
     private String courseStartTime;
     private String courseEndTime;

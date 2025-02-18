@@ -11,6 +11,7 @@ public class CourseInfoTmp {
 
     private Long courseId;
     private String instructorName;
+    private String instructorImgUrl;
     private String courseName;
     private LocalTime courseStartTime;
     private int attendeeCount;

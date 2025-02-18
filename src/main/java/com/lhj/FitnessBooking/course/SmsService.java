@@ -65,6 +65,7 @@ public class SmsService {
         return new CourseInfo(
                 courseInfoTmp.getCourseId(),
                 courseInfoTmp.getInstructorName(),
+                courseInfoTmp.getInstructorImgUrl(),
                 courseInfoTmp.getCourseName(),
                 courseInfoTmp.getCourseStartTime().format(DateTimeFormatter.ofPattern("HH:mm")),
                 courseInfoTmp.getCourseStartTime().plusMinutes(50).format(DateTimeFormatter.ofPattern("HH:mm")),

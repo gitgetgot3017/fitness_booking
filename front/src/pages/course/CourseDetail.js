@@ -99,7 +99,7 @@ function CourseDetail() {
                         <div className="time-group">
                             <div className="reservation-item">
                                 <div className="left" style={{display: "flex", alignItems: "center"}}>
-                                    <img alt="지수 프로필" style={{marginRight: "10px"}} />
+                                    <img src={course.instructorImgUrl} style={{marginRight: "10px", width: "60px", height: "60px"}} />
                                     <div>
                                         <p><strong>{course.instructorName}({course.courseName})</strong></p>
                                         <p>{course.courseStartTime} - {course.courseEndTime}</p>

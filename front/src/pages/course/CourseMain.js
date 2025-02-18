@@ -118,7 +118,7 @@ function CourseMain() {
                         navigate("/courses/detail");
                     }}>
                         <div className="left" style={{display: "flex", alignItems: "center"}}>
-                            <img style={{marginRight: "10px"}} />
+                            <img src="https://hyeonjilee-bucket.s3.ap-northeast-2.amazonaws.com/fitness_booking_instructors/%EC%A7%80%EC%88%98.jpg" style={{marginRight: "10px", width: "60px", height: "60px"}} />
                             <div>
                                 <p><strong>지수(캐딜락)</strong></p>
                                 <p>22:00 - 22:50</p>
@@ -133,9 +133,9 @@ function CourseMain() {
                         navigate("/courses/detail");
                     }}>
                         <div className="left" style={{display: "flex", alignItems: "center"}}>
-                            <img style={{marginRight: "10px"}} />
+                            <img src="https://hyeonjilee-bucket.s3.ap-northeast-2.amazonaws.com/fitness_booking_instructors/%EC%B1%84%EC%98%81.jpg" style={{marginRight: "10px", width: "60px", height: "60px"}} />
                             <div>
-                                <p><strong>지수(캐딜락)</strong></p>
+                                <p><strong>채영(체어&바렐)</strong></p>
                                 <p>23:00 - 23:50</p>
                             </div>
                         </div>
@@ -152,7 +152,7 @@ function CourseMain() {
                                     navigate("/courses/detail");
                                 }}>
                                     <div className="left" style={{display: "flex", alignItems: "center"}}>
-                                        <img style={{marginRight: "10px"}} />
+                                        <img src={course.instructorImgUrl} style={{marginRight: "10px", width: "60px", height: "60px"}} />
                                         <div>
                                             <p><strong>{course.instructorName}({course.courseName})</strong></p>
                                             <p>{course.courseStartTime} - {course.courseEndTime}</p>
