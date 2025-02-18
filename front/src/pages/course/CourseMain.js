@@ -1,7 +1,7 @@
 import './CourseMain.css';
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import axios from "axios";
+import api from "../../api";
 
 function CourseMain() {
 
@@ -19,12 +19,9 @@ function CourseMain() {
 
     let navigate = useNavigate ();
 
-    let accessToken = localStorage.getItem("accessToken");
-
     useEffect(() => {
-        axios.get("/courses", {
-                params: {date: date.toISOString().slice(0, 10)},
-                ...(accessToken && {headers: {Authorization: `Bearer ${accessToken}`}})
+        api.get("/courses", {
+                params: {date: date.toISOString().slice(0, 10)}
             })
             .then((result) => {
                 setMemberName(result.data.memberName);
@@ -40,37 +37,6 @@ function CourseMain() {
             })
             .catch((error) => {
                 console.error("메인 정보 가져오는 중 에러 발생:", error.response ? error.response.data : error.message);
-                if (error.response) {
-                    console.error("에러 상태 코드:", error.response.status);
-                }
-
-                if (error.response.status == 401) {
-                    if (error.response.data.error == "ACCESS_TOKEN_EXPIRED") {
-                        axios.patch("/refresh/token",
-                            {
-                                refreshToken: localStorage.getItem("refreshToken") },
-                            { ...(accessToken && { headers: { Authorization: `Bearer ${accessToken}` } })
-                            }, {
-                                headers: { "Content-Type": "application/json" }
-                            })
-                            .then((result) => {
-                                window.localStorage.setItem("accessToken", result.data.accessToken);
-                                window.localStorage.setItem("refreshToken", result.data.refreshToken);
-                            })
-                            .catch((error) => {
-                                console.error("토큰 갱신 요청 중 에러 발생:", error.response ? error.response.data : error.message);
-                                if (error.response) {
-                                    console.error("에러 상태 코드:", error.response.status);
-                                }
-
-                                if (error.response.status == 401) {
-                                    navigate("/members/login");
-                                }
-                            });
-                    } else if (error.response.data.error == "ACCESS_TOKEN_INVALID") {
-                        navigate("/members/login");
-                    }
-                }
             });
     }, []);
 

@@ -1,7 +1,7 @@
 import './CourseDetail.css';
 import {useEffect, useState} from "react";
-import axios from "axios";
 import {useNavigate} from "react-router-dom";
+import api from "../../api";
 
 function CourseDetail() {
 
@@ -34,7 +34,7 @@ function CourseDetail() {
     params.append("courseId", window.localStorage.getItem("courseId"));
 
     useEffect(() => {
-        axios.get("/courses/detail", { params })
+        api.get("/courses/detail", { params })
             .then((result) => {
                 setMemberName(result.data.courseDetailInfo.memberName);
                 setMemberNum(result.data.courseDetailInfo.memberNum);
@@ -61,9 +61,6 @@ function CourseDetail() {
             })
             .catch((error) => {
                 console.error("상세 정보 가져오는 중 에러 발생:", error.response ? error.response.data : error.message);
-                if (error.response) {
-                    console.error("에러 상태 코드:", error.response.status);
-                }
             });
     }, []);
 
@@ -151,7 +148,7 @@ function CourseDetail() {
                                             <button className="reserve" onClick={() => {
                                                 alert("수강 취소하시겠습니까?");
 
-                                                axios.post("/courses/cancellation", {
+                                                api.post("/courses/cancellation", {
                                                         date: window.localStorage.getItem("courseDate"),
                                                         courseId: window.localStorage.getItem("courseId")
                                                     }, {
@@ -163,9 +160,6 @@ function CourseDetail() {
                                                     })
                                                     .catch((error) => {
                                                         console.error("수강 취소 중 에러 발생:", error.response ? error.response.data : error.message);
-                                                        if (error.response) {
-                                                            console.error("에러 상태 코드:", error.response.status);
-                                                        }
                                                     });
                                             }}>수강 취소</button>
                                     )
@@ -183,7 +177,7 @@ function CourseDetail() {
                                                             <button className="reserve" onClick={() => {
                                                                 alert("알림 신청을 취소하시겠습니까?");
 
-                                                                axios.delete("/courses/notifications/cancellation", {
+                                                                api.delete("/courses/notifications/cancellation", {
                                                                         date: window.localStorage.getItem("courseDate"),
                                                                         courseId: window.localStorage.getItem("courseId")
                                                                     }, {
@@ -195,33 +189,27 @@ function CourseDetail() {
                                                                     })
                                                                     .catch((error) => {
                                                                         console.error("수강 취소 중 에러 발생:", error.response ? error.response.data : error.message);
-                                                                        if (error.response) {
-                                                                            console.error("에러 상태 코드:", error.response.status);
-                                                                        }
                                                                     });
                                                             }}>알림 취소</button> :
                                                             <button className="reserve" onClick={() => {
-                                                                axios.post("/courses/notifications", {
-                                                                    date: window.localStorage.getItem("courseDate"),
-                                                                    courseId: window.localStorage.getItem("courseId")
-                                                                }, {
-                                                                    headers: { "Content-Type": "application/json" }
-                                                                })
+                                                                api.post("/courses/notifications", {
+                                                                        date: window.localStorage.getItem("courseDate"),
+                                                                        courseId: window.localStorage.getItem("courseId")
+                                                                    }, {
+                                                                        headers: { "Content-Type": "application/json" }
+                                                                    })
                                                                     .then(() => {
                                                                         alert("대기 신청하였습니다.");
                                                                         navigate("/courses");
                                                                     })
                                                                     .catch((error) => {
                                                                         console.error("대기 신청 중 에러 발생:", error.response ? error.response.data : error.message);
-                                                                        if (error.response) {
-                                                                            console.error("에러 상태 코드:", error.response.status);
-                                                                        }
                                                                     });
                                                             }}>알림 신청</button>
                                                     )
                                             ) :
                                             <button className="reserve" onClick={() => {
-                                                axios.post("/courses/reservations", {
+                                                api.post("/courses/reservations", {
                                                         date: window.localStorage.getItem("courseDate"),
                                                         courseId: window.localStorage.getItem("courseId")
                                                     }, {
@@ -233,9 +221,6 @@ function CourseDetail() {
                                                     })
                                                     .catch((error) => {
                                                         console.error("수강 예약 중 에러 발생:", error.response ? error.response.data : error.message);
-                                                        if (error.response) {
-                                                            console.error("에러 상태 코드:", error.response.status);
-                                                        }
                                                     });
                                             }}>예약</button>
                                     )

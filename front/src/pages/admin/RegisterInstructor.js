@@ -1,6 +1,6 @@
 import './RegistierInstructor.css';
 import {useState} from "react";
-import axios from "axios";
+import api from "../../api";
 
 function RegisterInstructor() {
 
@@ -54,15 +54,12 @@ function RegisterInstructor() {
                         formData.append("instructorName", instructorName);
                         formData.append("image", image);
 
-                        axios.post("/admin/register/instructors", formData)
+                        api.post("/admin/register/instructors", formData)
                             .then(() => {
                                 alert("강사를 등록하였습니다.");
                             })
                             .catch((error) => {
                                 console.error("강사 등록 중 에러 발생:", error.response ? error.response.data : error.message);
-                                if (error.response) {
-                                    console.error("에러 상태 코드:", error.response.status);
-                                }
                             });
                     }}>등록</button>
                 </form>

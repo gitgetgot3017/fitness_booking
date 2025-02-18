@@ -1,7 +1,6 @@
 import './RegisterCourse.css';
 import {useEffect, useState} from "react";
-import axios from "axios";
-
+import api from "../../api";
 
 function RegisterCourse() {
 
@@ -14,15 +13,12 @@ function RegisterCourse() {
     let [endTimes, setEndTimes] = useState([]);
 
     useEffect(() => {
-        axios.get("/instructors")
+        api.get("/instructors")
             .then((result) => {
                 setInstructorNames(result.data);
             })
             .catch((error) => {
                 console.error("강사 정보 가져오는 중 에러 발생:", error.response ? error.response.data : error.message);
-                if (error.response) {
-                    console.error("에러 상태 코드:", error.response.status);
-                }
             });
     }, [])
 
@@ -114,7 +110,7 @@ function RegisterCourse() {
                                 return;
                             }
 
-                            axios.post("/admin/register/courses", {
+                            api.post("/admin/register/courses", {
                                     courseName: courseName,
                                     instructorName: selectedInstructorNames,
                                     dayOfWeeks: selectedDayOfWeeks,
@@ -128,9 +124,6 @@ function RegisterCourse() {
                                 })
                                 .catch((error) => {
                                     console.error("수업 등록 중 에러 발생:", error.response ? error.response.data : error.message);
-                                    if (error.response) {
-                                        console.error("에러 상태 코드:", error.response.status);
-                                    }
                                 })
                         }}>등록</button>
                 </form>
