@@ -1,5 +1,5 @@
 import './App.css';
-import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Routes, Route } from 'react-router-dom';
 import CourseMain from './pages/course/CourseMain';
 import CourseDetail from "./pages/course/CourseDetail";
 import Login from "./pages/member/Login";
