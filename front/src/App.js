@@ -2,6 +2,7 @@ import './App.css';
 import { Routes, Route } from 'react-router-dom';
 import CourseMain from './pages/course/CourseMain';
 import CourseDetail from "./pages/course/CourseDetail";
+import RecommendCourse from "./pages/api/RecommendCourse";
 import Login from "./pages/member/Login";
 import RegisterCourse from "./pages/admin/RegisterCourse";
 import RegisterInstructor from "./pages/admin/RegisterInstructor";
@@ -12,6 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<CourseMain></CourseMain>}></Route>
         <Route path="/courses/detail" element={<CourseDetail></CourseDetail>}></Route>
+        <Route path="/courses/recommendation" element={<RecommendCourse></RecommendCourse>}></Route>
 
         <Route path="/members/login" element={<Login></Login>}></Route>
 

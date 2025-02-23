@@ -1,0 +1,35 @@
+.form-container, .recommendation-box {
+    background-color: #333;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+    border: 2px solid #777;
+}
+
+.form-container h2 {
+    margin-bottom: 20px;
+}
+
+.form-container select, .form-container button {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+    margin-bottom: 10px;
+}
+
+.form-container button {
+    background-color: #f00;
+    color: white;
+    cursor: pointer;
+}
+
+.reservation-item button {
+    background-color: #f00;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
