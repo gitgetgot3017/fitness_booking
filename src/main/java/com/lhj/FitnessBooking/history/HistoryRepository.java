@@ -1,6 +1,7 @@
 package com.lhj.FitnessBooking.history;
 
 import com.lhj.FitnessBooking.domain.Course;
+import com.lhj.FitnessBooking.domain.CourseHistory;
 import com.lhj.FitnessBooking.domain.History;
 import com.lhj.FitnessBooking.domain.Member;
 import com.lhj.FitnessBooking.dto.CheckBefore4HourDto;
@@ -55,4 +56,8 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
             "and :limitTime < c.startTime " +
             "and h.status = 'RESERVED' and h.id in (select max(subH.id) from History subH where subH.member = :member and subH.status <> 'ENROLLED' group by subH.course)")
     Optional<CheckBefore4HourDto> ifBefore4hour(@Param("member") Member member, @Param("date") LocalDate date, @Param("course") Course course, @Param("limitTime") LocalTime limitTime);
+
+    List<History> findByCourseDate(LocalDate courseDate);
+
+    Optional<History> findByCourseDateAndCourse(LocalDate courseDate, Course course);
 }

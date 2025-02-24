@@ -183,13 +183,13 @@ public class CourseService {
      */
     private void validateCourseAvailability(Map<String, String> errorResponse, LocalDate date, Long courseId, int leftCount) {
 
-        List<CourseHistory> enrolledDates = courseHistoryRepository.findByDate(date);
+        List<History> enrolledDates = historyRepository.findByCourseDate(date);
         if (enrolledDates.size() >= 2) {
             errorResponse.put("enrollmentLimitExceeded", "하루에 수강 가능한 최대 횟수는 2회입니다.");
         }
 
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotExistCourseException("존재하지 않는 수업입니다."));
-        if (courseHistoryRepository.findByDateAndCourse(date, course).isEmpty()) {
+        if (historyRepository.findByCourseDateAndCourse(date, course).isEmpty()) {
             errorResponse.put("duplicateEnrollment", "이미 신청한 수업입니다.");
         }
 
@@ -255,13 +255,13 @@ public class CourseService {
 
     private void validateCourseReservationPossibility(Member member, LocalDate date, Long courseId) {
 
-        List<CourseHistory> enrolledDates = courseHistoryRepository.findByDate(date);
+        List<History> enrolledDates = historyRepository.findByCourseDate(date);
         if (enrolledDates.size() >= 2) {
             throw new EnrollmentLimitExceededException("하루에 수강 가능한 최대 횟수는 2회입니다.");
         }
 
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotExistCourseException("존재하지 않는 수업입니다."));
-        if (courseHistoryRepository.findByDateAndCourse(date, course).isEmpty()) {
+        if (historyRepository.findByCourseDateAndCourse(date, course).isEmpty()) {
             throw new DuplicateEnrollmentException("이미 신청한 수업입니다.");
         }
 
