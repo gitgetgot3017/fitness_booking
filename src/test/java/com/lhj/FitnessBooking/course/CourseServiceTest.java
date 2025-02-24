@@ -24,6 +24,7 @@ import java.util.List;
 
 import static com.lhj.FitnessBooking.domain.CourseStatus.*;
 import static com.lhj.FitnessBooking.domain.DayOfWeek.TUES;
+import static com.lhj.FitnessBooking.domain.MemberGrade.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -188,7 +189,7 @@ class CourseServiceTest {
 
     private Member saveMember(String memberNum, String password, String name, String phone, boolean gender, LocalDate regDate) {
 
-        Member member = new Member(memberNum, password, name, phone, gender, regDate);
+        Member member = new Member(memberNum, password, name, phone, gender, MEMBER, regDate);
         memberRepository.save(member);
         return member;
     }

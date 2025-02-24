@@ -1,6 +1,7 @@
 package com.lhj.FitnessBooking.subscription;
 
 import com.lhj.FitnessBooking.domain.Member;
+import com.lhj.FitnessBooking.domain.MemberGrade;
 import com.lhj.FitnessBooking.domain.Subscription;
 import com.lhj.FitnessBooking.dto.CourseMainHeader;
 import com.lhj.FitnessBooking.member.MemberRepository;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
+import static com.lhj.FitnessBooking.domain.MemberGrade.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -119,7 +121,7 @@ class SubscriptionRepositoryTest {
 
     private Member saveMember(String memberNum, String password, String name, String phone, boolean gender, LocalDate regDate) {
 
-        Member member = new Member(memberNum, password, name, phone, gender, regDate);
+        Member member = new Member(memberNum, password, name, phone, gender, MEMBER, regDate);
         memberRepository.save(member);
         return member;
     }
