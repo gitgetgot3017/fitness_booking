@@ -80,6 +80,7 @@ function RecommendCourse() {
                                         })
                                         .catch((error) => {
                                             console.error("추천 수업 예약 중 에러 발생:", error.response ? error.response.data : error.message);
+                                            alert(error.response.data.message);
                                         })
                                 })
                                 .catch((error) => {

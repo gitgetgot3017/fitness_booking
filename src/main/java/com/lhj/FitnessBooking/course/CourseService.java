@@ -1,7 +1,6 @@
 package com.lhj.FitnessBooking.course;
 
-import com.lhj.FitnessBooking.course.exception.CannotAccessException;
-import com.lhj.FitnessBooking.course.exception.NotExistCourseException;
+import com.lhj.FitnessBooking.course.exception.*;
 import com.lhj.FitnessBooking.courseHistory.CourseHistoryRepository;
 import com.lhj.FitnessBooking.domain.*;
 import com.lhj.FitnessBooking.dto.*;
@@ -238,6 +237,8 @@ public class CourseService {
      */
     public void reserveCourse(Member member, LocalDate date, Long courseId) {
 
+        validateCourseReservationPossibility(member, date, courseId); // 추천 수업 예약을 통해 '예약하기' 버튼을 접하는 경우를 위함
+
         int courseCount = courseRepository.getCourseCountWithLock(date, courseId);
         if (courseCount >= 6) {
             throw new ReservationFailException("수강 인원 초과로 예약에 실패하셨습니다.");
@@ -250,6 +251,24 @@ public class CourseService {
         historyRepository.save(history);
 
         subscriptionRepository.increaseReservedCount(member);
+    }
+
+    private void validateCourseReservationPossibility(Member member, LocalDate date, Long courseId) {
+
+        List<CourseHistory> enrolledDates = courseHistoryRepository.findByDate(date);
+        if (enrolledDates.size() >= 2) {
+            throw new EnrollmentLimitExceededException("하루에 수강 가능한 최대 횟수는 2회입니다.");
+        }
+
+        Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotExistCourseException("존재하지 않는 수업입니다."));
+        if (courseHistoryRepository.findByDateAndCourse(date, course).isEmpty()) {
+            throw new DuplicateEnrollmentException("이미 신청한 수업입니다.");
+        }
+
+        CourseMainHeader subscription = subscriptionRepository.getSubscription(member, LocalDate.now());
+        if (subscription.getAvailableCount() - subscription.getCompletedCount() - subscription.getReservedCount() == 0) {
+            throw new CourseExpirationException("수강 횟수가 남아있지 않습니다.");
+        }
     }
 
     public void waitCourse(Member member, LocalDate date, Long courseId) {

@@ -1,7 +1,6 @@
 package com.lhj.FitnessBooking.course;
 
-import com.lhj.FitnessBooking.course.exception.CannotAccessException;
-import com.lhj.FitnessBooking.course.exception.NotExistCourseException;
+import com.lhj.FitnessBooking.course.exception.*;
 import com.lhj.FitnessBooking.reservation.exception.ReservationFailException;
 import com.lhj.FitnessBooking.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class CourseExController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({NotExistCourseException.class, CannotAccessException.class, NotExistCourseException.class})
+    @ExceptionHandler({NotExistCourseException.class, CannotAccessException.class, NotExistCourseException.class, EnrollmentLimitExceededException.class, DuplicateEnrollmentException.class, CourseExpirationException.class})
     public ErrorResponse showErrorMessage(RuntimeException e) {
         return new ErrorResponse("course", e.getMessage());
     }
