@@ -16,8 +16,9 @@ function CourseMain() {
     let [courses, setCourses] = useState([]);
     let [courseMainHistoryList, setCourseMainHistoryList] = useState([]);
     let [date, setDate] = useState(new Date());
+    let [sidebarOpen, setSidebarOpen] = useState(false);
 
-    let navigate = useNavigate ();
+    let navigate = useNavigate();
 
     useEffect(() => {
         api.get("/courses", {
@@ -54,13 +55,23 @@ function CourseMain() {
             <header className="header">
                 <div className="menu">
                     <h2>홈 &gt; 그룹예약</h2>
-                    <div className="hamburger">☰</div>
+                    <div className="hamburger" onClick={() => setSidebarOpen(true)}>☰</div>
                 </div>
                 <hr />
                 <div className="user-info">
                     <p><strong>{memberName}({memberNum})</strong> 회원님</p>
                 </div>
             </header>
+
+            {/* Sidebar */}
+            <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
+                <button className="close-btn" onClick={() => setSidebarOpen(false)}>×</button>
+                <ul>
+                    <li><a onClick={() => navigate("/courses/recommendation")}>수업 추천</a></li>
+                    <li><a onClick={() => navigate("/admin/register/courses")}>수업 등록</a></li>
+                    <li><a onClick={() => navigate("/admin/register/instructors")}>강사 등록</a></li>
+                </ul>
+            </div>
 
             <div className="membership-box">
                 <div className="left">
