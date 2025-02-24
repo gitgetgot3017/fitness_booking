@@ -1,12 +1,24 @@
 import './RecommendCourse.css';
 import {useState} from "react";
 import api from "../../api";
+import {useNavigate} from "react-router-dom";
 
 function RecommendCourse() {
 
+    let [courseId, setCourseId] = useState(0);
     let [condition, setCondition] = useState("");
     let [goal, setGoal] = useState("");
-    let [recommendation, setRecommendation] = useState("");
+    let [recommendDto, setRecommendDto] = useState({"geminiSaid": null, "courseName": null});
+
+    let navigate = useNavigate();
+
+    function getFormattedTodayDate() {
+        return new Intl.DateTimeFormat("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })
+            .format(new Date())
+            .trim()
+            .replace(/\.\s*/g, "-")
+            .replace(/-$/, "");
+    }
 
     return (
         <div className="container" style={{textAlign: "center"}}>
@@ -38,7 +50,7 @@ function RecommendCourse() {
                             }
                         })
                         .then((result) => {
-                            setRecommendation(result.data);
+                            setRecommendDto(result.data);
                         })
                         .catch((error) => {
                             console.error("요가 수업 추천 중 에러 발생:", error.response ? error.response.data : error.message);
@@ -46,7 +58,35 @@ function RecommendCourse() {
                 }}>추천하기</button>
             </div>
             <div className="recommendation-box">
-                {recommendation}
+                {recommendDto.geminiSaid}
+                <br />
+                {
+                    recommendDto.courseName === null ?
+                        null :
+                        <button style={{marginTop: "20px"}} onClick={() => {
+                            api.get("/courses/id?name=" + recommendDto.courseName)
+                                .then((result) => {
+                                    setCourseId(result.data);
+
+                                    api.post("/courses/reservations", {
+                                            date: getFormattedTodayDate(),
+                                            courseId: courseId
+                                        }, {
+                                            headers: { "Content-Type": "application/json" }
+                                        })
+                                        .then(() => {
+                                            alert("수업을 예약하였습니다!");
+                                            navigate("/");
+                                        })
+                                        .catch((error) => {
+                                            console.error("추천 수업 예약 중 에러 발생:", error.response ? error.response.data : error.message);
+                                        })
+                                })
+                                .catch((error) => {
+                                    console.error("요가 수업 추천 중 에러 발생:", error.response ? error.response.data : error.message);
+                                });
+                        }}>{recommendDto.courseName} 예약하기</button>
+                }
             </div>
         </div>
     );

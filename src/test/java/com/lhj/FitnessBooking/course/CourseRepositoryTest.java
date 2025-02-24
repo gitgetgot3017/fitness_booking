@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 import static com.lhj.FitnessBooking.domain.DayOfWeek.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -212,6 +213,21 @@ class CourseRepositoryTest {
 
         // then
         assertThat(courses).hasSize(3);
+    }
+
+    @DisplayName("특정 요일, 특정 이름의 수업 찾기")
+    @Test
+    void findByDayOfWeekAndName() {
+
+        // given
+        Instructor instructor = saveInstructor("써니");
+        courseRepository.save(new Course(instructor, "플라잉", TUES, LocalTime.of(11, 0)));
+
+        // when
+        Optional<Course> courseExist = courseRepository.findByDayOfWeekAndName(TUES, "플라잉");
+
+        // then
+        courseExist.isPresent();
     }
 
     private Instructor saveInstructor(String name) {

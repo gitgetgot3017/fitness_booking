@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class CourseExController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({NotExistCourseException.class, CannotAccessException.class})
+    @ExceptionHandler({NotExistCourseException.class, CannotAccessException.class, NotExistCourseException.class})
     public ErrorResponse showErrorMessage(RuntimeException e) {
         return new ErrorResponse("course", e.getMessage());
     }

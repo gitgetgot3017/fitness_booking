@@ -3,6 +3,7 @@ package com.lhj.FitnessBooking.api;
 import com.lhj.FitnessBooking.api.dto.MemberCondition;
 import com.lhj.FitnessBooking.api.dto.MemberGoal;
 import com.lhj.FitnessBooking.api.dto.MemberInputRequest;
+import com.lhj.FitnessBooking.api.dto.RecommendDto;
 import com.lhj.FitnessBooking.course.CourseRepository;
 import com.lhj.FitnessBooking.courseHistory.CourseHistoryRepository;
 import com.lhj.FitnessBooking.domain.Course;
@@ -52,10 +53,10 @@ class GeminiServiceTest {
         MemberInputRequest request = new MemberInputRequest(GOOD, WEIGHT);
 
         // when
-        String result = geminiService.recommendCourse(request);
+        RecommendDto recommendDto = geminiService.recommendCourse(request);
 
         // then
-        assertThat(result).isEqualTo("오늘의 수업이 존재하지 않습니다!");
+        assertThat(recommendDto.getGeminiSaid()).isEqualTo("오늘의 수업이 존재하지 않습니다!");
     }
 
     @DisplayName("요가 수업 추천하기(2) - 오늘의 수업이 1개 남은 경우")
@@ -76,10 +77,10 @@ class GeminiServiceTest {
         MemberInputRequest request = new MemberInputRequest(GOOD, WEIGHT);
 
         // when
-        String result = geminiService.recommendCourse(request);
+        RecommendDto recommendDto = geminiService.recommendCourse(request);
 
         // then
-        assertThat(result).isEqualTo("오늘의 수업이 1개 남았습니다. 해당 수업을 예약하시겠습니까?");
+        assertThat(recommendDto.getGeminiSaid()).isEqualTo("오늘의 수업이 1개 남았습니다. 해당 수업을 예약하시겠습니까?");
     }
 
     @DisplayName("요가 수업 추천하기(3) - 오늘의 수업이 2개 이상 남아서 Gemini가 추천할 수 있는 경우")
@@ -100,11 +101,10 @@ class GeminiServiceTest {
         MemberInputRequest request = new MemberInputRequest(GOOD, WEIGHT);
 
         // when
-        String result = geminiService.recommendCourse(request);
+        RecommendDto recommendDto = geminiService.recommendCourse(request);
 
         // then
-        System.out.println("result = " + result);
-        assertThat(result).isNotEmpty();
+        assertThat(recommendDto.getGeminiSaid()).isNotEmpty();
     }
 
     private Instructor saveInstructor(String name) {

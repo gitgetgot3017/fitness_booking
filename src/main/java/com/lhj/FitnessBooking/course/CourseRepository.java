@@ -52,4 +52,7 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     void decreaseCourseCount(@Param("date") LocalDate date, @Param("course") Course course);
 
     List<Course> findByDayOfWeek(DayOfWeek dayOfWeek);
+
+    // 하루에는 한 종류의 요가 수업이 두 번 이상 존재하지 않는다.
+    Optional<Course> findByDayOfWeekAndName(DayOfWeek dayOfWeek, String name);
 }

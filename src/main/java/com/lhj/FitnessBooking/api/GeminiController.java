@@ -1,7 +1,11 @@
 package com.lhj.FitnessBooking.api;
 
 import com.lhj.FitnessBooking.api.dto.MemberInputRequest;
+import com.lhj.FitnessBooking.api.dto.RecommendDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -12,7 +16,8 @@ public class GeminiController {
     private final GeminiService geminiService;
 
     @GetMapping
-    public String recommendCourse(@ModelAttribute MemberInputRequest request) {
-        return geminiService.recommendCourse(request);
+    public HttpEntity<RecommendDto> recommendCourse(@ModelAttribute MemberInputRequest request) {
+
+        return new ResponseEntity<>(geminiService.recommendCourse(request), HttpStatus.OK);
     }
 }
