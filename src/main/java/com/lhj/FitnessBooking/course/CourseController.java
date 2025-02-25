@@ -27,7 +27,7 @@ import static com.lhj.FitnessBooking.domain.DayOfWeek.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/courses")
+@RequestMapping("/api/courses")
 public class CourseController {
 
     private final MemberRepository memberRepository;

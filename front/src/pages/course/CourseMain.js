@@ -21,7 +21,7 @@ function CourseMain() {
     let navigate = useNavigate();
 
     useEffect(() => {
-        api.get("/courses", {
+        api.get("/api/courses", {
                 params: {date: date.toISOString().slice(0, 10)}
             })
             .then((result) => {

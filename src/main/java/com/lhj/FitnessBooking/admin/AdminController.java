@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/register")
+@RequestMapping("/api/admin/register")
 public class AdminController {
 
     private final MemberRepository memberRepository;

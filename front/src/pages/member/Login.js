@@ -28,7 +28,7 @@ function Login() {
                         navigate("/"); // TODO: SSE 연결 요청이 잘 이뤄지는지, 연결이 잘 되는지 확인 필요함
 
                         if (result.data.grade === "ADMIN") {
-                            api.get("/notifications")
+                            api.get("/api/notifications")
                                 .catch((error) => {
                                     console.error("SSE 연결 요청 중 에러 발생:", error.response ? error.response.data : error.message);
                                 });

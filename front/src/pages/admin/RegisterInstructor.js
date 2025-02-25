@@ -54,7 +54,7 @@ function RegisterInstructor() {
                         formData.append("instructorName", instructorName);
                         formData.append("image", image);
 
-                        api.post("/admin/register/instructors", formData)
+                        api.post("/api/admin/register/instructors", formData)
                             .then(() => {
                                 alert("강사를 등록하였습니다.");
                             })

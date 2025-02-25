@@ -16,7 +16,7 @@ public class JwtController {
 
     private final JwtService jwtService;
 
-    @PatchMapping("/refresh/token")
+    @PatchMapping("/api/refresh/token")
     public HttpEntity<Jwt> refreshTokens(@RequestBody RefreshTokenRequest refreshTokenRequest) {
 
         Jwt jwt = jwtService.refreshTokens(refreshTokenRequest.getRefreshToken());

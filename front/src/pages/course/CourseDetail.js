@@ -34,7 +34,7 @@ function CourseDetail() {
     params.append("courseId", window.localStorage.getItem("courseId"));
 
     useEffect(() => {
-        api.get("/courses/detail", { params })
+        api.get("/api/courses/detail", { params })
             .then((result) => {
                 setMemberName(result.data.courseDetailInfo.memberName);
                 setMemberNum(result.data.courseDetailInfo.memberNum);
@@ -148,7 +148,7 @@ function CourseDetail() {
                                             <button className="reserve" onClick={() => {
                                                 alert("수강 취소하시겠습니까?");
 
-                                                api.post("/courses/cancellation", {
+                                                api.post("/api/courses/cancellation", {
                                                         date: window.localStorage.getItem("courseDate"),
                                                         courseId: window.localStorage.getItem("courseId")
                                                     }, {
@@ -177,7 +177,7 @@ function CourseDetail() {
                                                             <button className="reserve" onClick={() => {
                                                                 alert("알림 신청을 취소하시겠습니까?");
 
-                                                                api.delete("/courses/notifications/cancellation", {
+                                                                api.delete("/api/courses/notifications/cancellation", {
                                                                         date: window.localStorage.getItem("courseDate"),
                                                                         courseId: window.localStorage.getItem("courseId")
                                                                     }, {
@@ -192,7 +192,7 @@ function CourseDetail() {
                                                                     });
                                                             }}>알림 취소</button> :
                                                             <button className="reserve" onClick={() => {
-                                                                api.post("/courses/notifications", {
+                                                                api.post("/api/courses/notifications", {
                                                                         date: window.localStorage.getItem("courseDate"),
                                                                         courseId: window.localStorage.getItem("courseId")
                                                                     }, {
@@ -209,7 +209,7 @@ function CourseDetail() {
                                                     )
                                             ) :
                                             <button className="reserve" onClick={() => {
-                                                api.post("/courses/reservations", {
+                                                api.post("/api/courses/reservations", {
                                                         date: window.localStorage.getItem("courseDate"),
                                                         courseId: window.localStorage.getItem("courseId")
                                                     }, {

@@ -13,7 +13,7 @@ function RegisterCourse() {
     let [endTimes, setEndTimes] = useState([]);
 
     useEffect(() => {
-        api.get("/instructors")
+        api.get("/api/instructors")
             .then((result) => {
                 setInstructorNames(result.data);
             })
@@ -110,7 +110,7 @@ function RegisterCourse() {
                                 return;
                             }
 
-                            api.post("/admin/register/courses", {
+                            api.post("/api/admin/register/courses", {
                                     courseName: courseName,
                                     instructorName: selectedInstructorNames,
                                     dayOfWeeks: selectedDayOfWeeks,
