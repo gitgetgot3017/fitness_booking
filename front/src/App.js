@@ -2,7 +2,7 @@ import './App.css';
 import { Routes, Route } from 'react-router-dom';
 import CourseMain from './pages/course/CourseMain';
 import CourseDetail from "./pages/course/CourseDetail";
-import RecommendCourse from "./pages/api/RecommendCourse";
+import RecommendCourse from "./pages/gemini/RecommendCourse";
 import Login from "./pages/member/Login";
 import RegisterCourse from "./pages/admin/RegisterCourse";
 import RegisterInstructor from "./pages/admin/RegisterInstructor";
