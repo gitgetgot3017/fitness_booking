@@ -27,7 +27,7 @@ api.interceptors.response.use(
             if (error.response.status == 401) {
                 if (error.response.data.error === "ACCESS_TOKEN_EXPIRED") {
                     api.patch(
-                        "/refresh/token",
+                        "/api/refresh/token",
                         {refreshToken: localStorage.getItem("refreshToken")},
                         {headers: {"Content-Type": "application/json"}}
                     ).then((result) => {
