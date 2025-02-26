@@ -22,16 +22,16 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         try {
-//            String authorization = request.getHeader("Authorization");
-//            if (authorization == null) {
-//                throw new NotExistAccessTokenException("로그인이 필요합니다.");
-//            }
-//            String accessToken = authorization.replace("Bearer ", "");
-//
-//            Claims claims = jwtService.getClaims(accessToken);
-//
-//            String memberNum = (String) claims.get("memberNum");
-//            request.setAttribute("memberNum", memberNum);
+            String authorization = request.getHeader("Authorization");
+            if (authorization == null) {
+                throw new NotExistAccessTokenException("로그인이 필요합니다.");
+            }
+            String accessToken = authorization.replace("Bearer ", "");
+
+            Claims claims = jwtService.getClaims(accessToken);
+
+            String memberNum = (String) claims.get("memberNum");
+            request.setAttribute("memberNum", memberNum);
             return true;
 
         } catch (ExpiredJwtException e) {
