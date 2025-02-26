@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -51,9 +52,12 @@ public class AdminService {
                 .orElseThrow(() -> new NotExistInstructorException("존재하지 않는 강사입니다."));
 
         for (DayOfWeek dayOfWeek : registerCourseDto.getDayOfWeeks()) {
-            for (LocalTime startTime: registerCourseDto.getStartTime()) {
+            for (int i=0; i< registerCourseDto.getStartTime().size(); i++) {
 
-                Course course = new Course(instructor, registerCourseDto.getCourseName(), dayOfWeek, startTime);
+                LocalTime startTime = registerCourseDto.getStartTime().get(i);
+                LocalTime endTime = registerCourseDto.getEndTime().get(i);
+
+                Course course = new Course(instructor, registerCourseDto.getCourseName(), dayOfWeek, startTime, endTime);
                 courseRepository.save(course);
 
                 scheduleJob(member, dayOfWeek, startTime, course);

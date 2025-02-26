@@ -27,10 +27,13 @@ public class Course {
 
     private LocalTime startTime;
 
-    public Course(Instructor instructor, String name, DayOfWeek dayOfWeek, LocalTime startTime) {
+    private LocalTime endTime;
+
+    public Course(Instructor instructor, String name, DayOfWeek dayOfWeek, LocalTime startTime, LocalTime endTime) {
         this.instructor = instructor;
         this.name = name;
         this.dayOfWeek = dayOfWeek;
         this.startTime = startTime;
+        this.endTime = endTime;
     }
 }
