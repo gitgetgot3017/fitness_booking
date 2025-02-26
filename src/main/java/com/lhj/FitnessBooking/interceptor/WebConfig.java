@@ -18,6 +18,6 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(new LoginCheckInterceptor(jwtService))
                 .order(1)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/members/**", "/error", "/refresh/token");
+                .excludePathPatterns("/api/members/**", "/error", "/api/refresh/token");
     }
 }
