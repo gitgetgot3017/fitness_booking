@@ -15,7 +15,7 @@ function Login() {
             <input type="text" onChange={(e) => setMemberNum(e.target.value)} />
             <input type="password" onChange={(e) => setPassword(e.target.value)} />
             <button onClick={() => {
-                axios.post("/members/login", {
+                axios.post("/api/members/login", {
                         memberNum: memberNum,
                         password: password
                     }, {
