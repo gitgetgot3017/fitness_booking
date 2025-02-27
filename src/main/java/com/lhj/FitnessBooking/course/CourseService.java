@@ -1,8 +1,10 @@
 package com.lhj.FitnessBooking.course;
 
 import com.lhj.FitnessBooking.course.exception.*;
-import com.lhj.FitnessBooking.courseHistory.CourseHistoryRepository;
-import com.lhj.FitnessBooking.domain.*;
+import com.lhj.FitnessBooking.domain.Course;
+import com.lhj.FitnessBooking.domain.History;
+import com.lhj.FitnessBooking.domain.Member;
+import com.lhj.FitnessBooking.domain.Reservation;
 import com.lhj.FitnessBooking.dto.*;
 import com.lhj.FitnessBooking.history.HistoryRepository;
 import com.lhj.FitnessBooking.reservation.ReservationRepository;
@@ -19,7 +21,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static com.lhj.FitnessBooking.domain.CourseStatus.*;
+import static com.lhj.FitnessBooking.domain.CourseStatus.CANCELED;
+import static com.lhj.FitnessBooking.domain.CourseStatus.RESERVED;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +32,6 @@ public class CourseService {
     private final SubscriptionRepository subscriptionRepository;
     private final HistoryRepository historyRepository;
     private final CourseRepository courseRepository;
-    private final CourseHistoryRepository courseHistoryRepository;
     private final ReservationRepository reservationRepository;
     private final SmsService smsService;
 
@@ -39,19 +41,19 @@ public class CourseService {
      */
     public CourseMainResponse showCourseMain(Member member, LocalDate date) {
 
-        LocalDate today = LocalDate.now();
-
         CourseMainHeader courseMainHeader = null;
         List<CourseInfoTmp> courses = null;
         try {
             courseMainHeader = subscriptionRepository.getSubscription(member, LocalDate.now());
 
-            if (date.isEqual(today)) { // 오늘의 수업 조회
-                courses = courseRepository.getTodayCourses(today, LocalTime.now());
-            } else if (date.isEqual(today.plusDays(1))) { // 내일의 수업 조회
-                courses = courseRepository.getTomorrowCourses(today);
+            // 오늘의 수업을 조회하면 현재 시각 이후의 수업만 보여주고, 나머지 일자의 수업을 조회하면 전체 수업을 보여준다.
+            LocalTime startTime = LocalTime.of(0, 0, 0);
+            if (date.isEqual(LocalDate.now())) {
+                startTime = LocalTime.now();
             }
+            courses = courseRepository.getCourses(date, startTime); // 특정 날짜(date)의 수업 조회
         } finally {
+            LocalDate today = LocalDate.now();
             List<History> history = historyRepository.getHistoryDate(member, today.getYear(), today.getMonthValue());
             return changeIntoCourseMainResponse(courseMainHeader, history, courses);
         }
@@ -115,7 +117,7 @@ public class CourseService {
 
         Map<String, String> errorResponse = new HashMap<>();
         int leftCount = courseMainHeader.getAvailableCount() - courseMainHeader.getCompletedCount() - courseMainHeader.getReservedCount(); // 남은 수강 횟수
-        validateCourseAvailability(errorResponse, date, courseId, leftCount);
+        validateCourseAvailability(errorResponse, date, courseId, member, leftCount);
         validateCourseCancelAvailability(errorResponse, member, date, courseId);
 
         return makeCourseDetailInfo(courseDetailInfo, errorResponse);
@@ -166,7 +168,7 @@ public class CourseService {
                 courseInfoTmp.getInstructorImgUrl(),
                 courseInfoTmp.getCourseName(),
                 courseInfoTmp.getCourseStartTime().format(DateTimeFormatter.ofPattern("HH:mm")),
-                courseInfoTmp.getCourseStartTime().plusMinutes(50).format(DateTimeFormatter.ofPattern("HH:mm")),
+                courseInfoTmp.getCourseEndTime().format(DateTimeFormatter.ofPattern("HH:mm")),
                 courseInfoTmp.getAttendeeCount()
         );
     }
@@ -181,15 +183,15 @@ public class CourseService {
      * 수강 대기하기 위한 조건
      * 5. 해당 수업의 예약 여석이 존재해야 한다.
      */
-    private void validateCourseAvailability(Map<String, String> errorResponse, LocalDate date, Long courseId, int leftCount) {
+    private void validateCourseAvailability(Map<String, String> errorResponse, LocalDate date, Long courseId, Member member, int leftCount) {
 
-        List<History> enrolledDates = historyRepository.findByCourseDate(date);
+        List<History> enrolledDates = historyRepository.getReservedAndEnrolled(date);
         if (enrolledDates.size() >= 2) {
             errorResponse.put("enrollmentLimitExceeded", "하루에 수강 가능한 최대 횟수는 2회입니다.");
         }
 
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotExistCourseException("존재하지 않는 수업입니다."));
-        if (historyRepository.findByCourseDateAndCourse(date, course).isEmpty()) {
+        if (historyRepository.checkAlreadyRegistered(date, course).isPresent()) {
             errorResponse.put("duplicateEnrollment", "이미 신청한 수업입니다.");
         }
 
@@ -205,9 +207,12 @@ public class CourseService {
         List<Reservation> reservations = reservationRepository.findByCourseDateAndCourse(date, course);
         if (reservations.size() >= 6) {
             errorResponse.put("reservationCapacityExceeded", "대기 정원을 초과하였습니다.");
-            return;
         }
-        errorResponse.put("alreadyWaitCourse", "대기 신청을 하였습니다."); // 대기 취소를 하기 위함
+
+        Optional<Reservation> ifReserve = reservationRepository.findByCourseDateAndCourseAndMember(date, course, member);
+        if (ifReserve.isPresent()) {
+            errorResponse.put("alreadyWaitCourse", "이미 대기 신청을 하였습니다.");
+        }
     }
 
     /**
@@ -224,7 +229,7 @@ public class CourseService {
 
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new NotExistCourseException("해당 수업은 존재하지 않습니다."));
-        if (historyRepository.ifBefore4hour(member, date, course, LocalTime.now()).isEmpty()) {
+        if (historyRepository.ifAfter4hour(member, date, course, LocalTime.now().plusHours(4)).isPresent()) {
             errorResponse.put("exceeded4HourLimit", "수업 시작 4시간 전까지만 취소 가능합니다.");
         }
     }
@@ -255,13 +260,13 @@ public class CourseService {
 
     private void validateCourseReservationPossibility(Member member, LocalDate date, Long courseId) {
 
-        List<History> enrolledDates = historyRepository.findByCourseDate(date);
+        List<History> enrolledDates = historyRepository.getReservedAndEnrolled(date);
         if (enrolledDates.size() >= 2) {
             throw new EnrollmentLimitExceededException("하루에 수강 가능한 최대 횟수는 2회입니다.");
         }
 
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotExistCourseException("존재하지 않는 수업입니다."));
-        if (historyRepository.findByCourseDateAndCourse(date, course).isEmpty()) {
+        if (historyRepository.checkAlreadyRegistered(date, course).isEmpty()) {
             throw new DuplicateEnrollmentException("이미 신청한 수업입니다.");
         }
 

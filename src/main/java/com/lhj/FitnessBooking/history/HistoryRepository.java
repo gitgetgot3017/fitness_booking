@@ -48,16 +48,37 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
     List<History> getCancelCount(@Param("member") Member member, @Param("date") LocalDate date);
 
     @Query("select new com.lhj.FitnessBooking.dto.CheckBefore4HourDto(c.startTime) " +
-            "from History h join Course c on h.course = c " +
+            "from History h " +
+            "join Course c on h.course = c " +
             "join CourseHistory ch on c = ch.course " +
             "where h.member = :member " +
             "and ch.date = :date " +
             "and h.course = :course " +
-            "and :limitTime < c.startTime " +
+            "and :limitTime >= c.startTime " +
             "and h.status = 'RESERVED' and h.id in (select max(subH.id) from History subH where subH.member = :member and subH.status <> 'ENROLLED' group by subH.course)")
-    Optional<CheckBefore4HourDto> ifBefore4hour(@Param("member") Member member, @Param("date") LocalDate date, @Param("course") Course course, @Param("limitTime") LocalTime limitTime);
+    Optional<CheckBefore4HourDto> ifAfter4hour(@Param("member") Member member, @Param("date") LocalDate date, @Param("course") Course course, @Param("limitTime") LocalTime limitTime);
 
-    List<History> findByCourseDate(LocalDate courseDate);
+    @Query(
+            "select h " +
+            "from History h " +
+            "where (h.status = 'ENROLLED' " +
+            "or (h.status = 'RESERVED' " +
+            "and h.id in (select max(h.id) " +
+                            "from History h " +
+                            "where h.courseDate = :courseDate " +
+                            "and h.status <> 'ENROLLED' " +
+                            "group by h.course))) "
+    )
+    List<History> getReservedAndEnrolled(@Param("courseDate") LocalDate courseDate);
 
-    Optional<History> findByCourseDateAndCourse(LocalDate courseDate, Course course);
+    @Query(
+            "select h " +
+            "from History h " +
+            "where h.status = 'RESERVED' " +
+            "and h.id = (select max(h.id) " +
+                                "from History h " +
+                                "where h.courseDate = :courseDate " +
+                                "and h.course = :course)"
+    )
+    Optional<History> checkAlreadyRegistered(@Param("courseDate") LocalDate courseDate, @Param("course") Course course);
 }

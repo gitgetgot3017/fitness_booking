@@ -123,38 +123,6 @@ function CourseMain() {
 
             <div className="tab-content" id="available">
                 <div className="time-group">
-                    {/* 임시 코드 */}
-                    <div className="reservation-item" style={{marginBottom: "20px"}} onClick={() => {
-                        window.localStorage.setItem("courseId", 62);
-                        navigate("/courses/detail");
-                    }}>
-                        <div className="left" style={{display: "flex", alignItems: "center"}}>
-                            <img src="https://hyeonjilee-bucket.s3.ap-northeast-2.amazonaws.com/fitness_booking_instructors/%EC%A7%80%EC%88%98.jpg" style={{marginRight: "10px", width: "60px", height: "60px"}} />
-                            <div>
-                                <p><strong>지수(캐딜락)</strong></p>
-                                <p>22:00 - 22:50</p>
-                            </div>
-                        </div>
-                        <div className="right">
-                            <h2>5 / 6</h2>
-                        </div>
-                    </div>
-                    <div className="reservation-item" style={{marginBottom: "20px"}} onClick={() => {
-                        window.localStorage.setItem("courseId", 2);
-                        navigate("/courses/detail");
-                    }}>
-                        <div className="left" style={{display: "flex", alignItems: "center"}}>
-                            <img src="https://hyeonjilee-bucket.s3.ap-northeast-2.amazonaws.com/fitness_booking_instructors/%EC%B1%84%EC%98%81.jpg" style={{marginRight: "10px", width: "60px", height: "60px"}} />
-                            <div>
-                                <p><strong>채영(체어&바렐)</strong></p>
-                                <p>23:00 - 23:50</p>
-                            </div>
-                        </div>
-                        <div className="right">
-                            <h2>6 / 6</h2>
-                        </div>
-                    </div>
-                    {/* 임시 코드 */}
                     {
                         courses.map(function(course, i) {
                             return (

@@ -7,6 +7,7 @@ import com.lhj.FitnessBooking.dto.CheckBefore4HourDto;
 import com.lhj.FitnessBooking.dto.CourseHistoryTmp;
 import com.lhj.FitnessBooking.instructor.InstructorRepository;
 import com.lhj.FitnessBooking.member.MemberRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.lhj.FitnessBooking.domain.CourseStatus.*;
-import static com.lhj.FitnessBooking.domain.DayOfWeek.MON;
-import static com.lhj.FitnessBooking.domain.DayOfWeek.TUES;
-import static com.lhj.FitnessBooking.domain.MemberGrade.*;
+import static com.lhj.FitnessBooking.domain.DayOfWeek.*;
+import static com.lhj.FitnessBooking.domain.MemberGrade.MEMBER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -33,6 +33,11 @@ class HistoryRepositoryTest {
     @Autowired HistoryRepository historyRepository;
     @Autowired CourseHistoryRepository courseHistoryRepository;
 
+    @AfterEach
+    void afterEach() {
+        historyRepository.deleteAll();
+    }
+
     @DisplayName("홈 > 그룹예약: 수강 및 예약 날짜 조회(1)")
     @Test
     void getHistoryDateTest1() {
@@ -43,7 +48,7 @@ class HistoryRepositoryTest {
         Instructor instructor = new Instructor("지수");
         instructorRepository.save(instructor);
 
-        Course course = new Course(instructor, "캐딜락", MON, LocalTime.of(9, 0));
+        Course course = new Course(instructor, "캐딜락", MON, LocalTime.of(9, 0), LocalTime.of(9, 50));
         courseRepository.save(course);
 
         int year = 2025;
@@ -69,7 +74,7 @@ class HistoryRepositoryTest {
         Instructor instructor = new Instructor("지수");
         instructorRepository.save(instructor);
 
-        Course course = new Course(instructor, "캐딜락", MON, LocalTime.of(9, 0));
+        Course course = new Course(instructor, "캐딜락", MON, LocalTime.of(9, 0), LocalTime.of(9, 50));
         courseRepository.save(course);
 
         int year = 2025;
@@ -95,7 +100,7 @@ class HistoryRepositoryTest {
         Instructor instructor = new Instructor("지수");
         instructorRepository.save(instructor);
 
-        Course course = new Course(instructor, "캐딜락", MON, LocalTime.of(9, 0));
+        Course course = new Course(instructor, "캐딜락", MON, LocalTime.of(9, 0), LocalTime.of(9, 50));
         courseRepository.save(course);
 
         int year = 2025;
@@ -121,7 +126,7 @@ class HistoryRepositoryTest {
         Instructor instructor = new Instructor("지수");
         instructorRepository.save(instructor);
 
-        Course course = new Course(instructor, "캐딜락", MON, LocalTime.of(9, 0));
+        Course course = new Course(instructor, "캐딜락", MON, LocalTime.of(9, 0), LocalTime.of(9, 50));
         courseRepository.save(course);
 
         int year = 2025;
@@ -148,7 +153,7 @@ class HistoryRepositoryTest {
         Instructor instructor = new Instructor("지수");
         instructorRepository.save(instructor);
 
-        Course course = new Course(instructor, "캐딜락", MON, LocalTime.of(9, 0));
+        Course course = new Course(instructor, "캐딜락", MON, LocalTime.of(9, 0), LocalTime.of(9, 50));
         courseRepository.save(course);
 
         int year = 2025;
@@ -171,7 +176,7 @@ class HistoryRepositoryTest {
 
         // given
         Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
-        Course course = saveCourse("지수", "캐딜락", MON, LocalTime.of(9, 0));
+        Course course = saveCourse("지수", "캐딜락", MON, LocalTime.of(9, 0), LocalTime.of(9, 50));
         saveCourseHistory(course, LocalDate.of(2025, 1, 30), 4);
         saveCourseHistory(course, LocalDate.of(2025, 1, 31), 5);
         saveCourseHistory(course, LocalDate.of(2025, 2, 3), 5);
@@ -199,8 +204,8 @@ class HistoryRepositoryTest {
 
         // given
         Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
-        Course course1 = saveCourse("지수", "캐딜락", TUES, LocalTime.of(18, 0));
-        Course course2 = saveCourse("지수", "바렐", TUES, LocalTime.of(20, 0));
+        Course course1 = saveCourse("지수", "캐딜락", TUES, LocalTime.of(18, 0), LocalTime.of(18, 50));
+        Course course2 = saveCourse("지수", "바렐", TUES, LocalTime.of(20, 0), LocalTime.of(20, 50));
 
         historyRepository.save(new History(member, LocalDate.of(2025, 1, 26), course1, 2025, 1, LocalDateTime.of(2025, 1, 31, 16, 29), RESERVED));
         historyRepository.save(new History(member, LocalDate.of(2025, 1, 26), course1, 2025, 1, LocalDateTime.of(2025, 1, 31, 16, 29), CANCELED));
@@ -220,15 +225,14 @@ class HistoryRepositoryTest {
 
         // given
         Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
-        Course course = saveCourse("지수", "캐딜락", TUES, LocalTime.of(18, 0));
+
+        Course course = saveCourse("지수", "캐딜락", THUR, LocalTime.of(18, 0), LocalTime.of(18, 50));
         saveHistory(member, LocalDate.of(2025, 1, 31), course, 2025, 1, LocalDateTime.of(2025, 1, 30, 8, 0), RESERVED);
         saveCourseHistory(course, LocalDate.of(2025, 1, 31), 5);
 
-        // when
-        Optional<CheckBefore4HourDto> ifBefore4Hour = historyRepository.ifBefore4hour(member, LocalDate.of(2025, 1, 31), course, LocalTime.of(13, 59, 59).plusHours(4));
-
-        // then
-        assertThat(ifBefore4Hour).isNotEmpty();
+        // when, when
+        historyRepository.ifAfter4hour(member, LocalDate.of(2025, 2, 27), course, LocalTime.of(13, 59, 59))
+                .isEmpty();
     }
 
     @DisplayName("수업 시작 4시간 전 취소 - 실패 케이스")
@@ -237,15 +241,67 @@ class HistoryRepositoryTest {
 
         // given
         Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
-        Course course = saveCourse("지수", "캐딜락", TUES, LocalTime.of(18, 0));
+
+        Course course = saveCourse("지수", "캐딜락", TUES, LocalTime.of(18, 0), LocalTime.of(18, 50));
         saveHistory(member, LocalDate.of(2025, 1, 31), course, 2025, 1, LocalDateTime.of(2025, 1, 30, 8, 0), RESERVED);
         saveCourseHistory(course, LocalDate.of(2025, 1, 31), 5);
 
+        // when, then
+        historyRepository.ifAfter4hour(member, LocalDate.of(2025, 2, 27), course, LocalTime.of(14, 0, 0))
+                .isPresent();
+    }
+
+    @DisplayName("특정 날짜에서 ENROLLED 또는 (최종 상태가) RESERVED인 레코드 개수 구하기")
+    @Test
+    void getReservedAndEnrolled() {
+
+        // given
+        Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
+        Course course = saveCourse("지수", "캐딜락", TUES, LocalTime.of(18, 0), LocalTime.of(18, 50));
+
+        historyRepository.save(new History(member, LocalDate.of(2025, 2, 26), course, 2025, 2, LocalDateTime.now(), ENROLLED));
+        historyRepository.save(new History(member, LocalDate.of(2025, 2, 26), course, 2025, 2, LocalDateTime.now(), RESERVED));
+        historyRepository.save(new History(member, LocalDate.of(2025, 2, 26), course, 2025, 2, LocalDateTime.now(), CANCELED));
+        historyRepository.save(new History(member, LocalDate.of(2025, 2, 26), course, 2025, 2, LocalDateTime.now(), RESERVED));
+
         // when
-        Optional<CheckBefore4HourDto> ifBefore4Hour = historyRepository.ifBefore4hour(member, LocalDate.of(2025, 1, 31), course, LocalTime.of(14, 0).plusHours(4));
+        List<History> reservedAndEnrolled = historyRepository.getReservedAndEnrolled(LocalDate.of(2025, 2, 26));
 
         // then
-        assertThat(ifBefore4Hour).isEmpty();
+        assertThat(reservedAndEnrolled).hasSize(2);
+    }
+    
+    @DisplayName("특정 날짜, 특정 수업에 대해 이미 신청했는지(최종 상태가 RESERVED인 history가 존재하는지) 확인하기 - 존재하지 않는 경우")
+    @Test
+    void checkAlreadyRegistered1() {
+        
+        // given
+        Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
+        Course course = saveCourse("지수", "캐딜락", TUES, LocalTime.of(18, 0), LocalTime.of(18, 50));
+
+        historyRepository.save(new History(member, LocalDate.of(2025, 2, 26), course, 2025, 2, LocalDateTime.now(), RESERVED));
+        historyRepository.save(new History(member, LocalDate.of(2025, 2, 26), course, 2025, 2, LocalDateTime.now(), CANCELED));
+        
+        // when, then
+        historyRepository.checkAlreadyRegistered(LocalDate.of(2025, 2, 26), course)
+                .isEmpty();
+    }
+
+    @DisplayName("특정 날짜, 특정 수업에 대해 이미 신청했는지(최종 상태가 RESERVED인 history가 존재하는지) 확인하기 - 존재하는 경우")
+    @Test
+    void checkAlreadyRegistered2() {
+
+        // given
+        Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
+        Course course = saveCourse("지수", "캐딜락", TUES, LocalTime.of(18, 0), LocalTime.of(18, 50));
+
+        historyRepository.save(new History(member, LocalDate.of(2025, 2, 26), course, 2025, 2, LocalDateTime.now(), RESERVED));
+        historyRepository.save(new History(member, LocalDate.of(2025, 2, 26), course, 2025, 2, LocalDateTime.now(), CANCELED));
+        historyRepository.save(new History(member, LocalDate.of(2025, 2, 26), course, 2025, 2, LocalDateTime.now(), RESERVED));
+
+        // when, then
+        historyRepository.checkAlreadyRegistered(LocalDate.of(2025, 2, 26), course)
+                .isPresent();
     }
 
     private Member saveMember(String memberNum, String password, String name, String phone, boolean gender, LocalDate regDate) {
@@ -255,12 +311,12 @@ class HistoryRepositoryTest {
         return member;
     }
 
-    private Course saveCourse(String instructorName, String courseName, DayOfWeek dayOfWeek, LocalTime startTime) {
+    private Course saveCourse(String instructorName, String courseName, DayOfWeek dayOfWeek, LocalTime startTime, LocalTime endTime) {
 
         Instructor instructor = new Instructor(instructorName);
         instructorRepository.save(instructor);
 
-        Course course = new Course(instructor, courseName, dayOfWeek, startTime);
+        Course course = new Course(instructor, courseName, dayOfWeek, startTime, endTime);
         courseRepository.save(course);
         return course;
     }

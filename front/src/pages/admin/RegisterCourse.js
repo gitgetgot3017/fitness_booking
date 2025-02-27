@@ -1,5 +1,6 @@
 import './RegisterCourse.css';
 import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 import api from "../../api";
 
 function RegisterCourse() {
@@ -11,6 +12,8 @@ function RegisterCourse() {
     let [selectedDayOfWeeks, setSelectedDayOfWeeks] = useState([]);
     let [startTimes, setStarTimes] = useState([true]);
     let [endTimes, setEndTimes] = useState([]);
+
+    let navigate = useNavigate();
 
     useEffect(() => {
         api.get("/api/instructors")
@@ -80,7 +83,7 @@ function RegisterCourse() {
                                                 setStarTimes(copy);
                                             }} required />
                                             ~
-                                            <input type="time" id="end-time" onClick={(e) => {
+                                            <input type="time" id="end-time" onChange={(e) => {
                                                 let copy = [...endTimes];
                                                 copy[i] = e.target.value;
                                                 setEndTimes(copy);
@@ -120,7 +123,8 @@ function RegisterCourse() {
                                     headers: { "Content-Type": "application/json" }
                                 })
                                 .then(() => {
-                                    // TODO: 수업 조회 페이지 만든 후, 해당 페이지로 이동
+                                    alert("수업을 등록하였습니다!");
+                                    navigate("/");
                                 })
                                 .catch((error) => {
                                     console.error("수업 등록 중 에러 발생:", error.response ? error.response.data : error.message);

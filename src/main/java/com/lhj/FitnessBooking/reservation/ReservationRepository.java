@@ -10,10 +10,13 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
     List<Reservation> findByCourseDateAndCourse(LocalDate courseDate, Course course);
+
+    Optional<Reservation> findByCourseDateAndCourseAndMember(LocalDate courseDate, Course course, Member member);
 
     @Modifying
     @Query("delete from Reservation r where r.courseDate = :courseDate and r.course = :course")

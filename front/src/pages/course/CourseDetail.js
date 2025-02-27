@@ -58,6 +58,8 @@ function CourseDetail() {
                     courseExpiration: result.data.errorResponse.courseExpiration,
                     alreadyWaitCourse: result.data.errorResponse.alreadyWaitCourse
                 });
+
+                console.log(errorState);
             })
             .catch((error) => {
                 console.error("상세 정보 가져오는 중 에러 발생:", error.response ? error.response.data : error.message);
@@ -136,7 +138,7 @@ function CourseDetail() {
 
             <div className="reservation-footer">
                 <div className="buttons">
-                    <button className="close">닫기</button>
+                    <button className="close" onClick={() => navigate("/")}>닫기</button>
                     {
                         errorState.duplicateEnrollment ?
                             ( // 해당 수업을 이미 신청한 경우

@@ -1,11 +1,14 @@
 import './RegistierInstructor.css';
 import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 import api from "../../api";
 
 function RegisterInstructor() {
 
     let [instructorName, setInstructorName] = useState("");
     let [image, setImage] = useState();
+
+    let navigate = useNavigate();
 
     function showPreview(e) {
 
@@ -56,7 +59,8 @@ function RegisterInstructor() {
 
                         api.post("/api/admin/register/instructors", formData)
                             .then(() => {
-                                alert("강사를 등록하였습니다.");
+                                alert("강사를 등록하였습니다!");
+                                navigate("/");
                             })
                             .catch((error) => {
                                 console.error("강사 등록 중 에러 발생:", error.response ? error.response.data : error.message);

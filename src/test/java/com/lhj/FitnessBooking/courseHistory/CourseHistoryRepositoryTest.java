@@ -38,7 +38,7 @@ class CourseHistoryRepositoryTest {
         courseHistoryRepository.save(new CourseHistory(course2, LocalDate.of(2025, 1, 30), 6));
 
         // when
-        List<History> enrolledDates = historyRepository.findByCourseDate(LocalDate.of(2025, 1, 30));
+        List<History> enrolledDates = historyRepository.getReservedAndEnrolled(LocalDate.of(2025, 1, 30));
 
         // then
         assertThat(enrolledDates).hasSize(2);
