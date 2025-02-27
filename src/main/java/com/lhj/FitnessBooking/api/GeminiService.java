@@ -21,7 +21,7 @@ public class GeminiService {
 
     public RecommendDto recommendCourse(MemberInputRequest request) {
 
-        List<CourseInfoTmp> courses = courseRepository.getTodayCourses(LocalDate.now(), LocalTime.now());
+        List<CourseInfoTmp> courses = courseRepository.getCourses(LocalDate.now(), LocalTime.now());
 
         MessageDto messageDto = getMessage(request, courses);
         if (!messageDto.isFlag()) { // Gemini를 사용하지 않는 경우
