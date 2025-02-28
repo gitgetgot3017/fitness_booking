@@ -266,7 +266,7 @@ public class CourseService {
         }
 
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotExistCourseException("존재하지 않는 수업입니다."));
-        if (historyRepository.checkAlreadyRegistered(date, course).isEmpty()) {
+        if (historyRepository.checkAlreadyRegistered(date, course).isPresent()) {
             throw new DuplicateEnrollmentException("이미 신청한 수업입니다.");
         }
 

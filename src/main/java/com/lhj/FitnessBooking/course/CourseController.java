@@ -46,8 +46,7 @@ public class CourseController {
     public CourseDetailResponse showCourseDetail(HttpServletRequest request, @RequestParam("date") LocalDate date, @RequestParam("courseId") Long courseId) {
 
         Member member = getMember(request, memberRepository);
-        CourseDetailResponse tmp = courseService.showCourseDetail(member, date, courseId);
-        return tmp;
+        return courseService.showCourseDetail(member, date, courseId);
     }
 
     @PostMapping("/reservations")

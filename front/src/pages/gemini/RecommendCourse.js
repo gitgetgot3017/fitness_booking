@@ -64,11 +64,11 @@ function RecommendCourse() {
                     recommendDto.courseName === null ?
                         null :
                         <button style={{marginTop: "20px"}} onClick={() => {
-                            api.get("/courses/id?name=" + recommendDto.courseName)
+                            api.get("/api/courses/id?name=" + recommendDto.courseName)
                                 .then((result) => {
                                     setCourseId(result.data);
 
-                                    api.post("/courses/reservations", {
+                                    api.post("/api/courses/reservations", {
                                             date: getFormattedTodayDate(),
                                             courseId: courseId
                                         }, {
