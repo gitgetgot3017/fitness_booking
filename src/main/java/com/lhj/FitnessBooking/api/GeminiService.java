@@ -1,11 +1,17 @@
 package com.lhj.FitnessBooking.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lhj.FitnessBooking.api.dto.*;
+import com.lhj.FitnessBooking.api.exception.NotExistModelException;
 import com.lhj.FitnessBooking.course.CourseRepository;
 import com.lhj.FitnessBooking.dto.CourseInfoTmp;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -18,6 +24,10 @@ public class GeminiService {
 
     private final GeminiInterface geminiInterface;
     private final CourseRepository courseRepository;
+    private final ObjectMapper objectMapper;
+
+    @Value("${googleai.api.key}")
+    private String API_KEY;
 
     public RecommendDto recommendCourse(MemberInputRequest request) {
 
@@ -28,8 +38,12 @@ public class GeminiService {
             return new RecommendDto(messageDto.getMessage(), null);
         }
 
+        String modelName = extractModelName();
+        if (modelName == null) {
+            throw new NotExistModelException("적절한 Gemini 모델이 존재하지 않습니다.");
+        }
         GeminiRequest geminiRequest = new GeminiRequest(messageDto.getMessage());
-        GeminiResponse response = geminiInterface.getCompletion("gemini-pro", geminiRequest);
+        GeminiResponse response = geminiInterface.getCompletion(modelName, geminiRequest);
 
         String geminiSaid = response.getCandidates()
                 .stream()
@@ -57,6 +71,44 @@ public class GeminiService {
                     request.getCondition(), request.getGoal(), getCoursesName(courses));
         }
         return new MessageDto(flag, message);
+    }
+
+    private String getAvailableModels() {
+
+        String targetUrl = "https://generativelanguage.googleapis.com/v1/models?key=" + API_KEY;
+        RestTemplate restTemplate = new RestTemplate();
+        return restTemplate.getForEntity(targetUrl, String.class).getBody();
+    }
+
+    private String extractModelName() {
+
+        String availableModels = getAvailableModels();
+
+        try {
+        JsonNode models = objectMapper.readTree(availableModels).get("models");
+
+        if (models != null && models.isArray()) {
+            for (JsonNode model : models) {
+                JsonNode methods = model.get("supportedGenerationMethods");
+                String description = model.has("description") ? model.get("description").asText().toLowerCase() : "";
+
+                if (description.contains("deprecate")) {
+                    continue;
+                }
+
+                if (methods != null && methods.isArray()) {
+                    for (JsonNode method : methods) {
+                        if (method.asText().equals("generateContent")) {
+                            return model.get("name").asText().replace("models/", "");  // 🔥 사용 가능한 모델명 반환
+                        }
+                    }
+                }
+            }
+        }
+    } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null; // 적절한 모델이 존재하지 않는 경우
     }
 
     private String getCoursesName(List<CourseInfoTmp> courses) {
