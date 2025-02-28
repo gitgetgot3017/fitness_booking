@@ -1,12 +1,12 @@
 package com.lhj.FitnessBooking.notification;
 
-import com.lhj.FitnessBooking.domain.Member;
 import com.lhj.FitnessBooking.domain.Notification;
-import com.lhj.FitnessBooking.member.MemberRepository;
-import com.lhj.FitnessBooking.member.exception.NotExistMemberException;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
@@ -23,23 +23,22 @@ public class NotificationService {
 
     private final SseEmitterRepository sseEmitterRepository;
     private final NotificationRepository notificationRepository;
-    private final MemberRepository memberRepository;
 
     /**
      * 1. SSE 객체 생성 후 저장 -> 반환
      * 2. 더미 데이터 전송 (503을 막기 위함)
      * 3. 미전송 데이터 전송
      */
-    public SseEmitter connectSse(long memberId, long lastEventId) {
+    public SseEmitter connectSse(long lastEventId) {
 
-        String id = memberId + "_" + System.currentTimeMillis();
+        String id = String.valueOf(System.currentTimeMillis());
 
         SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
         sseEmitterRepository.saveEmitter(id, emitter);
         emitter.onCompletion(() -> sseEmitterRepository.deleteEmitter(id));
         emitter.onTimeout(() -> sseEmitterRepository.deleteEmitter(id));
 
-        sendToClient(emitter, -1, "dummy data [memberId: " + memberId + "]", id);
+        sendToClient(emitter, -1, "dummy data", id);
 
         if(lastEventId > 0) {
             notificationRepository.findAll().stream()
@@ -66,6 +65,7 @@ public class NotificationService {
         try {
             sseEmitter.send(SseEmitter.event()
                     .id(String.valueOf(notificationId))
+                    .name("message")
                     .data(notification));
         } catch (IOException e) {
             sseEmitterRepository.deleteEmitter(id);

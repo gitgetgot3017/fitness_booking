@@ -1,7 +1,6 @@
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
-import api from "../../api";
 
 function Login() {
 
@@ -25,14 +24,23 @@ function Login() {
                         window.localStorage.setItem("accessToken", result.data.accessToken);
                         window.localStorage.setItem("refreshToken", result.data.refreshToken);
 
-                        navigate("/"); // TODO: SSE 연결 요청이 잘 이뤄지는지, 연결이 잘 되는지 확인 필요함
-
                         if (result.data.grade === "ADMIN") {
-                            api.get("/api/notifications")
-                                .catch((error) => {
-                                    console.error("SSE 연결 요청 중 에러 발생:", error.response ? error.response.data : error.message);
-                                });
+                            let eventSource = new EventSource('http://localhost:8080/api/notifications?accessToken=' + localStorage.getItem("accessToken"));
+
+                            eventSource.onopen = function () {
+                                console.log("SSE 연결 성공!");
+                            }
+
+                            eventSource.onmessage = function(event) {
+                                console.log("서버로부터 데이터를 수신하였음", event.data);
+                            }
+
+                            eventSource.onerror = function(error) {
+                                console.log("SSE 연결 오류 발생!", error);
+                            }
                         }
+
+                        navigate("/");
                     })
                     .catch((error) => {
                         console.error("로그인 중 에러 발생:", error.response ? error.response.data : error.message);

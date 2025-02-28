@@ -1,40 +1,46 @@
 package com.lhj.FitnessBooking.notification;
 
-import com.lhj.FitnessBooking.domain.Member;
-import com.lhj.FitnessBooking.member.MemberRepository;
-import com.lhj.FitnessBooking.member.exception.NotExistMemberException;
+import com.lhj.FitnessBooking.domain.Notification;
+import com.lhj.FitnessBooking.jwt.exception.NotExistAccessTokenException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/notifications")
 public class NotificationController {
 
-    private final MemberRepository memberRepository;
     private final NotificationService notificationService;
+    private final NotificationRepository notificationRepository;
 
     @GetMapping(produces = "text/event-stream")
-    public HttpEntity<SseEmitter> connectSse(HttpServletRequest request, @RequestHeader(value = "Last-Event-ID", defaultValue = "0") long lastEventId) {
+    public HttpEntity<SseEmitter> connectSse(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "accessToken", required = false) String accessToken, @RequestHeader(value = "Last-Event-ID", defaultValue = "0") long lastEventId) {
 
-        Member member = getMember(request);
+        // /api/notifications (SSE 연결 요청)에 대한 accessToken 처리
+        if (request.getRequestURI().equals("/api/notifications") && accessToken == null) {
+            throw new NotExistAccessTokenException("로그인이 필요합니다.");
+        }
 
-        SseEmitter emitter = notificationService.connectSse(member.getId(), lastEventId);
+        response.setContentType("text/event-stream");
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000"); // CORS 문제를 해결하기 위함
+
+        SseEmitter emitter = notificationService.connectSse(lastEventId);
         return new ResponseEntity<>(emitter, HttpStatus.OK);
     }
 
-    private Member getMember(HttpServletRequest request) {
+    @GetMapping("/history")
+    public HttpEntity<List<Notification>> getNotifications() {
 
-        String memberNum = (String) request.getAttribute("memberNum");
-        return memberRepository.findByMemberNum(memberNum)
-                .orElseThrow(() -> new NotExistMemberException("해당 멤버는 존재하지 않습니다."));
+        List<Notification> notifications = notificationRepository.getWeeklyNotifications(LocalDateTime.now().minusDays(7));
+        return new ResponseEntity<>(notifications, HttpStatus.OK);
     }
 }

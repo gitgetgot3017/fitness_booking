@@ -70,6 +70,7 @@ function CourseMain() {
                     <li><a onClick={() => navigate("/courses/recommendation")}>수업 추천</a></li>
                     <li><a onClick={() => navigate("/admin/register/courses")}>수업 등록</a></li>
                     <li><a onClick={() => navigate("/admin/register/instructors")}>강사 등록</a></li>
+                    <li><a onClick={() => navigate("/notifications")}>알림</a></li>
                 </ul>
             </div>
 

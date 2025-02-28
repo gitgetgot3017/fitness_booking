@@ -1,0 +1,46 @@
+.notifications {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.notifications::-webkit-scrollbar {
+    width: 8px;
+}
+
+.notifications::-webkit-scrollbar-track {
+    background: #333;
+    border-radius: 10px;
+}
+
+.notifications::-webkit-scrollbar-thumb {
+    background: #f00;
+    border-radius: 10px;
+}
+
+.notification-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #444;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.notification-item.read {
+    background-color: #222;
+    color: #bbb;
+}
+
+.notification-item .left {
+    text-align: left;
+}
+
+.notification-item .right {
+    text-align: right;
+    font-size: 0.9em;
+    color: #bbb;
+}
