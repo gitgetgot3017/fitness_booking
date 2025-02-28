@@ -22,7 +22,7 @@ function CourseMain() {
 
     useEffect(() => {
         api.get("/api/courses", {
-                params: {date: date.toISOString().slice(0, 10)}
+                params: {date: `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`}
             })
             .then((result) => {
                 setMemberName(result.data.memberName);
