@@ -38,7 +38,7 @@ public class NotificationService {
         emitter.onCompletion(() -> sseEmitterRepository.deleteEmitter(id));
         emitter.onTimeout(() -> sseEmitterRepository.deleteEmitter(id));
 
-        sendToClient(emitter, -1, "dummy data", id);
+        sendToClient(emitter, -1, "{\"data\": \"dummy data\"}", id);
 
         if(lastEventId > 0) {
             notificationRepository.findAll().stream()

@@ -61,13 +61,14 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
     @Query(
             "select h " +
             "from History h " +
-            "where (h.status = 'ENROLLED' " +
-            "or (h.status = 'RESERVED' " +
+            "where (h.courseDate = :courseDate " + // 특정 날짜 중 status가 ENROLLED인 것
+            "and h.status = 'ENROLLED') " +
+            "or (h.status = 'RESERVED' " + // 특정 날짜 중 status의 최종 상태가 RESERVED인 것
             "and h.id in (select max(h.id) " +
                             "from History h " +
                             "where h.courseDate = :courseDate " +
                             "and h.status <> 'ENROLLED' " +
-                            "group by h.course))) "
+                            "group by h.course)) "
     )
     List<History> getReservedAndEnrolled(@Param("courseDate") LocalDate courseDate);
 
@@ -75,7 +76,7 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
             "select h " +
             "from History h " +
             "where h.status = 'RESERVED' " +
-            "and h.id = (select max(h.id) " +
+            "and h.id = (select h.id " +
                                 "from History h " +
                                 "where h.courseDate = :courseDate " +
                                 "and h.course = :course)"

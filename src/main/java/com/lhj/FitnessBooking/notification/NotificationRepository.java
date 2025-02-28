@@ -13,6 +13,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     @Query("select n " +
             "from Notification n " +
-            "where :startDateTime <= n.notificationDateTime ")
+            "where :startDateTime <= n.notificationDateTime " +
+            "order by n.notificationDateTime desc")
     List<Notification> getWeeklyNotifications(@Param("startDateTime") LocalDateTime startDateTime);
 }
