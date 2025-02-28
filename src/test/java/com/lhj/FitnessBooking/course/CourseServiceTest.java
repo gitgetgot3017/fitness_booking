@@ -46,7 +46,7 @@ class CourseServiceTest {
     void reserveCourseSuccess() {
 
         // given
-        Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
+        Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0), LocalTime.of(0, 0));
         CourseHistory courseHistory = saveCourseHistory(course, LocalDate.of(2025, 2, 4), 5);
 
         Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
@@ -75,7 +75,7 @@ class CourseServiceTest {
     @Test
     void reserveCourseFail() {
 
-        Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
+        Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0), LocalTime.of(0, 0));
         saveCourseHistory(course, LocalDate.of(2025, 2, 4), 6);
 
         Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
@@ -92,7 +92,7 @@ class CourseServiceTest {
     void waitCourse() {
 
         // given
-        Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
+        Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0), LocalTime.of(0, 0));
 
         Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
         LocalDate courseDate = LocalDate.of(2025, 2, 5);
@@ -113,7 +113,7 @@ class CourseServiceTest {
     void cancelCourse() {
 
         // given
-        Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
+        Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0), LocalTime.of(0, 0));
         CourseHistory courseHistory = saveCourseHistory(course, LocalDate.of(2025, 2, 5), 6);
 
         Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
@@ -146,7 +146,7 @@ class CourseServiceTest {
     void cancelWaiting() {
 
         // given
-        Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
+        Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0), LocalTime.of(0, 0));
 
         Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
         LocalDate courseDate = LocalDate.of(2025, 2, 5);
@@ -168,8 +168,8 @@ class CourseServiceTest {
     void showCourseHistory() {
 
         // given
-        Course course1 = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
-        Course course2 = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
+        Course course1 = saveCourse("캐딜락", TUES, LocalTime.of(18, 0), LocalTime.of(0, 0));
+        Course course2 = saveCourse("캐딜락", TUES, LocalTime.of(18, 0), LocalTime.of(0, 0));
         Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
         saveCourseHistory(course1, LocalDate.of(2025, 2, 5), 5);
         saveCourseHistory(course2, LocalDate.of(2025, 2, 5), 4);
@@ -194,12 +194,12 @@ class CourseServiceTest {
         return member;
     }
 
-    private Course saveCourse(String name, DayOfWeek dayOfWeek, LocalTime startTime) {
+    private Course saveCourse(String name, DayOfWeek dayOfWeek, LocalTime startTime, LocalTime endTime) {
 
         Instructor instructor = new Instructor(name);
         instructorRepository.save(instructor);
 
-        Course course = new Course(instructor, name, dayOfWeek, startTime);
+        Course course = new Course(instructor, name, dayOfWeek, startTime, endTime);
         courseRepository.save(course);
         return course;
     }

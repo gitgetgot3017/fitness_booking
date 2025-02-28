@@ -40,7 +40,7 @@ class CourseRepositoryTest {
         courseHistoryRepository.deleteAll();
     }
 
-    @DisplayName("홈 > 그룹예약: 오늘의 수강 목록 조회")
+    @DisplayName("홈 > 그룹예약: 수강 목록 조회")
     @Test
     void getTodayCourses() {
 
@@ -48,10 +48,10 @@ class CourseRepositoryTest {
         Instructor instructor1 = saveInstructor("지수");
         Instructor instructor2 = saveInstructor("세미");
 
-        Course course1 = saveCourse(instructor1, "캐딜락", TUES, LocalTime.of(9, 0));
-        Course course2 = saveCourse(instructor1, "바렐", TUES, LocalTime.of(9, 0));
-        Course course3 = saveCourse(instructor1, "리포머", TUES, LocalTime.of(18, 0));
-        Course course4 = saveCourse(instructor2, "체어", TUES, LocalTime.of(18, 0));
+        Course course1 = saveCourse(instructor1, "캐딜락", TUES, LocalTime.of(9, 0), LocalTime.of(0, 0));
+        Course course2 = saveCourse(instructor1, "바렐", TUES, LocalTime.of(9, 0), LocalTime.of(0, 0));
+        Course course3 = saveCourse(instructor1, "리포머", TUES, LocalTime.of(18, 0), LocalTime.of(0, 0));
+        Course course4 = saveCourse(instructor2, "체어", TUES, LocalTime.of(18, 0), LocalTime.of(0, 0));
 
         courseHistoryRepository.save(new CourseHistory(course1, LocalDate.of(2025, 1, 26), 6));
         courseHistoryRepository.save(new CourseHistory(course1, LocalDate.of(2025, 1, 26), 5));
@@ -65,7 +65,7 @@ class CourseRepositoryTest {
         courseHistoryRepository.save(new CourseHistory(course4, LocalDate.of(2025, 1, 26), 5));
 
         // when
-        List<CourseInfoTmp> courseInfoList = courseRepository.getTodayCourses(LocalDate.of(2025, 1, 26), LocalTime.of(12, 30));
+        List<CourseInfoTmp> courseInfoList = courseRepository.getCourses(LocalDate.of(2025, 1, 26), LocalTime.of(12, 30));
 
         // then
         assertThat(courseInfoList).hasSize(6)
@@ -80,50 +80,6 @@ class CourseRepositoryTest {
                 );
     }
 
-    @DisplayName("홈 > 그룹예약: 내일의 수강 목록 조회")
-    @Test
-    void getTomorrowCourses() {
-
-        // given
-        Instructor instructor1 = saveInstructor("지수");
-        Instructor instructor2 = saveInstructor("세미");
-
-        Course course1 = saveCourse(instructor1, "캐딜락", TUES, LocalTime.of(20, 0));
-        Course course2 = saveCourse(instructor1, "바렐", TUES, LocalTime.of(20, 0));
-        Course course3 = saveCourse(instructor1, "리포머", TUES, LocalTime.of(18, 0));
-        Course course4 = saveCourse(instructor2, "체어", TUES, LocalTime.of(18, 0));
-
-        courseHistoryRepository.save(new CourseHistory(course1, LocalDate.of(2025, 1, 26), 6));
-        courseHistoryRepository.save(new CourseHistory(course1, LocalDate.of(2025, 1, 26), 5));
-        courseHistoryRepository.save(new CourseHistory(course2, LocalDate.of(2025, 1, 26), 6));
-        courseHistoryRepository.save(new CourseHistory(course2, LocalDate.of(2025, 1, 26), 4));
-        courseHistoryRepository.save(new CourseHistory(course3, LocalDate.of(2025, 1, 26), 5));
-        courseHistoryRepository.save(new CourseHistory(course3, LocalDate.of(2025, 1, 26), 6));
-        courseHistoryRepository.save(new CourseHistory(course3, LocalDate.of(2025, 1, 26), 6));
-        courseHistoryRepository.save(new CourseHistory(course4, LocalDate.of(2025, 1, 26), 5));
-        courseHistoryRepository.save(new CourseHistory(course4, LocalDate.of(2025, 1, 26), 4));
-        courseHistoryRepository.save(new CourseHistory(course4, LocalDate.of(2025, 1, 26), 5));
-
-        // when
-        List<CourseInfoTmp> courseInfoList = courseRepository.getTomorrowCourses(LocalDate.of(2025, 1, 26));
-
-        // then
-        assertThat(courseInfoList).hasSize(10)
-                .extracting("instructorName", "courseName", "courseStartTime", "attendeeCount")
-                .containsExactly(
-                        tuple("지수", "리포머", LocalTime.of(18, 0), 5),
-                        tuple("지수", "리포머", LocalTime.of(18, 0), 6),
-                        tuple("지수", "리포머", LocalTime.of(18, 0), 6),
-                        tuple("세미", "체어", LocalTime.of(18, 0), 5),
-                        tuple("세미", "체어", LocalTime.of(18, 0), 4),
-                        tuple("세미", "체어", LocalTime.of(18, 0), 5),
-                        tuple("지수", "캐딜락", LocalTime.of(20, 0), 6),
-                        tuple("지수", "캐딜락", LocalTime.of(20, 0), 5),
-                        tuple("지수", "바렐", LocalTime.of(20, 0), 6),
-                        tuple("지수", "바렐", LocalTime.of(20, 0), 4)
-                );
-    }
-
     @DisplayName("수강 정원 구하기")
     @Test
     void getCourseCount() {
@@ -131,7 +87,7 @@ class CourseRepositoryTest {
         // given
         Instructor instructor = saveInstructor("지수");
 
-        Course course = courseRepository.save(new Course(instructor, "캐딜락", TUES, LocalTime.of(18, 0)));
+        Course course = courseRepository.save(new Course(instructor, "캐딜락", TUES, LocalTime.of(18, 0), LocalTime.of(0, 0)));
         courseHistoryRepository.save(new CourseHistory(course, LocalDate.of(2025, 1, 30), 5));
 
         // when
@@ -147,7 +103,7 @@ class CourseRepositoryTest {
 
         // given
         Instructor instructor = saveInstructor("지수");
-        Course course = courseRepository.save(new Course(instructor, "캐딜락", SAT, LocalTime.of(11, 0)));
+        Course course = courseRepository.save(new Course(instructor, "캐딜락", SAT, LocalTime.of(11, 0), LocalTime.of(0, 0)));
         courseHistoryRepository.save(new CourseHistory(course, LocalDate.of(2025, 2, 1), 6));
 
         // when, then
@@ -161,7 +117,7 @@ class CourseRepositoryTest {
 
         // given
         Instructor instructor = saveInstructor("지수");
-        Course course = courseRepository.save(new Course(instructor, "캐딜락", SAT, LocalTime.of(11, 0)));
+        Course course = courseRepository.save(new Course(instructor, "캐딜락", SAT, LocalTime.of(11, 0), LocalTime.of(0, 0)));
         CourseHistory courseHistory = courseHistoryRepository.save(new CourseHistory(course, LocalDate.of(2025, 2, 2), 4));
 
         // when
@@ -181,7 +137,7 @@ class CourseRepositoryTest {
 
         // given
         Instructor instructor = saveInstructor("지수");
-        Course course = courseRepository.save(new Course(instructor, "캐딜락", SAT, LocalTime.of(11, 0)));
+        Course course = courseRepository.save(new Course(instructor, "캐딜락", SAT, LocalTime.of(11, 0), LocalTime.of(0, 0)));
         CourseHistory courseHistory = courseHistoryRepository.save(new CourseHistory(course, LocalDate.of(2025, 2, 2), 4));
 
         // when
@@ -202,11 +158,11 @@ class CourseRepositoryTest {
         // given
         Instructor instructor = saveInstructor("지수");
 
-        courseRepository.save(new Course(instructor, "캐딜락", WED, LocalTime.of(18, 0)));
-        courseRepository.save(new Course(instructor, "캐딜락", WED, LocalTime.of(19, 0)));
-        courseRepository.save(new Course(instructor, "캐딜락", WED, LocalTime.of(20, 0)));
-        courseRepository.save(new Course(instructor, "캐딜락", THUR, LocalTime.of(18, 0)));
-        courseRepository.save(new Course(instructor, "캐딜락", SAT, LocalTime.of(10, 0)));
+        courseRepository.save(new Course(instructor, "캐딜락", WED, LocalTime.of(18, 0), LocalTime.of(0, 0)));
+        courseRepository.save(new Course(instructor, "캐딜락", WED, LocalTime.of(19, 0), LocalTime.of(0, 0)));
+        courseRepository.save(new Course(instructor, "캐딜락", WED, LocalTime.of(20, 0), LocalTime.of(0, 0)));
+        courseRepository.save(new Course(instructor, "캐딜락", THUR, LocalTime.of(18, 0), LocalTime.of(0, 0)));
+        courseRepository.save(new Course(instructor, "캐딜락", SAT, LocalTime.of(10, 0), LocalTime.of(0, 0)));
 
         // when
         List<Course> courses = courseRepository.findByDayOfWeek(WED);
@@ -221,7 +177,7 @@ class CourseRepositoryTest {
 
         // given
         Instructor instructor = saveInstructor("써니");
-        courseRepository.save(new Course(instructor, "플라잉", TUES, LocalTime.of(11, 0)));
+        courseRepository.save(new Course(instructor, "플라잉", TUES, LocalTime.of(11, 0), LocalTime.of(0, 0)));
 
         // when
         Optional<Course> courseExist = courseRepository.findByDayOfWeekAndName(TUES, "플라잉");
@@ -236,8 +192,8 @@ class CourseRepositoryTest {
         return instructor;
     }
 
-    private Course saveCourse(Instructor instructor, String name, DayOfWeek dayOfWeek, LocalTime startTime) {
-        Course course = new Course(instructor, name, dayOfWeek, startTime);
+    private Course saveCourse(Instructor instructor, String name, DayOfWeek dayOfWeek, LocalTime startTime, LocalTime endTime) {
+        Course course = new Course(instructor, name, dayOfWeek, startTime, endTime);
         courseRepository.save(course);
         return course;
     }

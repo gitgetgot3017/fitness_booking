@@ -31,8 +31,8 @@ class CourseHistoryRepositoryTest {
 
         // given
         Instructor instructor = saveInstructor("지수");
-        Course course1 = saveCourse(instructor, "캐딜락", TUES, LocalTime.of(18, 0));
-        Course course2 = saveCourse(instructor, "바렐", TUES, LocalTime.of(20, 0));
+        Course course1 = saveCourse(instructor, "캐딜락", TUES, LocalTime.of(18, 0), LocalTime.of(0, 0));
+        Course course2 = saveCourse(instructor, "바렐", TUES, LocalTime.of(20, 0), LocalTime.of(0, 0));
 
         courseHistoryRepository.save(new CourseHistory(course1, LocalDate.of(2025, 1, 30), 5));
         courseHistoryRepository.save(new CourseHistory(course2, LocalDate.of(2025, 1, 30), 6));
@@ -50,13 +50,13 @@ class CourseHistoryRepositoryTest {
 
         // given
         Instructor instructor = saveInstructor("지수");
-        Course course1 = saveCourse(instructor, "캐딜락", TUES, LocalTime.of(18, 0));
-        Course course2 = saveCourse(instructor, "바렐", TUES, LocalTime.of(20, 0));
+        Course course1 = saveCourse(instructor, "캐딜락", TUES, LocalTime.of(18, 0), LocalTime.of(0, 0));
+        Course course2 = saveCourse(instructor, "바렐", TUES, LocalTime.of(20, 0), LocalTime.of(0, 0));
 
         courseHistoryRepository.save(new CourseHistory(course1, LocalDate.of(2025, 1, 30), 5));
 
         // when
-        Optional<History> result = historyRepository.findByCourseDateAndCourse(LocalDate.of(2025, 1, 30), course2);
+        Optional<History> result = historyRepository.checkAlreadyRegistered(LocalDate.of(2025, 1, 30), course2);
 
         // then
         assertThat(result).isEmpty();
@@ -68,12 +68,12 @@ class CourseHistoryRepositoryTest {
 
         // given
         Instructor instructor = saveInstructor("지수");
-        Course course = saveCourse(instructor, "캐딜락", TUES, LocalTime.of(18, 0));
+        Course course = saveCourse(instructor, "캐딜락", TUES, LocalTime.of(18, 0), LocalTime.of(0, 0));
 
         courseHistoryRepository.save(new CourseHistory(course, LocalDate.of(2025, 1, 30), 5));
 
         // when
-        Optional<History> result = historyRepository.findByCourseDateAndCourse(LocalDate.of(2025, 1, 30), course);
+        Optional<History> result = historyRepository.checkAlreadyRegistered(LocalDate.of(2025, 1, 30), course);
 
         // then
         assertThat(result).isNotEmpty();
@@ -85,8 +85,8 @@ class CourseHistoryRepositoryTest {
         return instructor;
     }
 
-    private Course saveCourse(Instructor instructor, String name, DayOfWeek dayOfWeek, LocalTime startTime) {
-        Course course = new Course(instructor, name, dayOfWeek, startTime);
+    private Course saveCourse(Instructor instructor, String name, DayOfWeek dayOfWeek, LocalTime startTime, LocalTime endTime) {
+        Course course = new Course(instructor, name, dayOfWeek, startTime, endTime);
         courseRepository.save(course);
         return course;
     }

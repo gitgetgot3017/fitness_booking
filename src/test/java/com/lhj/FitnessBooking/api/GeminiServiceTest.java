@@ -42,8 +42,8 @@ class GeminiServiceTest {
         // given
         Instructor instructor = saveInstructor("유나");
 
-        Course course1 = saveCourse(instructor, "하타", MON, LocalTime.of(9, 0));
-        Course course2 = saveCourse(instructor, "필라테스", MON, LocalTime.of(10, 0));
+        Course course1 = saveCourse(instructor, "하타", MON, LocalTime.of(9, 0), LocalTime.of(9, 50));
+        Course course2 = saveCourse(instructor, "필라테스", MON, LocalTime.of(10, 0), LocalTime.of(10, 50));
 
         saveCourseHistory(course1, LocalDate.of(2025, 2, 17), 4);
         saveCourseHistory(course2, LocalDate.of(2025, 2, 17), 5);
@@ -66,8 +66,8 @@ class GeminiServiceTest {
         // given
         Instructor instructor = saveInstructor("유나");
 
-        Course course1 = saveCourse(instructor, "하타", MON, LocalTime.of(8, 0));
-        Course course2 = saveCourse(instructor, "필라테스", MON, LocalTime.of(18, 0));
+        Course course1 = saveCourse(instructor, "하타", MON, LocalTime.of(8, 0), LocalTime.of(8, 50));
+        Course course2 = saveCourse(instructor, "필라테스", MON, LocalTime.of(18, 0), LocalTime.of(18, 50));
 
         saveCourseHistory(course1, LocalDate.of(2025, 2, 17), 4);
         saveCourseHistory(course2, LocalDate.of(2025, 2, 17), 5);
@@ -90,8 +90,8 @@ class GeminiServiceTest {
         // given
         Instructor instructor = saveInstructor("유나");
 
-        Course course1 = saveCourse(instructor, "하타", MON, LocalTime.of(18, 0));
-        Course course2 = saveCourse(instructor, "필라테스", MON, LocalTime.of(19, 0));
+        Course course1 = saveCourse(instructor, "하타", MON, LocalTime.of(18, 0), LocalTime.of(18, 50));
+        Course course2 = saveCourse(instructor, "필라테스", MON, LocalTime.of(19, 0), LocalTime.of(19, 50));
 
         saveCourseHistory(course1, LocalDate.of(2025, 2, 17), 4);
         saveCourseHistory(course2, LocalDate.of(2025, 2, 17), 5);
@@ -113,8 +113,8 @@ class GeminiServiceTest {
         return instructor;
     }
 
-    private Course saveCourse(Instructor instructor, String name, DayOfWeek dayOfWeek, LocalTime startTime) {
-        Course course = new Course(instructor, name, dayOfWeek, startTime);
+    private Course saveCourse(Instructor instructor, String name, DayOfWeek dayOfWeek, LocalTime startTime, LocalTime endTime) {
+        Course course = new Course(instructor, name, dayOfWeek, startTime, endTime);
         courseRepository.save(course);
         return course;
     }

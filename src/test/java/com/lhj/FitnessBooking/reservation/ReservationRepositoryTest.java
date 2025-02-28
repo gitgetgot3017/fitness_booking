@@ -34,7 +34,7 @@ class ReservationRepositoryTest {
 
         // given
         Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
-        Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
+        Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0), LocalTime.of(0, 0));
 
         reservationRepository.save(new Reservation(LocalDate.of(2025, 2, 3), course, member, LocalDateTime.of(2025, 2, 3, 23, 12)));
         reservationRepository.save(new Reservation(LocalDate.of(2025, 2, 3), course, member, LocalDateTime.of(2025, 2, 3, 23, 12)));
@@ -50,6 +50,34 @@ class ReservationRepositoryTest {
         assertThat(reservations).hasSize(6);
     }
 
+    @DisplayName("이미 대기 등록한 수업인지 확인하기 - 이미 대기 등록한 경우")
+    @Test
+    void findByCourseDateAndCourseAndMember1() {
+
+        // given
+        Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
+        Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0), LocalTime.of(0, 0));
+
+        reservationRepository.save(new Reservation(LocalDate.of(2025, 2, 27), course, member, LocalDateTime.of(2025, 2, 3, 23, 12)));
+
+        // when, then
+        reservationRepository.findByCourseDateAndCourseAndMember(LocalDate.of(2025, 2, 27), course, member)
+                .isPresent();
+    }
+
+    @DisplayName("이미 대기 등록한 수업인지 확인하기 - 대기 등록하지 않은 경우")
+    @Test
+    void findByCourseDateAndCourseAndMember2() {
+
+        // given
+        Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
+        Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0), LocalTime.of(0, 0));
+
+        // when, then
+        reservationRepository.findByCourseDateAndCourseAndMember(LocalDate.of(2025, 2, 27), course, member)
+                .isEmpty();
+    }
+
     @DisplayName("특정 수업의 대기 전부 삭제하기")
     @Test
     void deleteReservations() {
@@ -58,7 +86,7 @@ class ReservationRepositoryTest {
         Member member1 = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
         Member member2 = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
         Member member3 = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
-        Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
+        Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0), LocalTime.of(0, 0));
 
         reservationRepository.save(new Reservation(LocalDate.of(2025, 2, 4), course, member1, LocalDateTime.of(2025, 2, 4, 22, 18)));
         reservationRepository.save(new Reservation(LocalDate.of(2025, 2, 4), course, member2, LocalDateTime.of(2025, 2, 4, 22, 18)));
@@ -79,7 +107,7 @@ class ReservationRepositoryTest {
         // given
         Member member1 = saveMember("1073", "060820", "일현지", "01052802073", true, LocalDate.of(2025, 1, 31));
         Member member2 = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2025, 1, 31));
-        Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0));
+        Course course = saveCourse("캐딜락", TUES, LocalTime.of(18, 0), LocalTime.of(0, 0));
 
         reservationRepository.save(new Reservation(LocalDate.of(2025, 2, 4), course, member1, LocalDateTime.of(2025, 2, 4, 22, 18)));
         reservationRepository.save(new Reservation(LocalDate.of(2025, 2, 4), course, member2, LocalDateTime.of(2025, 2, 4, 22, 18)));
@@ -100,12 +128,12 @@ class ReservationRepositoryTest {
         return member;
     }
 
-    private Course saveCourse(String name, DayOfWeek dayOfWeek, LocalTime startTime) {
+    private Course saveCourse(String name, DayOfWeek dayOfWeek, LocalTime startTime, LocalTime endTime) {
 
         Instructor instructor = new Instructor(name);
         instructorRepository.save(instructor);
 
-        Course course = new Course(instructor, name, dayOfWeek, startTime);
+        Course course = new Course(instructor, name, dayOfWeek, startTime, endTime);
         courseRepository.save(course);
         return course;
     }
