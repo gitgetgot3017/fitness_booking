@@ -11,8 +11,11 @@ jobs:
     steps:
       - name: Github Repository 파일 불러오기
         uses: actions/checkout@v4
-        with:
-          path: "."
+
+      - name: Github Actions 상 경로 확인
+        run: |
+          pwd
+          ls
 
       - name: JDK 17 버전 설치
         uses: actions/setup-java@v4
