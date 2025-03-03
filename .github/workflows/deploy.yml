@@ -13,9 +13,9 @@ jobs:
       - name: SSH로 EC2에 원격 접속하기
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ screts.EC2_HOST }}
-          username: ${{ screts.EC2_USERNAME }}
-          key: ${{ screts.EC2_PRIVATE_KEY }}
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
           script_stop: true
           script: |
             cd /hme/ubuntu/fitness_booking
