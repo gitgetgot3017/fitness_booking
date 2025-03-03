@@ -26,7 +26,7 @@ jobs:
       - name: 빌드하기 (+ 실행 권한 주기)
         run: |
           chmod +x gradlew
-          ./gradlew clean build -x test
+          CI=false ./gradlew clean build -x test
 
       - name: 빌드된 파일 이름 변경하기
         run: mv ./build/libs/*SNAPSHOT.jar ./project.jar
