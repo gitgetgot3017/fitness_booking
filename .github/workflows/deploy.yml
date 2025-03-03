@@ -20,7 +20,7 @@ jobs:
 
       - name: application.yml 파일 만들기
         run: |
-        mkdir src/main/resoures
+        mkdir src/main/resources
         echo "${{ secrets.APPLICATION_YML }}" > ./src/main/resources/application.yml
 
       - name: 빌드하기
