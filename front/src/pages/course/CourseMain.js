@@ -21,26 +21,9 @@ function CourseMain() {
     let navigate = useNavigate();
 
     useEffect(() => {
-        // api.get("/api/courses", {
-        //         params: {date: `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`}
-        //     })
-        //     .then((result) => {
-        //         setMemberName(result.data.memberName);
-        //         setMemberNum(result.data.memberNum);
-        //         setSubscriptionName(result.data.subscriptionName);
-        //         setStartDate(result.data.startDate);
-        //         setEndDate(result.data.endDate);
-        //         setCompletedCount(result.data.completedCount);
-        //         setAvailableCount(result.data.availableCount);
-        //         setReservedCount(result.data.reservedCount);
-        //         setCourseMainHistoryList(result.data.courseMainHistoryList);
-        //         setCourses(result.data.courses);
-        //     })
-        //     .catch((error) => {
-        //         console.error("메인 정보 가져오는 중 에러 발생:", error.response ? error.response.data : error.message);
-        //     });
-
-        api.get("/api/courses/tmp1")
+        api.get("/api/courses", {
+                params: {date: `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`}
+            })
             .then((result) => {
                 setMemberName(result.data.memberName);
                 setMemberNum(result.data.memberNum);
@@ -50,29 +33,11 @@ function CourseMain() {
                 setCompletedCount(result.data.completedCount);
                 setAvailableCount(result.data.availableCount);
                 setReservedCount(result.data.reservedCount);
+                setCourseMainHistoryList(result.data.courseMainHistoryList);
+                setCourses(result.data.courses);
             })
             .catch((error) => {
-                console.error("메인 정보 (1) 가져오는 중 에러 발생:", error.response ? error.response.data : error.message);
-            });
-
-
-        api.get("/api/courses/tmp2", {
-                params: {date: `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`}
-            })
-            .then((result) => {
-                setCourseMainHistoryList(result.data);
-            })
-            .catch((error) => {
-                console.error("메인 정보 (2) 가져오는 중 에러 발생:", error.response ? error.response.data : error.message);
-            });
-
-
-        api.get("/api/courses/tmp3")
-            .then((result) => {
-                setCourses(result.data);
-            })
-            .catch((error) => {
-                console.error("메인 정보 (3) 가져오는 중 에러 발생:", error.response ? error.response.data : error.message);
+                console.error("메인 정보 가져오는 중 에러 발생:", error.response ? error.response.data : error.message);
             });
     }, []);
 
