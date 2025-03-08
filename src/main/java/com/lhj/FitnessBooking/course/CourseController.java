@@ -4,8 +4,7 @@ import com.lhj.FitnessBooking.course.exception.NotExistCourseException;
 import com.lhj.FitnessBooking.domain.Course;
 import com.lhj.FitnessBooking.domain.DayOfWeek;
 import com.lhj.FitnessBooking.domain.Member;
-import com.lhj.FitnessBooking.dto.CourseDetailResponse;
-import com.lhj.FitnessBooking.dto.CourseHistoryDto;
+import com.lhj.FitnessBooking.dto.*;
 import com.lhj.FitnessBooking.member.MemberRepository;
 import com.lhj.FitnessBooking.member.exception.NotExistMemberException;
 import com.lhj.FitnessBooking.request.ReserveCourseRequest;
@@ -18,10 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.lhj.FitnessBooking.domain.DayOfWeek.*;
 
@@ -40,6 +38,26 @@ public class CourseController {
 
         Member member = getMember(request, memberRepository);
         return courseService.showCourseMain(member, date);
+    }
+
+    @GetMapping("/tmp1")
+    public CourseMainHeader tmp1(HttpServletRequest request) {
+
+        Member member = getMember(request, memberRepository);
+        return courseService.tmp1(member);
+    }
+
+    @GetMapping("/tmp2")
+    public List<CourseInfo> tmp2(@RequestParam("date") LocalDate date) {
+
+        return courseService.tmp2(date);
+    }
+
+    @GetMapping("/tmp3")
+    public Set<Integer> tmp3(HttpServletRequest request) {
+
+        Member member = getMember(request, memberRepository);
+        return courseService.tmp3(member);
     }
 
     @GetMapping("/detail")

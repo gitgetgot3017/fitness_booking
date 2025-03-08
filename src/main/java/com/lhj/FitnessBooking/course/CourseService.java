@@ -59,6 +59,24 @@ public class CourseService {
         }
     }
 
+    public CourseMainHeader tmp1(Member member) {
+        return subscriptionRepository.getSubscription(member, LocalDate.now());
+    }
+
+    public List<CourseInfo> tmp2(LocalDate date) {
+        LocalTime startTime = LocalTime.of(0, 0, 0);
+        if (date.isEqual(LocalDate.now())) {
+            startTime = LocalTime.now();
+        }
+        List<CourseInfoTmp> courseInfoTmpList = courseRepository.getCourses(date, startTime);
+        return changeAllCourseInfoTmpToCourseInfo(courseInfoTmpList);
+    }
+
+    public Set<Integer> tmp3(Member member) {
+        List<History> historyList = historyRepository.getHistoryDate(member, 2025, 03);
+        return changeHistoryToDate(historyList);
+    }
+
     private CourseMainResponse changeIntoCourseMainResponse(CourseMainHeader courseMainHeader, List<History> historyList, List<CourseInfoTmp> courseInfoTmpList) {
 
         if (courseMainHeader == null) {
