@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/10286fff-d3a0-4b3a-8791-6fa36b68bafe)# 요가 및 필라테스 수강신청 프로젝트
+# 요가 및 필라테스 수강신청 프로젝트
 
 ### ✔ 기술 스택
 - Java 17
