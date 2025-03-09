@@ -38,9 +38,9 @@ API 응답 설계를 고민하며 어떤 데이터를 미리 가공해서 제공
 <hr>
 
 ### 구현 결과
-![image](https://github.com/user-attachments/assets/092e7656-a421-44cc-861f-6a9dbed86093)
-![image](https://github.com/user-attachments/assets/3517c969-8a01-491d-8703-a54f380c5efa)
-![image](https://github.com/user-attachments/assets/a2a10a0a-638b-414e-ae70-dcc641422252)
-![image](https://github.com/user-attachments/assets/86ff5d3b-4c99-4877-bacc-9fe0bedac7be)
-![image](https://github.com/user-attachments/assets/c90dcde7-7131-4163-813a-d554d4267e44)
-![image](https://github.com/user-attachments/assets/435d0d2a-6d46-4b4d-9f00-01c2ab8b60cb)
+![image](https://github.com/user-attachments/assets/8890d24a-3f72-4f1c-a2fe-e0e673770443)
+![image](https://github.com/user-attachments/assets/a241c0e6-2524-4eb2-8a16-12f64545cf50)
+![image](https://github.com/user-attachments/assets/db601184-1f14-4195-ad40-b794de6838e4)
+![image](https://github.com/user-attachments/assets/465d7978-107f-41ad-a72f-3c2adb538150)
+![image](https://github.com/user-attachments/assets/fc368288-dfba-4373-a62c-cf980fd4a4d3)
+![image](https://github.com/user-attachments/assets/7ff75670-d8e3-4c3d-94b8-9c42852771a2)
