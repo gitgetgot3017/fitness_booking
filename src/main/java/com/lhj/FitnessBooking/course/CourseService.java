@@ -12,6 +12,7 @@ import com.lhj.FitnessBooking.reservation.exception.ReservationFailException;
 import com.lhj.FitnessBooking.response.CourseMainResponse;
 import com.lhj.FitnessBooking.subscription.SubscriptionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +35,8 @@ public class CourseService {
     private final CourseRepository courseRepository;
     private final ReservationRepository reservationRepository;
     private final SmsService smsService;
+
+    private final RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 수강권 만료의 이유로 수강권이 존재하지 않는 회원: 이용 내역만 보여준다. try 일부 -> finally
@@ -244,17 +247,29 @@ public class CourseService {
 
         validateCourseReservationPossibility(member, date, courseId); // 추천 수업 예약을 통해 '예약하기' 버튼을 접하는 경우를 위함
 
-        int courseCount = courseRepository.getCourseCountWithLock(date, courseId);
+        // 1.
+        String courseCountKey = "course:" + date + ":" + courseId + ":count";
+        Integer courseCount = (Integer) redisTemplate.opsForValue().get(courseCountKey);
+
+        if (courseCount == null) { // redis에 키가 존재하지 않으면 DB 조회 후 저장
+            courseCount = courseRepository.getCourseCountWithLock(date, courseId);
+            redisTemplate.opsForValue().set(courseCountKey, courseCount);
+        }
+
         if (courseCount >= 6) {
             throw new ReservationFailException("수강 인원 초과로 예약에 실패하셨습니다.");
         }
 
+        redisTemplate.opsForValue().increment(courseCountKey);
+
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotExistCourseException("존재하지 않는 수업입니다."));
         courseRepository.increaseCourseCount(date, course);
 
+        // 2.
         History history = new History(member, date, course, date.getYear(), date.getMonthValue(), LocalDateTime.now(), RESERVED);
         historyRepository.save(history);
 
+        // 3.
         subscriptionRepository.increaseReservedCount(member);
     }
 
