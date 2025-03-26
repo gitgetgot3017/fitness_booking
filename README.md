@@ -7,6 +7,7 @@
 - MySQL
 - react
 - AWS EC2, RDS, S3
+- Redis
 - github actions
 <br>
 
