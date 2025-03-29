@@ -251,6 +251,7 @@ public class CourseService {
      * 1. 수강 정원 1명 증가시키기
      * 2. history에 RESERVED 추가
      * 3. subscription의 reservedCount + 1
+     * 4. 해당 강좌의 인기 점수 1만큼 증가
      */
     public void reserveCourse(Member member, LocalDate date, Long courseId) {
 
@@ -280,6 +281,11 @@ public class CourseService {
 
         // 3.
         subscriptionRepository.increaseReservedCount(member);
+
+        // 4.
+        String popularClassesKey = "class:popular";
+        String classValue = "class" + date + ":" + courseId;
+        redisTemplate.opsForZSet().incrementScore(popularClassesKey, classValue, 1);
     }
 
     private void validateCourseReservationPossibility(Member member, LocalDate date, Long courseId) {
@@ -300,15 +306,28 @@ public class CourseService {
         }
     }
 
+    /**
+     * 수강 대기를 하려면?
+     * 1. Reservation에 레코드 추가
+     * 2. Redis의 List에 대기자 추가
+     * 3. 해당 강좌의 인기 점수 1만큼 증가
+     */
     public void waitCourse(Member member, LocalDate date, Long courseId) {
 
+        // 1.
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new NotExistCourseException("해당 수업은 존재하지 않습니다."));
         Reservation reservation = new Reservation(date, course, member , LocalDateTime.now());
         reservationRepository.save(reservation);
 
+        // 2.
         String courseWaitingKey = "course:" + date + ":" + courseId + ":waiting";
         redisTemplate.opsForList().rightPush(courseWaitingKey, member.getId());
+
+        // 3.
+        String popularClassesKey = "class:popular";
+        String classValue = "class" + date + ":" + courseId;
+        redisTemplate.opsForZSet().incrementScore(popularClassesKey, classValue, 1);
     }
 
     /**
@@ -317,29 +336,50 @@ public class CourseService {
      * 2. hisotry에 CANCELED 추가
      * 3. subscription의 reservedCount - 1
      * 4. 대기자가 존재할 시, (1) 대기자 전원에게 문자 메시지 발송 (2) reservation에서 대기자 전원 제거
+     * 5. 해당 강좌의 인기 점수 1만큼 감소
      */
     public void cancelCourse(Member member, LocalDate date, Long courseId) {
 
+        // 1.
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotExistCourseException("존재하지 않는 수업입니다."));
         courseRepository.decreaseCourseCount(date, course);
 
+        // 2.
         History history = new History(member, date, course, date.getYear(), date.getMonthValue(), LocalDateTime.now(), CANCELED);
         historyRepository.save(history);
 
+        // 3.
         subscriptionRepository.decreaseReservedCount(member);
 
+        // 4.
         List<Reservation> reservations = reservationRepository.findByCourseDateAndCourse(date, course);
         if (reservations.size() == 0) {
             return;
         }
         smsService.sendSms(member.getPhone(), date, courseId);
         reservationRepository.deleteReservations(date, course);
+
+        // 5.
+        String popularClassesKey = "class:popular";
+        String classValue = "class" + date + ":" + courseId;
+        redisTemplate.opsForZSet().incrementScore(popularClassesKey, classValue, -1);
     }
 
+    /**
+     * 대기 취소를 하려면?
+     * 1. Reservation에서 레코드 제거
+     * 2. 해당 강좌의 인기 점수 1만큼 감소
+     */
     public void cancelWaiting(LocalDate date, Long courseId, Member member) {
 
+        // 1.
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotExistCourseException("존재하지 않는 수업입니다."));
         reservationRepository.deleteReservation(date, course, member);
+
+        // 2.
+        String popularClassesKey = "class:popular";
+        String classValue = "class" + date + ":" + courseId;
+        redisTemplate.opsForZSet().incrementScore(popularClassesKey, classValue, 1);
     }
 
     public List<CourseHistoryDto> showCourseHistory(Member member, LocalDate date) {
@@ -362,5 +402,10 @@ public class CourseService {
             ));
         }
         return courseHistoryDtoList;
+    }
+
+    public Set<Object> getPopularTop3Classes() {
+        
+        return redisTemplate.opsForZSet().reverseRange("class:popular", 0, 2);
     }
 }
