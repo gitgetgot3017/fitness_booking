@@ -379,7 +379,7 @@ public class CourseService {
         // 2.
         String popularClassesKey = "class:popular";
         String classValue = "class" + date + ":" + courseId;
-        redisTemplate.opsForZSet().incrementScore(popularClassesKey, classValue, 1);
+        redisTemplate.opsForZSet().incrementScore(popularClassesKey, classValue, -1);
     }
 
     public List<CourseHistoryDto> showCourseHistory(Member member, LocalDate date) {
@@ -405,7 +405,7 @@ public class CourseService {
     }
 
     public Set<Object> getPopularTop3Classes() {
-        
+
         return redisTemplate.opsForZSet().reverseRange("class:popular", 0, 2);
     }
 }
