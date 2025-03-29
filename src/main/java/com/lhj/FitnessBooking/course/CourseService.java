@@ -202,13 +202,22 @@ public class CourseService {
             errorResponse.put("courseExpiration", "수강 횟수가 남아있지 않습니다.");
         }
 
-        int courseCount = courseRepository.getCourseCount(date, courseId);
+        String courseCountKey = "course:" + date + ":" + courseId + ":count";
+        Integer courseCount = (Integer) redisTemplate.opsForValue().get(courseCountKey);
+        if (courseCount == null) { // redis에서 조회 후 데이터가 없을 시 DB 조회
+            courseCount = courseRepository.getCourseCount(date, courseId);
+        }
         if (courseCount >= 6) {
             errorResponse.put("classCapacityExceeded", "수강 정원을 초과하였습니다.");
         }
 
-        List<Reservation> reservations = reservationRepository.findByCourseDateAndCourse(date, course);
-        if (reservations.size() >= 6) {
+        String courseWaitingKey = "course:" + date + ":" + courseId + ":waiting";
+        Long waitingSize = redisTemplate.opsForList().size(courseWaitingKey);
+        if (waitingSize == null) { // redis에서 조회 후 데이터가 없을 시 DB 조회
+            List<Reservation> reservations = reservationRepository.findByCourseDateAndCourse(date, course);
+            waitingSize = Long.valueOf(reservations.size());
+        }
+        if (waitingSize >= 6) {
             errorResponse.put("reservationCapacityExceeded", "대기 정원을 초과하였습니다.");
         }
 
@@ -295,9 +304,11 @@ public class CourseService {
 
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new NotExistCourseException("해당 수업은 존재하지 않습니다."));
-
         Reservation reservation = new Reservation(date, course, member , LocalDateTime.now());
         reservationRepository.save(reservation);
+
+        String courseWaitingKey = "course:" + date + ":" + courseId + ":waiting";
+        redisTemplate.opsForList().rightPush(courseWaitingKey, member.getId());
     }
 
     /**
