@@ -76,10 +76,11 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
             "select h " +
             "from History h " +
             "where h.status = 'RESERVED' " +
+            "and h.member = :member " +
             "and h.id = (select h.id " +
-                                "from History h " +
-                                "where h.courseDate = :courseDate " +
-                                "and h.course = :course)"
+                        "from History h " +
+                        "where h.courseDate = :courseDate " +
+                        "and h.course = :course)"
     )
-    Optional<History> checkAlreadyRegistered(@Param("courseDate") LocalDate courseDate, @Param("course") Course course);
+    Optional<History> checkAlreadyRegistered(@Param("courseDate") LocalDate courseDate, @Param("course") Course course, @Param("member") Member member);
 }

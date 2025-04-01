@@ -201,7 +201,7 @@ public class CourseService {
         }
 
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotExistCourseException("존재하지 않는 수업입니다."));
-        if (historyRepository.checkAlreadyRegistered(date, course).isPresent()) {
+        if (historyRepository.checkAlreadyRegistered(date, course, member).isPresent()) {
             errorResponse.put("duplicateEnrollment", "이미 신청한 수업입니다.");
         }
 
@@ -302,7 +302,7 @@ public class CourseService {
         }
 
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotExistCourseException("존재하지 않는 수업입니다."));
-        if (historyRepository.checkAlreadyRegistered(date, course).isPresent()) {
+        if (historyRepository.checkAlreadyRegistered(date, course, member).isPresent()) {
             throw new DuplicateEnrollmentException("이미 신청한 수업입니다.");
         }
 
