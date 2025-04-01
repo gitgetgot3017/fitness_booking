@@ -38,7 +38,7 @@ public class JwtService {
         key = Keys.hmacShaKeyFor(secretKey);
     }
 
-    private static final long accessTokenExpiration = 1000 * 60 * 15; // 15분
+    private static final long accessTokenExpiration = 1000 * 60 * 60 * 24 * 3; // 1000 * 60 * 15; // 15분
     private static final long refreshTokenExpiration = 1000 * 60 * 60 * 24 * 14; // 2주
 
     public Jwt createJwt(Map<String, String> claims) {
