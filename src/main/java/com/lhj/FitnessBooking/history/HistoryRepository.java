@@ -77,7 +77,7 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
             "from History h " +
             "where h.status = 'RESERVED' " +
             "and h.member = :member " +
-            "and h.id = (select h.id " +
+            "and h.id in (select h.id " +
                         "from History h " +
                         "where h.courseDate = :courseDate " +
                         "and h.course = :course)"
