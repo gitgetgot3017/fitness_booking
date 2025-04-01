@@ -12,6 +12,7 @@ import com.lhj.FitnessBooking.reservation.exception.ReservationFailException;
 import com.lhj.FitnessBooking.response.CourseMainResponse;
 import com.lhj.FitnessBooking.subscription.SubscriptionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +37,11 @@ public class CourseService {
     private final ReservationRepository reservationRepository;
     private final SmsService smsService;
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    @Qualifier("stringValueRedisTemplate")
+    private final RedisTemplate<String, Integer> integerRedisTemplate;
+
+    @Qualifier("longValueRedisTemplate")
+    private final RedisTemplate<String, Long> longRedisTemplate;
 
     /**
      * 수강권 만료의 이유로 수강권이 존재하지 않는 회원: 이용 내역만 보여준다. try 일부 -> finally
@@ -203,7 +208,7 @@ public class CourseService {
         }
 
         String courseCountKey = "course:" + date + ":" + courseId + ":count";
-        Integer courseCount = (Integer) redisTemplate.opsForValue().get(courseCountKey);
+        Integer courseCount = integerRedisTemplate.opsForValue().get(courseCountKey);
         if (courseCount == null) { // redis에서 조회 후 데이터가 없을 시 DB 조회
             courseCount = courseRepository.getCourseCount(date, courseId);
         }
@@ -212,7 +217,7 @@ public class CourseService {
         }
 
         String courseWaitingKey = "course:" + date + ":" + courseId + ":waiting";
-        Long waitingSize = redisTemplate.opsForList().size(courseWaitingKey);
+        Long waitingSize = longRedisTemplate.opsForList().size(courseWaitingKey);
         if (waitingSize == null) { // redis에서 조회 후 데이터가 없을 시 DB 조회
             List<Reservation> reservations = reservationRepository.findByCourseDateAndCourse(date, course);
             waitingSize = Long.valueOf(reservations.size());
@@ -259,18 +264,18 @@ public class CourseService {
 
         // 1.
         String courseCountKey = "course:" + date + ":" + courseId + ":count";
-        Integer courseCount = (Integer) redisTemplate.opsForValue().get(courseCountKey);
+        Integer courseCount = integerRedisTemplate.opsForValue().get(courseCountKey);
 
         if (courseCount == null) { // redis에 키가 존재하지 않으면 DB 조회 후 저장
             courseCount = courseRepository.getCourseCountWithLock(date, courseId);
-            redisTemplate.opsForValue().set(courseCountKey, courseCount);
+            integerRedisTemplate.opsForValue().set(courseCountKey, courseCount);
         }
 
         if (courseCount >= 6) {
             throw new ReservationFailException("수강 인원 초과로 예약에 실패하셨습니다.");
         }
 
-        redisTemplate.opsForValue().increment(courseCountKey);
+        integerRedisTemplate.opsForValue().increment(courseCountKey);
 
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotExistCourseException("존재하지 않는 수업입니다."));
         courseRepository.increaseCourseCount(date, course);
@@ -284,8 +289,7 @@ public class CourseService {
 
         // 4.
         String popularClassesKey = "class:popular";
-        String classValue = "class" + date + ":" + courseId;
-        redisTemplate.opsForZSet().incrementScore(popularClassesKey, classValue, 1);
+        longRedisTemplate.opsForZSet().incrementScore(popularClassesKey, courseId, 1);
     }
 
     private void validateCourseReservationPossibility(Member member, LocalDate date, Long courseId) {
@@ -322,11 +326,11 @@ public class CourseService {
 
         // 2.
         String courseWaitingKey = "course:" + date + ":" + courseId + ":waiting";
-        redisTemplate.opsForList().rightPush(courseWaitingKey, member.getId());
+        longRedisTemplate.opsForList().rightPush(courseWaitingKey, member.getId());
 
         // 3.
         String popularClassesKey = "class:popular";
-        redisTemplate.opsForZSet().incrementScore(popularClassesKey, courseId, 1.0);
+        longRedisTemplate.opsForZSet().incrementScore(popularClassesKey, courseId, 1.0);
     }
 
     /**
@@ -360,8 +364,7 @@ public class CourseService {
 
         // 5.
         String popularClassesKey = "class:popular";
-        String classValue = "class" + date + ":" + courseId;
-        redisTemplate.opsForZSet().incrementScore(popularClassesKey, classValue, -1);
+        longRedisTemplate.opsForZSet().incrementScore(popularClassesKey, courseId, -1);
     }
 
     /**
@@ -377,8 +380,7 @@ public class CourseService {
 
         // 2.
         String popularClassesKey = "class:popular";
-        String classValue = "class" + date + ":" + courseId;
-        redisTemplate.opsForZSet().incrementScore(popularClassesKey, classValue, -1);
+        longRedisTemplate.opsForZSet().incrementScore(popularClassesKey, courseId, -1);
     }
 
     public List<CourseHistoryDto> showCourseHistory(Member member, LocalDate date) {
@@ -403,8 +405,8 @@ public class CourseService {
         return courseHistoryDtoList;
     }
 
-    public Set<Object> getPopularTop3Classes() {
+    public Set<Long> getPopularTop3Classes() {
 
-        return redisTemplate.opsForZSet().reverseRange("class:popular", 0, 2);
+        return longRedisTemplate.opsForZSet().reverseRange("class:popular", 0, 2);
     }
 }
