@@ -43,6 +43,8 @@ public class CourseService {
     @Qualifier("longValueRedisTemplate")
     private final RedisTemplate<String, Long> longRedisTemplate;
 
+    public static final int COURSE_MAX_COUNT = 6;
+
     /**
      * 수강권 만료의 이유로 수강권이 존재하지 않는 회원: 이용 내역만 보여준다. try 일부 -> finally
      * 수강권이 존재하는 회원: try 전체 -> finally
@@ -212,7 +214,7 @@ public class CourseService {
         if (courseCount == null) { // redis에서 조회 후 데이터가 없을 시 DB 조회
             courseCount = courseRepository.getCourseCount(date, courseId);
         }
-        if (courseCount >= 6) {
+        if (courseCount >= COURSE_MAX_COUNT) {
             errorResponse.put("classCapacityExceeded", "수강 정원을 초과하였습니다.");
         }
 
@@ -271,7 +273,7 @@ public class CourseService {
             integerRedisTemplate.opsForValue().set(courseCountKey, courseCount);
         }
 
-        if (courseCount >= 6) {
+        if (courseCount >= COURSE_MAX_COUNT) {
             throw new ReservationFailException("수강 인원 초과로 예약에 실패하셨습니다.");
         }
 
