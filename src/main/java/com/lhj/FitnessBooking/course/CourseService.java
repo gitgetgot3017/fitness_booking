@@ -262,7 +262,7 @@ public class CourseService {
      */
     public void reserveCourse(Member member, LocalDate date, Long courseId) {
 
-        validateCourseReservationPossibility(member, date, courseId); // 추천 수업 예약을 통해 '예약하기' 버튼을 접하는 경우를 위함
+//        validateCourseReservationPossibility(member, date, courseId); // 추천 수업 예약을 통해 '예약하기' 버튼을 접하는 경우를 위함
 
         // 1.
         String courseCountKey = "course:" + date + ":" + courseId + ":count";
