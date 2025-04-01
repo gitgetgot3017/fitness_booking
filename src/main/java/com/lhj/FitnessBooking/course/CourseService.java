@@ -326,8 +326,7 @@ public class CourseService {
 
         // 3.
         String popularClassesKey = "class:popular";
-        String classValue = "class" + date + ":" + courseId;
-        redisTemplate.opsForZSet().incrementScore(popularClassesKey, classValue, 1);
+        redisTemplate.opsForZSet().incrementScore(popularClassesKey, courseId, 1);
     }
 
     /**
