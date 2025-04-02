@@ -266,18 +266,11 @@ public class CourseService {
 
         // 1.
         String courseCountKey = "course:" + date + ":" + courseId + ":count";
-        Integer courseCount = integerRedisTemplate.opsForValue().get(courseCountKey);
+        Long courseCount = integerRedisTemplate.opsForValue().increment(courseCountKey);
 
-        if (courseCount == null) { // redis에 키가 존재하지 않으면 DB 조회 후 저장
-            courseCount = courseRepository.getCourseCountWithLock(date, courseId);
-            integerRedisTemplate.opsForValue().set(courseCountKey, courseCount);
-        }
-
-        if (courseCount >= COURSE_MAX_COUNT) {
+        if (courseCount > COURSE_MAX_COUNT) {
             throw new ReservationFailException("수강 인원 초과로 예약에 실패하셨습니다.");
         }
-
-        integerRedisTemplate.opsForValue().increment(courseCountKey);
 
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotExistCourseException("존재하지 않는 수업입니다."));
         courseRepository.increaseCourseCount(date, course);
