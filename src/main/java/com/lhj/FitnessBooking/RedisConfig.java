@@ -25,9 +25,9 @@ public class RedisConfig {
 
     // 스트링 자료구조용 - value가 Integer
     @Bean
-    public RedisTemplate<String, Integer> stringValueRedisTemplate() {
+    public RedisTemplate<String, Integer> stringValueRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, Integer> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory());
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new GenericToStringSerializer<>(Integer.class));
         return redisTemplate;
@@ -35,9 +35,9 @@ public class RedisConfig {
 
     // 리스트, zset 자료구조용 - value가 Long
     @Bean
-    public RedisTemplate<String, Long> longValueRedisTemplate() {
+    public RedisTemplate<String, Long> longValueRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, Long> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory());
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new GenericToStringSerializer<>(Long.class));
         return redisTemplate;
