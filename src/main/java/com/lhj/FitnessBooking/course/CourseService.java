@@ -12,6 +12,7 @@ import com.lhj.FitnessBooking.reservation.exception.ReservationFailException;
 import com.lhj.FitnessBooking.response.CourseMainResponse;
 import com.lhj.FitnessBooking.subscription.SubscriptionRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import java.util.*;
 import static com.lhj.FitnessBooking.domain.CourseStatus.CANCELED;
 import static com.lhj.FitnessBooking.domain.CourseStatus.RESERVED;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -267,6 +269,7 @@ public class CourseService {
         // 1.
         String courseCountKey = "course:" + date + ":" + courseId + ":count";
         Long courseCount = longRedisTemplate.opsForValue().increment(courseCountKey);
+        log.info(">>> 수강 신청 Redis 카운트: {}", courseCount);
 
         if (courseCount > COURSE_MAX_COUNT) {
             longRedisTemplate.opsForValue().decrement(courseCountKey);
