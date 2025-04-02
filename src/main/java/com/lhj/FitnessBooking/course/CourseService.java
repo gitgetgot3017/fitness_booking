@@ -266,10 +266,10 @@ public class CourseService {
 
         // 1.
         String courseCountKey = "course:" + date + ":" + courseId + ":count";
-        Long courseCount = integerRedisTemplate.opsForValue().increment(courseCountKey);
+        Long courseCount = longRedisTemplate.opsForValue().increment(courseCountKey);
 
         if (courseCount > COURSE_MAX_COUNT) {
-            integerRedisTemplate.opsForValue().decrement(courseCountKey);
+            longRedisTemplate.opsForValue().decrement(courseCountKey);
             throw new ReservationFailException("수강 인원 초과로 예약에 실패하셨습니다.");
         }
 
