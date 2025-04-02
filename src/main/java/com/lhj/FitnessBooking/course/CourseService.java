@@ -267,12 +267,9 @@ public class CourseService {
 //        validateCourseReservationPossibility(member, date, courseId); // 추천 수업 예약을 통해 '예약하기' 버튼을 접하는 경우를 위함
 
         // 1.
-        String courseCountKey = "course:" + date + ":" + courseId + ":count";
-        Long courseCount = longRedisTemplate.opsForValue().increment(courseCountKey);
-        log.info(">>> 수강 신청 Redis 카운트: {}", courseCount);
+        int courseCount = courseRepository.getCourseCountWithLock(date, courseId);
 
-        if (courseCount > COURSE_MAX_COUNT) {
-            longRedisTemplate.opsForValue().decrement(courseCountKey);
+        if (courseCount >= COURSE_MAX_COUNT) {
             throw new ReservationFailException("수강 인원 초과로 예약에 실패하셨습니다.");
         }
 
