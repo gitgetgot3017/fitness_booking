@@ -45,7 +45,7 @@ public class CourseService {
     @Qualifier("longValueRedisTemplate")
     private final RedisTemplate<String, Long> longRedisTemplate;
 
-    public static final int COURSE_MAX_COUNT = 100;
+    public static final int COURSE_MAX_COUNT = 6;
 
     /**
      * 수강권 만료의 이유로 수강권이 존재하지 않는 회원: 이용 내역만 보여준다. try 일부 -> finally
@@ -264,12 +264,11 @@ public class CourseService {
      */
     public void reserveCourse(Member member, LocalDate date, Long courseId) {
 
-//        validateCourseReservationPossibility(member, date, courseId); // 추천 수업 예약을 통해 '예약하기' 버튼을 접하는 경우를 위함
+        validateCourseReservationPossibility(member, date, courseId); // 추천 수업 예약을 통해 '예약하기' 버튼을 접하는 경우를 위함
 
         // 1.
         String courseCountKey = "course:" + date + ":" + courseId + ":count";
         Long courseCount = longRedisTemplate.opsForValue().increment(courseCountKey);
-        log.info(">>> 수강 신청 Redis 카운트: {}", courseCount);
 
         if (courseCount > COURSE_MAX_COUNT) {
             longRedisTemplate.opsForValue().decrement(courseCountKey);
