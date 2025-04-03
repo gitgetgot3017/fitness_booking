@@ -1,9 +1,14 @@
 package com.lhj.fitnessbooking.reservation;
 
+import com.lhj.fitnessbooking.domain.course.domain.DayOfWeek;
 import com.lhj.fitnessbooking.course.CourseRepository;
-import com.lhj.fitnessbooking.domain.*;
-import com.lhj.fitnessbooking.instructor.InstructorRepository;
-import com.lhj.fitnessbooking.member.MemberRepository;
+import com.lhj.fitnessbooking.domain.course.domain.Course;
+import com.lhj.fitnessbooking.domain.instructor.domain.Instructor;
+import com.lhj.fitnessbooking.domain.member.domain.Member;
+import com.lhj.fitnessbooking.domain.reservation.domain.Reservation;
+import com.lhj.fitnessbooking.domain.reservation.repository.ReservationRepository;
+import com.lhj.fitnessbooking.domain.instructor.repository.InstructorRepository;
+import com.lhj.fitnessbooking.domain.member.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +20,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-import static com.lhj.fitnessbooking.domain.DayOfWeek.TUES;
-import static com.lhj.fitnessbooking.domain.MemberGrade.*;
+import static com.lhj.fitnessbooking.domain.course.domain.DayOfWeek.TUES;
+import static com.lhj.fitnessbooking.domain.member.domain.MemberGrade.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
@@ -26,7 +31,8 @@ class ReservationRepositoryTest {
     @Autowired MemberRepository memberRepository;
     @Autowired InstructorRepository instructorRepository;
     @Autowired CourseRepository courseRepository;
-    @Autowired ReservationRepository reservationRepository;
+    @Autowired
+    ReservationRepository reservationRepository;
 
     @DisplayName("대기 인원 구하기")
     @Test

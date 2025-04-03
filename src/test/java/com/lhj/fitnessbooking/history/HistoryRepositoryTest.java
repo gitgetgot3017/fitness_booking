@@ -1,6 +1,6 @@
 package com.lhj.FitnessBooking.history;
 
-import com.lhj.FitnessBooking.course.CourseRepository;
+import com.lhj.fitnessbooking.domain.course.repository.CourseRepository;
 import com.lhj.FitnessBooking.courseHistory.CourseHistoryRepository;
 import com.lhj.FitnessBooking.domain.*;
 import com.lhj.FitnessBooking.dto.CheckBefore4HourDto;
@@ -17,7 +17,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Optional;
 
 import static com.lhj.FitnessBooking.domain.CourseStatus.*;
 import static com.lhj.FitnessBooking.domain.DayOfWeek.*;

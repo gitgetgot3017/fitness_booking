@@ -1,9 +1,14 @@
 package com.lhj.fitnessbooking.coursehistory;
 
-import com.lhj.fitnessbooking.course.CourseRepository;
-import com.lhj.fitnessbooking.domain.*;
-import com.lhj.fitnessbooking.history.HistoryRepository;
-import com.lhj.fitnessbooking.instructor.InstructorRepository;
+import com.lhj.fitnessbooking.domain.course.domain.Course;
+import com.lhj.fitnessbooking.domain.course.domain.DayOfWeek;
+import com.lhj.fitnessbooking.domain.course.repository.CourseRepository;
+import com.lhj.fitnessbooking.domain.coursehistory.domain.CourseHistory;
+import com.lhj.fitnessbooking.domain.coursehistory.repository.CourseHistoryRepository;
+import com.lhj.fitnessbooking.domain.history.domain.History;
+import com.lhj.fitnessbooking.domain.history.repository.HistoryRepository;
+import com.lhj.fitnessbooking.domain.instructor.domain.Instructor;
+import com.lhj.fitnessbooking.domain.instructor.repository.InstructorRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import static com.lhj.fitnessbooking.domain.DayOfWeek.TUES;
+import static com.lhj.fitnessbooking.domain.course.domain.DayOfWeek.TUES;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest

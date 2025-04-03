@@ -1,15 +1,24 @@
 package com.lhj.fitnessbooking.course;
 
-import com.lhj.fitnessbooking.coursehistory.CourseHistoryRepository;
-import com.lhj.fitnessbooking.domain.*;
-import com.lhj.fitnessbooking.dto.CourseHistoryDto;
-import com.lhj.fitnessbooking.dto.CourseMainHeader;
-import com.lhj.fitnessbooking.history.HistoryRepository;
-import com.lhj.fitnessbooking.instructor.InstructorRepository;
-import com.lhj.fitnessbooking.member.MemberRepository;
-import com.lhj.fitnessbooking.reservation.ReservationRepository;
-import com.lhj.fitnessbooking.reservation.exception.ReservationFailException;
-import com.lhj.fitnessbooking.subscription.SubscriptionRepository;
+import com.lhj.fitnessbooking.domain.course.domain.Course;
+import com.lhj.fitnessbooking.domain.course.domain.DayOfWeek;
+import com.lhj.fitnessbooking.domain.course.dto.CourseHistoryDto;
+import com.lhj.fitnessbooking.domain.course.dto.CourseMainHeader;
+import com.lhj.fitnessbooking.domain.course.repository.CourseRepository;
+import com.lhj.fitnessbooking.domain.course.service.CourseService;
+import com.lhj.fitnessbooking.domain.coursehistory.domain.CourseHistory;
+import com.lhj.fitnessbooking.domain.coursehistory.repository.CourseHistoryRepository;
+import com.lhj.fitnessbooking.domain.history.domain.History;
+import com.lhj.fitnessbooking.domain.history.repository.HistoryRepository;
+import com.lhj.fitnessbooking.domain.instructor.domain.Instructor;
+import com.lhj.fitnessbooking.domain.instructor.repository.InstructorRepository;
+import com.lhj.fitnessbooking.domain.member.domain.Member;
+import com.lhj.fitnessbooking.domain.member.repository.MemberRepository;
+import com.lhj.fitnessbooking.domain.reservation.domain.Reservation;
+import com.lhj.fitnessbooking.domain.reservation.exception.ReservationFailException;
+import com.lhj.fitnessbooking.domain.reservation.repository.ReservationRepository;
+import com.lhj.fitnessbooking.domain.subscription.domain.Subscription;
+import com.lhj.fitnessbooking.domain.subscription.repository.SubscriptionRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +29,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-import static com.lhj.fitnessbooking.domain.CourseStatus.*;
-import static com.lhj.fitnessbooking.domain.DayOfWeek.TUES;
-import static com.lhj.fitnessbooking.domain.MemberGrade.*;
+import static com.lhj.fitnessbooking.domain.course.domain.DayOfWeek.TUES;
+import static com.lhj.fitnessbooking.domain.history.domain.CourseStatus.*;
+import static com.lhj.fitnessbooking.domain.member.domain.MemberGrade.MEMBER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -37,7 +46,8 @@ class CourseServiceTest {
     @Autowired SubscriptionRepository subscriptionRepository;
     @Autowired ReservationRepository reservationRepository;
 
-    @Autowired CourseService courseService;
+    @Autowired
+    CourseService courseService;
 
     @DisplayName("수강 예약하기: 예약에 성공하는 경우")
     @Test

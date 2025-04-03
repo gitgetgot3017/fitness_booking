@@ -1,10 +1,10 @@
 package com.lhj.fitnessbooking.subscription;
 
-import com.lhj.fitnessbooking.domain.Member;
-import com.lhj.fitnessbooking.domain.Subscription;
-import com.lhj.fitnessbooking.dto.CourseMainHeader;
-import com.lhj.fitnessbooking.member.MemberRepository;
-import com.lhj.fitnessbooking.subscription.exception.NotExistSubscriptionException;
+import com.lhj.fitnessbooking.domain.member.domain.Member;
+import com.lhj.fitnessbooking.domain.subscription.domain.Subscription;
+import com.lhj.fitnessbooking.domain.course.dto.CourseMainHeader;
+import com.lhj.fitnessbooking.domain.member.repository.MemberRepository;
+import com.lhj.fitnessbooking.domain.subscription.exception.NotExistSubscriptionException;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
-import static com.lhj.fitnessbooking.domain.MemberGrade.*;
+import static com.lhj.fitnessbooking.domain.member.domain.MemberGrade.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional

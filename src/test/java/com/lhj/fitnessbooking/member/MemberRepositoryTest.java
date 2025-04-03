@@ -1,6 +1,7 @@
 package com.lhj.fitnessbooking.member;
 
-import com.lhj.fitnessbooking.domain.Member;
+import com.lhj.fitnessbooking.domain.member.repository.MemberRepository;
+import com.lhj.fitnessbooking.domain.member.domain.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,13 +9,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 
-import static com.lhj.fitnessbooking.domain.MemberGrade.*;
+import static com.lhj.fitnessbooking.domain.member.domain.MemberGrade.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 class MemberRepositoryTest {
 
-    @Autowired MemberRepository memberRepository;
+    @Autowired
+    MemberRepository memberRepository;
 
     @DisplayName("회원번호로 회원 찾기: 성공 케이스")
     @Test
