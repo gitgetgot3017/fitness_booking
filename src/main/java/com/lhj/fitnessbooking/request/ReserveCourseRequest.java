@@ -1,4 +1,4 @@
-package com.lhj.FitnessBooking.request;
+package com.lhj.fitnessbooking.request;
 
 import lombok.Getter;
 

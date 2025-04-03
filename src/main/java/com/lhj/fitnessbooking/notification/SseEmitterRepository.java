@@ -1,4 +1,4 @@
-package com.lhj.FitnessBooking.notification;
+package com.lhj.fitnessbooking.notification;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;

@@ -1,16 +1,16 @@
-package com.lhj.FitnessBooking.course;
+package com.lhj.fitnessbooking.course;
 
-import com.lhj.FitnessBooking.course.exception.*;
-import com.lhj.FitnessBooking.domain.Course;
-import com.lhj.FitnessBooking.domain.History;
-import com.lhj.FitnessBooking.domain.Member;
-import com.lhj.FitnessBooking.domain.Reservation;
-import com.lhj.FitnessBooking.dto.*;
-import com.lhj.FitnessBooking.history.HistoryRepository;
-import com.lhj.FitnessBooking.reservation.ReservationRepository;
-import com.lhj.FitnessBooking.reservation.exception.ReservationFailException;
-import com.lhj.FitnessBooking.response.CourseMainResponse;
-import com.lhj.FitnessBooking.subscription.SubscriptionRepository;
+import com.lhj.fitnessbooking.course.exception.*;
+import com.lhj.fitnessbooking.domain.Course;
+import com.lhj.fitnessbooking.domain.History;
+import com.lhj.fitnessbooking.domain.Member;
+import com.lhj.fitnessbooking.domain.Reservation;
+import com.lhj.fitnessbooking.dto.*;
+import com.lhj.fitnessbooking.history.HistoryRepository;
+import com.lhj.fitnessbooking.reservation.ReservationRepository;
+import com.lhj.fitnessbooking.reservation.exception.ReservationFailException;
+import com.lhj.fitnessbooking.response.CourseMainResponse;
+import com.lhj.fitnessbooking.subscription.SubscriptionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,8 +24,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static com.lhj.FitnessBooking.domain.CourseStatus.CANCELED;
-import static com.lhj.FitnessBooking.domain.CourseStatus.RESERVED;
+import static com.lhj.fitnessbooking.domain.CourseStatus.CANCELED;
+import static com.lhj.fitnessbooking.domain.CourseStatus.RESERVED;
 
 @Slf4j
 @Service

@@ -1,6 +1,6 @@
-package com.lhj.FitnessBooking.response;
+package com.lhj.fitnessbooking.response;
 
-import com.lhj.FitnessBooking.dto.CourseInfo;
+import com.lhj.fitnessbooking.dto.CourseInfo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

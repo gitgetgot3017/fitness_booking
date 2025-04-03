@@ -1,4 +1,4 @@
-package com.lhj.FitnessBooking.admin;
+package com.lhj.fitnessbooking.admin;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

@@ -1,17 +1,15 @@
-package com.lhj.FitnessBooking.course;
+package com.lhj.fitnessbooking.course;
 
-import com.lhj.FitnessBooking.courseHistory.CourseHistoryRepository;
-import com.lhj.FitnessBooking.domain.*;
-import com.lhj.FitnessBooking.dto.CourseHistoryDto;
-import com.lhj.FitnessBooking.dto.CourseMainHeader;
-import com.lhj.FitnessBooking.history.HistoryRepository;
-import com.lhj.FitnessBooking.instructor.InstructorRepository;
-import com.lhj.FitnessBooking.member.MemberRepository;
-import com.lhj.FitnessBooking.reservation.ReservationRepository;
-import com.lhj.FitnessBooking.reservation.exception.ReservationFailException;
-import com.lhj.FitnessBooking.subscription.SubscriptionRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
+import com.lhj.fitnessbooking.coursehistory.CourseHistoryRepository;
+import com.lhj.fitnessbooking.domain.*;
+import com.lhj.fitnessbooking.dto.CourseHistoryDto;
+import com.lhj.fitnessbooking.dto.CourseMainHeader;
+import com.lhj.fitnessbooking.history.HistoryRepository;
+import com.lhj.fitnessbooking.instructor.InstructorRepository;
+import com.lhj.fitnessbooking.member.MemberRepository;
+import com.lhj.fitnessbooking.reservation.ReservationRepository;
+import com.lhj.fitnessbooking.reservation.exception.ReservationFailException;
+import com.lhj.fitnessbooking.subscription.SubscriptionRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +20,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-import static com.lhj.FitnessBooking.domain.CourseStatus.*;
-import static com.lhj.FitnessBooking.domain.DayOfWeek.TUES;
-import static com.lhj.FitnessBooking.domain.MemberGrade.*;
+import static com.lhj.fitnessbooking.domain.CourseStatus.*;
+import static com.lhj.fitnessbooking.domain.DayOfWeek.TUES;
+import static com.lhj.fitnessbooking.domain.MemberGrade.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

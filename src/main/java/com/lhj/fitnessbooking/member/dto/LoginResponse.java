@@ -1,6 +1,6 @@
-package com.lhj.FitnessBooking.member.dto;
+package com.lhj.fitnessbooking.member.dto;
 
-import com.lhj.FitnessBooking.domain.MemberGrade;
+import com.lhj.fitnessbooking.domain.MemberGrade;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

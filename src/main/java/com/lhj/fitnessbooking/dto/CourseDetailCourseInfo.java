@@ -1,6 +1,4 @@
-package com.lhj.FitnessBooking.dto;
-
-import java.time.LocalTime;
+package com.lhj.fitnessbooking.dto;
 
 public class CourseDetailCourseInfo {
 

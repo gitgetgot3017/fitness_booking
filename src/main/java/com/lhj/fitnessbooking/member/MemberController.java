@@ -1,7 +1,7 @@
-package com.lhj.FitnessBooking.member;
+package com.lhj.fitnessbooking.member;
 
-import com.lhj.FitnessBooking.member.dto.LoginResponse;
-import com.lhj.FitnessBooking.member.dto.LoginRequest;
+import com.lhj.fitnessbooking.member.dto.LoginResponse;
+import com.lhj.fitnessbooking.member.dto.LoginRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;

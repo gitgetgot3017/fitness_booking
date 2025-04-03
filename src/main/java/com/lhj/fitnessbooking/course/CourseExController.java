@@ -1,8 +1,8 @@
-package com.lhj.FitnessBooking.course;
+package com.lhj.fitnessbooking.course;
 
-import com.lhj.FitnessBooking.course.exception.*;
-import com.lhj.FitnessBooking.reservation.exception.ReservationFailException;
-import com.lhj.FitnessBooking.response.ErrorResponse;
+import com.lhj.fitnessbooking.course.exception.*;
+import com.lhj.fitnessbooking.reservation.exception.ReservationFailException;
+import com.lhj.fitnessbooking.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;

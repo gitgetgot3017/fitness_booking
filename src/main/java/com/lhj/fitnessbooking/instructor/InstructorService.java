@@ -1,6 +1,6 @@
-package com.lhj.FitnessBooking.instructor;
+package com.lhj.fitnessbooking.instructor;
 
-import com.lhj.FitnessBooking.domain.Instructor;
+import com.lhj.fitnessbooking.domain.Instructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

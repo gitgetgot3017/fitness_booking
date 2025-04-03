@@ -1,4 +1,4 @@
-package com.lhj.FitnessBooking.api;
+package com.lhj.fitnessbooking.api;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;

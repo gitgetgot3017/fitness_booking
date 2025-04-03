@@ -1,4 +1,4 @@
-package com.lhj.FitnessBooking.api.dto;
+package com.lhj.fitnessbooking.api.dto;
 
 import lombok.Getter;
 

@@ -1,13 +1,13 @@
-package com.lhj.FitnessBooking.member;
+package com.lhj.fitnessbooking.member;
 
-import com.lhj.FitnessBooking.domain.Member;
-import com.lhj.FitnessBooking.domain.MemberGrade;
-import com.lhj.FitnessBooking.jwt.JwtService;
-import com.lhj.FitnessBooking.member.dto.LoginResponse;
-import com.lhj.FitnessBooking.member.dto.LoginRequest;
-import com.lhj.FitnessBooking.member.exception.LoginFailException;
-import com.lhj.FitnessBooking.jwt.dto.Jwt;
-import com.lhj.FitnessBooking.member.exception.NotExistMemberException;
+import com.lhj.fitnessbooking.domain.Member;
+import com.lhj.fitnessbooking.domain.MemberGrade;
+import com.lhj.fitnessbooking.jwt.JwtService;
+import com.lhj.fitnessbooking.member.dto.LoginResponse;
+import com.lhj.fitnessbooking.member.dto.LoginRequest;
+import com.lhj.fitnessbooking.member.exception.LoginFailException;
+import com.lhj.fitnessbooking.jwt.dto.Jwt;
+import com.lhj.fitnessbooking.member.exception.NotExistMemberException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.lhj.FitnessBooking.domain.MemberGrade.*;
+import static com.lhj.fitnessbooking.domain.MemberGrade.*;
 
 @Service
 @RequiredArgsConstructor

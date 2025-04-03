@@ -1,8 +1,8 @@
-package com.lhj.FitnessBooking.reservation;
+package com.lhj.fitnessbooking.reservation;
 
-import com.lhj.FitnessBooking.domain.Course;
-import com.lhj.FitnessBooking.domain.Member;
-import com.lhj.FitnessBooking.domain.Reservation;
+import com.lhj.fitnessbooking.domain.Course;
+import com.lhj.fitnessbooking.domain.Member;
+import com.lhj.fitnessbooking.domain.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

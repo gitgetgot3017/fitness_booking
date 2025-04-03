@@ -1,4 +1,4 @@
-package com.lhj.FitnessBooking.admin.dto;
+package com.lhj.fitnessbooking.admin.dto;
 
 import lombok.Getter;
 import lombok.Setter;

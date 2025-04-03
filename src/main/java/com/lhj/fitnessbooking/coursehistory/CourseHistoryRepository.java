@@ -1,6 +1,6 @@
-package com.lhj.FitnessBooking.courseHistory;
+package com.lhj.fitnessbooking.coursehistory;
 
-import com.lhj.FitnessBooking.domain.CourseHistory;
+import com.lhj.fitnessbooking.domain.CourseHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CourseHistoryRepository extends JpaRepository<CourseHistory, Long> {

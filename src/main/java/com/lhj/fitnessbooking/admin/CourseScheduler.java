@@ -1,11 +1,11 @@
-package com.lhj.FitnessBooking.admin;
+package com.lhj.fitnessbooking.admin;
 
-import com.lhj.FitnessBooking.course.CourseRepository;
-import com.lhj.FitnessBooking.courseHistory.CourseHistoryRepository;
-import com.lhj.FitnessBooking.domain.Course;
-import static com.lhj.FitnessBooking.domain.DayOfWeek.*;
+import com.lhj.fitnessbooking.course.CourseRepository;
+import com.lhj.fitnessbooking.coursehistory.CourseHistoryRepository;
+import com.lhj.fitnessbooking.domain.Course;
+import static com.lhj.fitnessbooking.domain.DayOfWeek.*;
 
-import com.lhj.FitnessBooking.domain.CourseHistory;
+import com.lhj.fitnessbooking.domain.CourseHistory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -34,7 +34,7 @@ public class CourseScheduler {
         }
     }
 
-    private com.lhj.FitnessBooking.domain.DayOfWeek changeToMyDayOfWeek(DayOfWeek dayOfWeek) {
+    private com.lhj.fitnessbooking.domain.DayOfWeek changeToMyDayOfWeek(DayOfWeek dayOfWeek) {
 
         switch (dayOfWeek) {
             case MONDAY: return MON;

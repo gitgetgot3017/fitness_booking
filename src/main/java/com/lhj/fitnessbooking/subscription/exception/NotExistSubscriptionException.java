@@ -1,4 +1,4 @@
-package com.lhj.FitnessBooking.subscription.exception;
+package com.lhj.fitnessbooking.subscription.exception;
 
 public class NotExistSubscriptionException extends RuntimeException {
 

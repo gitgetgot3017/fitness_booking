@@ -1,10 +1,10 @@
-package com.lhj.FitnessBooking.admin;
+package com.lhj.fitnessbooking.admin;
 
-import com.lhj.FitnessBooking.admin.dto.RegisterCourseDto;
-import com.lhj.FitnessBooking.admin.dto.RegisterInstructorDto;
-import com.lhj.FitnessBooking.domain.Member;
-import com.lhj.FitnessBooking.member.MemberRepository;
-import com.lhj.FitnessBooking.member.exception.NotExistMemberException;
+import com.lhj.fitnessbooking.admin.dto.RegisterCourseDto;
+import com.lhj.fitnessbooking.admin.dto.RegisterInstructorDto;
+import com.lhj.fitnessbooking.domain.Member;
+import com.lhj.fitnessbooking.member.MemberRepository;
+import com.lhj.fitnessbooking.member.exception.NotExistMemberException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

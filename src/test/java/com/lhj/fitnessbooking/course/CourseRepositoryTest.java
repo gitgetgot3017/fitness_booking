@@ -1,13 +1,13 @@
-package com.lhj.FitnessBooking.course;
+package com.lhj.fitnessbooking.course;
 
-import com.lhj.FitnessBooking.course.exception.NotExistCourseException;
-import com.lhj.FitnessBooking.courseHistory.CourseHistoryRepository;
-import com.lhj.FitnessBooking.domain.Course;
-import com.lhj.FitnessBooking.domain.CourseHistory;
-import com.lhj.FitnessBooking.domain.DayOfWeek;
-import com.lhj.FitnessBooking.domain.Instructor;
-import com.lhj.FitnessBooking.dto.CourseInfoTmp;
-import com.lhj.FitnessBooking.instructor.InstructorRepository;
+import com.lhj.fitnessbooking.course.exception.NotExistCourseException;
+import com.lhj.fitnessbooking.coursehistory.CourseHistoryRepository;
+import com.lhj.fitnessbooking.domain.Course;
+import com.lhj.fitnessbooking.domain.CourseHistory;
+import com.lhj.fitnessbooking.domain.DayOfWeek;
+import com.lhj.fitnessbooking.domain.Instructor;
+import com.lhj.fitnessbooking.dto.CourseInfoTmp;
+import com.lhj.fitnessbooking.instructor.InstructorRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +21,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
-import static com.lhj.FitnessBooking.domain.DayOfWeek.*;
+import static com.lhj.fitnessbooking.domain.DayOfWeek.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 

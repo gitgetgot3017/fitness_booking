@@ -1,4 +1,4 @@
-package com.lhj.FitnessBooking.member.exception;
+package com.lhj.fitnessbooking.member.exception;
 
 public class NotExistMemberException extends RuntimeException {
 

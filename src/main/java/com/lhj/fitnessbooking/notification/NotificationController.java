@@ -1,7 +1,7 @@
-package com.lhj.FitnessBooking.notification;
+package com.lhj.fitnessbooking.notification;
 
-import com.lhj.FitnessBooking.domain.Notification;
-import com.lhj.FitnessBooking.jwt.exception.NotExistAccessTokenException;
+import com.lhj.fitnessbooking.domain.Notification;
+import com.lhj.fitnessbooking.jwt.exception.NotExistAccessTokenException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

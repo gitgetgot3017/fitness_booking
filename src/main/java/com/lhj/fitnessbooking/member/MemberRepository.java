@@ -1,6 +1,6 @@
-package com.lhj.FitnessBooking.member;
+package com.lhj.fitnessbooking.member;
 
-import com.lhj.FitnessBooking.domain.Member;
+import com.lhj.fitnessbooking.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

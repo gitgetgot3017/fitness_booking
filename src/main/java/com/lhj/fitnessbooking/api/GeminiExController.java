@@ -1,7 +1,7 @@
-package com.lhj.FitnessBooking.api;
+package com.lhj.fitnessbooking.api;
 
-import com.lhj.FitnessBooking.api.exception.NotExistModelException;
-import com.lhj.FitnessBooking.response.ErrorResponse;
+import com.lhj.fitnessbooking.api.exception.NotExistModelException;
+import com.lhj.fitnessbooking.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;

@@ -1,4 +1,4 @@
-package com.lhj.FitnessBooking.instructor.exception;
+package com.lhj.fitnessbooking.instructor.exception;
 
 public class NotExistInstructorException extends RuntimeException {
 

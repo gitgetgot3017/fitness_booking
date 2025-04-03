@@ -1,17 +1,14 @@
-package com.lhj.FitnessBooking.jwt;
+package com.lhj.fitnessbooking.jwt;
 
-import com.lhj.FitnessBooking.domain.Member;
-import com.lhj.FitnessBooking.jwt.dto.Jwt;
-import com.lhj.FitnessBooking.jwt.exception.NotExistRefreshTokenException;
-import com.lhj.FitnessBooking.member.MemberRepository;
-import com.lhj.FitnessBooking.member.dto.LoginRequest;
+import com.lhj.fitnessbooking.domain.Member;
+import com.lhj.fitnessbooking.jwt.dto.Jwt;
+import com.lhj.fitnessbooking.jwt.exception.NotExistRefreshTokenException;
+import com.lhj.fitnessbooking.member.MemberRepository;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

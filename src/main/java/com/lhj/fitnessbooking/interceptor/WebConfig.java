@@ -1,6 +1,6 @@
-package com.lhj.FitnessBooking.interceptor;
+package com.lhj.fitnessbooking.interceptor;
 
-import com.lhj.FitnessBooking.jwt.JwtService;
+import com.lhj.fitnessbooking.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

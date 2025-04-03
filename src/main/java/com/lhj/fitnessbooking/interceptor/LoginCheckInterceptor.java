@@ -1,8 +1,8 @@
-package com.lhj.FitnessBooking.interceptor;
+package com.lhj.fitnessbooking.interceptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lhj.FitnessBooking.jwt.JwtService;
-import com.lhj.FitnessBooking.jwt.exception.NotExistAccessTokenException;
+import com.lhj.fitnessbooking.jwt.JwtService;
+import com.lhj.fitnessbooking.jwt.exception.NotExistAccessTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;

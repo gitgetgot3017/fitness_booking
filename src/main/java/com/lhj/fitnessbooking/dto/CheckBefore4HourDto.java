@@ -1,4 +1,4 @@
-package com.lhj.FitnessBooking.dto;
+package com.lhj.fitnessbooking.dto;
 
 import lombok.AllArgsConstructor;
 

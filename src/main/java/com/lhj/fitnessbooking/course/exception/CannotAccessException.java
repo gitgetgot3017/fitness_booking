@@ -1,4 +1,4 @@
-package com.lhj.FitnessBooking.course.exception;
+package com.lhj.fitnessbooking.course.exception;
 
 public class CannotAccessException extends RuntimeException {
 

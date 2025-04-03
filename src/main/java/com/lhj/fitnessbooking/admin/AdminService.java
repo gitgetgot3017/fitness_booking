@@ -1,21 +1,19 @@
-package com.lhj.FitnessBooking.admin;
+package com.lhj.fitnessbooking.admin;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.util.IOUtils;
-import com.lhj.FitnessBooking.admin.dto.RegisterCourseDto;
-import com.lhj.FitnessBooking.admin.dto.RegisterInstructorDto;
-import com.lhj.FitnessBooking.admin.exception.ImageSaveFailureException;
-import com.lhj.FitnessBooking.admin.exception.ScheduleRegistrationException;
-import com.lhj.FitnessBooking.course.CourseRepository;
-import com.lhj.FitnessBooking.domain.Course;
-import com.lhj.FitnessBooking.domain.DayOfWeek;
-import com.lhj.FitnessBooking.domain.Instructor;
-import com.lhj.FitnessBooking.domain.Member;
-import com.lhj.FitnessBooking.instructor.InstructorRepository;
-import com.lhj.FitnessBooking.instructor.exception.NotExistInstructorException;
+import com.lhj.fitnessbooking.admin.dto.RegisterCourseDto;
+import com.lhj.fitnessbooking.admin.dto.RegisterInstructorDto;
+import com.lhj.fitnessbooking.admin.exception.ImageSaveFailureException;
+import com.lhj.fitnessbooking.admin.exception.ScheduleRegistrationException;
+import com.lhj.fitnessbooking.course.CourseRepository;
+import com.lhj.fitnessbooking.domain.Course;
+import com.lhj.fitnessbooking.domain.DayOfWeek;
+import com.lhj.fitnessbooking.domain.Instructor;
+import com.lhj.fitnessbooking.domain.Member;
+import com.lhj.fitnessbooking.instructor.InstructorRepository;
+import com.lhj.fitnessbooking.instructor.exception.NotExistInstructorException;
 import lombok.RequiredArgsConstructor;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,13 +21,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.UUID;
-import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor

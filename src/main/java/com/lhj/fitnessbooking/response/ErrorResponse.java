@@ -1,4 +1,4 @@
-package com.lhj.FitnessBooking.response;
+package com.lhj.fitnessbooking.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

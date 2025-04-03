@@ -1,7 +1,7 @@
-package com.lhj.FitnessBooking.api;
+package com.lhj.fitnessbooking.api;
 
-import com.lhj.FitnessBooking.api.dto.GeminiRequest;
-import com.lhj.FitnessBooking.api.dto.GeminiResponse;
+import com.lhj.fitnessbooking.api.dto.GeminiRequest;
+import com.lhj.fitnessbooking.api.dto.GeminiResponse;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.service.annotation.HttpExchange;

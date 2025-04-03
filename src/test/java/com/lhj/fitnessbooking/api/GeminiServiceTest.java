@@ -1,17 +1,14 @@
-package com.lhj.FitnessBooking.api;
+package com.lhj.fitnessbooking.api;
 
-import com.lhj.FitnessBooking.api.dto.MemberCondition;
-import com.lhj.FitnessBooking.api.dto.MemberGoal;
-import com.lhj.FitnessBooking.api.dto.MemberInputRequest;
-import com.lhj.FitnessBooking.api.dto.RecommendDto;
-import com.lhj.FitnessBooking.course.CourseRepository;
-import com.lhj.FitnessBooking.courseHistory.CourseHistoryRepository;
-import com.lhj.FitnessBooking.domain.Course;
-import com.lhj.FitnessBooking.domain.CourseHistory;
-import com.lhj.FitnessBooking.domain.DayOfWeek;
-import com.lhj.FitnessBooking.domain.Instructor;
-import com.lhj.FitnessBooking.instructor.InstructorRepository;
-import org.assertj.core.api.Assertions;
+import com.lhj.fitnessbooking.api.dto.MemberInputRequest;
+import com.lhj.fitnessbooking.api.dto.RecommendDto;
+import com.lhj.fitnessbooking.course.CourseRepository;
+import com.lhj.fitnessbooking.coursehistory.CourseHistoryRepository;
+import com.lhj.fitnessbooking.domain.Course;
+import com.lhj.fitnessbooking.domain.CourseHistory;
+import com.lhj.fitnessbooking.domain.DayOfWeek;
+import com.lhj.fitnessbooking.domain.Instructor;
+import com.lhj.fitnessbooking.instructor.InstructorRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +17,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import static com.lhj.FitnessBooking.api.dto.MemberCondition.*;
-import static com.lhj.FitnessBooking.api.dto.MemberGoal.*;
-import static com.lhj.FitnessBooking.domain.DayOfWeek.MON;
-import static com.lhj.FitnessBooking.domain.DayOfWeek.TUES;
+import static com.lhj.fitnessbooking.api.dto.MemberCondition.*;
+import static com.lhj.fitnessbooking.api.dto.MemberGoal.*;
+import static com.lhj.fitnessbooking.domain.DayOfWeek.MON;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest

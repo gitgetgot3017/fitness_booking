@@ -1,4 +1,4 @@
-package com.lhj.FitnessBooking.instructor;
+package com.lhj.fitnessbooking.instructor;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;

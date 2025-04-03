@@ -1,4 +1,4 @@
-package com.lhj.FitnessBooking.reservation.exception;
+package com.lhj.fitnessbooking.reservation.exception;
 
 public class ReservationFailException extends RuntimeException {
 

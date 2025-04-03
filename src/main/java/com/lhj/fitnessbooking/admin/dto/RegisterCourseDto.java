@@ -1,6 +1,6 @@
-package com.lhj.FitnessBooking.admin.dto;
+package com.lhj.fitnessbooking.admin.dto;
 
-import com.lhj.FitnessBooking.domain.DayOfWeek;
+import com.lhj.fitnessbooking.domain.DayOfWeek;
 import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 

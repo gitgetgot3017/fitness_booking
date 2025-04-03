@@ -1,12 +1,12 @@
-package com.lhj.FitnessBooking.api;
+package com.lhj.fitnessbooking.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lhj.FitnessBooking.api.dto.*;
-import com.lhj.FitnessBooking.api.exception.NotExistModelException;
-import com.lhj.FitnessBooking.course.CourseRepository;
-import com.lhj.FitnessBooking.dto.CourseInfoTmp;
+import com.lhj.fitnessbooking.api.dto.*;
+import com.lhj.fitnessbooking.api.exception.NotExistModelException;
+import com.lhj.fitnessbooking.course.CourseRepository;
+import com.lhj.fitnessbooking.dto.CourseInfoTmp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

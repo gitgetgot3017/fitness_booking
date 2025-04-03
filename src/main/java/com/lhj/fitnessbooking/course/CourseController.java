@@ -1,15 +1,15 @@
-package com.lhj.FitnessBooking.course;
+package com.lhj.fitnessbooking.course;
 
-import com.lhj.FitnessBooking.course.exception.NotExistCourseException;
-import com.lhj.FitnessBooking.domain.Course;
-import com.lhj.FitnessBooking.domain.DayOfWeek;
-import com.lhj.FitnessBooking.domain.Member;
-import com.lhj.FitnessBooking.dto.CourseDetailResponse;
-import com.lhj.FitnessBooking.dto.CourseHistoryDto;
-import com.lhj.FitnessBooking.member.MemberRepository;
-import com.lhj.FitnessBooking.member.exception.NotExistMemberException;
-import com.lhj.FitnessBooking.request.ReserveCourseRequest;
-import com.lhj.FitnessBooking.response.CourseMainResponse;
+import com.lhj.fitnessbooking.course.exception.NotExistCourseException;
+import com.lhj.fitnessbooking.domain.Course;
+import com.lhj.fitnessbooking.domain.DayOfWeek;
+import com.lhj.fitnessbooking.domain.Member;
+import com.lhj.fitnessbooking.dto.CourseDetailResponse;
+import com.lhj.fitnessbooking.dto.CourseHistoryDto;
+import com.lhj.fitnessbooking.member.MemberRepository;
+import com.lhj.fitnessbooking.member.exception.NotExistMemberException;
+import com.lhj.fitnessbooking.request.ReserveCourseRequest;
+import com.lhj.fitnessbooking.response.CourseMainResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
@@ -18,12 +18,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
-import static com.lhj.FitnessBooking.domain.DayOfWeek.*;
+import static com.lhj.fitnessbooking.domain.DayOfWeek.*;
 
 @RestController
 @RequiredArgsConstructor

@@ -1,4 +1,4 @@
-package com.lhj.FitnessBooking.jwt.exception;
+package com.lhj.fitnessbooking.jwt.exception;
 
 public class NotExistRefreshTokenException extends RuntimeException {
 

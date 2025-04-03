@@ -1,9 +1,9 @@
-package com.lhj.FitnessBooking.reservation;
+package com.lhj.fitnessbooking.reservation;
 
-import com.lhj.FitnessBooking.course.CourseRepository;
-import com.lhj.FitnessBooking.domain.*;
-import com.lhj.FitnessBooking.instructor.InstructorRepository;
-import com.lhj.FitnessBooking.member.MemberRepository;
+import com.lhj.fitnessbooking.course.CourseRepository;
+import com.lhj.fitnessbooking.domain.*;
+import com.lhj.fitnessbooking.instructor.InstructorRepository;
+import com.lhj.fitnessbooking.member.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-import static com.lhj.FitnessBooking.domain.DayOfWeek.TUES;
-import static com.lhj.FitnessBooking.domain.MemberGrade.*;
+import static com.lhj.fitnessbooking.domain.DayOfWeek.TUES;
+import static com.lhj.fitnessbooking.domain.MemberGrade.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional

@@ -1,4 +1,4 @@
-package com.lhj.FitnessBooking.api.exception;
+package com.lhj.fitnessbooking.api.exception;
 
 public class NotExistModelException extends RuntimeException {
 

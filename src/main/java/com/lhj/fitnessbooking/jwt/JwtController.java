@@ -1,7 +1,7 @@
-package com.lhj.FitnessBooking.jwt;
+package com.lhj.fitnessbooking.jwt;
 
-import com.lhj.FitnessBooking.jwt.dto.Jwt;
-import com.lhj.FitnessBooking.jwt.dto.RefreshTokenRequest;
+import com.lhj.fitnessbooking.jwt.dto.Jwt;
+import com.lhj.fitnessbooking.jwt.dto.RefreshTokenRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;

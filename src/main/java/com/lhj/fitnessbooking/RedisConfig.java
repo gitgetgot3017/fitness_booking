@@ -1,4 +1,4 @@
-package com.lhj.FitnessBooking;
+package com.lhj.fitnessbooking;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
