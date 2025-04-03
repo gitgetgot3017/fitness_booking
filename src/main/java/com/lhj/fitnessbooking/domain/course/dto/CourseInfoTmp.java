@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream:src/main/java/com/lhj/fitnessbooking/domain/course/dto/CourseInfoTmp.java
 package com.lhj.fitnessbooking.domain.course.dto;
+=======
+package com.lhj.fitnessbooking.dto;
+>>>>>>> Stashed changes:src/main/java/com/lhj/fitnessbooking/dto/CourseInfoTmp.java
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

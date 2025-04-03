@@ -1,5 +1,3 @@
-package com.lhj.fitnessbooking.domain.course.repository;
-
 import com.lhj.fitnessbooking.domain.course.domain.Course;
 import com.lhj.fitnessbooking.domain.course.domain.DayOfWeek;
 import com.lhj.fitnessbooking.domain.course.dto.CourseInfoTmp;
