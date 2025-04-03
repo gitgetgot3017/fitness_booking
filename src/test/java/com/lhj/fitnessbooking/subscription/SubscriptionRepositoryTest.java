@@ -5,6 +5,7 @@ import com.lhj.fitnessbooking.domain.subscription.domain.Subscription;
 import com.lhj.fitnessbooking.domain.course.dto.CourseMainHeader;
 import com.lhj.fitnessbooking.domain.member.repository.MemberRepository;
 import com.lhj.fitnessbooking.domain.subscription.exception.NotExistSubscriptionException;
+import com.lhj.fitnessbooking.domain.subscription.repository.SubscriptionRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,8 +22,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class SubscriptionRepositoryTest {
 
-    @Autowired private MemberRepository memberRepository;
-    @Autowired private SubscriptionRepository subscriptionRepository;
+    @Autowired MemberRepository memberRepository;
+    @Autowired SubscriptionRepository subscriptionRepository;
 
     @Autowired EntityManager em;
 
