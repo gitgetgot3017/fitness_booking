@@ -1,16 +1,9 @@
-<<<<<<< Updated upstream:src/main/java/com/lhj/fitnessbooking/domain/subscription/repository/SubscriptionRepository.java
 package com.lhj.fitnessbooking.domain.subscription.repository;
 
 import com.lhj.fitnessbooking.domain.course.dto.CourseMainHeader;
 import com.lhj.fitnessbooking.domain.member.domain.Member;
 import com.lhj.fitnessbooking.domain.subscription.domain.Subscription;
-=======
-package com.lhj.fitnessbooking.subscription;
 
-import com.lhj.fitnessbooking.domain.Member;
-import com.lhj.fitnessbooking.domain.Subscription;
-import com.lhj.fitnessbooking.dto.CourseMainHeader;
->>>>>>> Stashed changes:src/main/java/com/lhj/fitnessbooking/subscription/SubscriptionRepository.java
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

@@ -1,12 +1,18 @@
-package com.lhj.FitnessBooking.history;
+package com.lhj.fitnessbooking.history;
 
+import com.lhj.fitnessbooking.domain.course.domain.Course;
+import com.lhj.fitnessbooking.domain.course.domain.DayOfWeek;
+import com.lhj.fitnessbooking.domain.course.dto.CourseHistoryTmp;
 import com.lhj.fitnessbooking.domain.course.repository.CourseRepository;
-import com.lhj.FitnessBooking.courseHistory.CourseHistoryRepository;
-import com.lhj.FitnessBooking.domain.*;
-import com.lhj.FitnessBooking.dto.CheckBefore4HourDto;
-import com.lhj.FitnessBooking.dto.CourseHistoryTmp;
-import com.lhj.FitnessBooking.instructor.InstructorRepository;
-import com.lhj.FitnessBooking.member.MemberRepository;
+import com.lhj.fitnessbooking.domain.coursehistory.domain.CourseHistory;
+import com.lhj.fitnessbooking.domain.coursehistory.repository.CourseHistoryRepository;
+import com.lhj.fitnessbooking.domain.history.domain.CourseStatus;
+import com.lhj.fitnessbooking.domain.history.domain.History;
+import com.lhj.fitnessbooking.domain.history.repository.HistoryRepository;
+import com.lhj.fitnessbooking.domain.instructor.domain.Instructor;
+import com.lhj.fitnessbooking.domain.instructor.repository.InstructorRepository;
+import com.lhj.fitnessbooking.domain.member.domain.Member;
+import com.lhj.fitnessbooking.domain.member.repository.MemberRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,9 +24,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-import static com.lhj.FitnessBooking.domain.CourseStatus.*;
-import static com.lhj.FitnessBooking.domain.DayOfWeek.*;
-import static com.lhj.FitnessBooking.domain.MemberGrade.MEMBER;
+import static com.lhj.fitnessbooking.domain.course.domain.DayOfWeek.*;
+import static com.lhj.fitnessbooking.domain.history.domain.CourseStatus.*;
+import static com.lhj.fitnessbooking.domain.member.domain.MemberGrade.MEMBER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest

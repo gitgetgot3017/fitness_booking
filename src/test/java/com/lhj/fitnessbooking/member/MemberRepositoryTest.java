@@ -15,8 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class MemberRepositoryTest {
 
-    @Autowired
-    MemberRepository memberRepository;
+    @Autowired MemberRepository memberRepository;
 
     @DisplayName("회원번호로 회원 찾기: 성공 케이스")
     @Test

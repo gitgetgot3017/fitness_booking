@@ -9,8 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class InstructorRepositoryTest {
 
-    @Autowired
-    InstructorRepository instructorRepository;
+    @Autowired InstructorRepository instructorRepository;
 
     @DisplayName("강사 이름으로 강사 찾기")
     @Test

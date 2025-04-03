@@ -1,8 +1,9 @@
 package com.lhj.fitnessbooking.domain.course.service;
 
-import com.lhj.fitnessbooking.domain.course.exception.SendSmsFailException;
 import com.lhj.fitnessbooking.domain.course.dto.CourseInfo;
-import com.lhj.fitnessbooking.dto.CourseInfoTmp;
+import com.lhj.fitnessbooking.domain.course.dto.CourseInfoTmp;
+import com.lhj.fitnessbooking.domain.course.exception.SendSmsFailException;
+import com.lhj.fitnessbooking.domain.course.repository.CourseRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.sdk.NurigoApp;

@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream:src/main/java/com/lhj/fitnessbooking/domain/history/repository/HistoryRepository.java
 package com.lhj.fitnessbooking.domain.history.repository;
 
 import com.lhj.fitnessbooking.domain.course.domain.Course;
@@ -6,15 +5,7 @@ import com.lhj.fitnessbooking.domain.course.dto.CourseHistoryTmp;
 import com.lhj.fitnessbooking.domain.history.domain.History;
 import com.lhj.fitnessbooking.domain.history.dto.CheckBefore4HourDto;
 import com.lhj.fitnessbooking.domain.member.domain.Member;
-=======
-package com.lhj.fitnessbooking.history;
 
-import com.lhj.fitnessbooking.domain.Course;
-import com.lhj.fitnessbooking.domain.History;
-import com.lhj.fitnessbooking.domain.Member;
-import com.lhj.fitnessbooking.dto.CheckBefore4HourDto;
-import com.lhj.fitnessbooking.dto.CourseHistoryTmp;
->>>>>>> Stashed changes:src/main/java/com/lhj/fitnessbooking/history/HistoryRepository.java
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

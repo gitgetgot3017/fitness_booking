@@ -1,13 +1,13 @@
 package com.lhj.fitnessbooking.gemini;
 
-import com.lhj.fitnessbooking.domain.gemini.service.GeminiService;
+import com.lhj.fitnessbooking.domain.course.domain.Course;
+import com.lhj.fitnessbooking.domain.course.domain.DayOfWeek;
+import com.lhj.fitnessbooking.domain.course.repository.CourseRepository;
+import com.lhj.fitnessbooking.domain.coursehistory.domain.CourseHistory;
+import com.lhj.fitnessbooking.domain.coursehistory.repository.CourseHistoryRepository;
 import com.lhj.fitnessbooking.domain.gemini.dto.MemberInputRequest;
 import com.lhj.fitnessbooking.domain.gemini.dto.RecommendDto;
-import com.lhj.fitnessbooking.course.CourseRepository;
-import com.lhj.fitnessbooking.domain.coursehistory.repository.CourseHistoryRepository;
-import com.lhj.fitnessbooking.domain.course.domain.Course;
-import com.lhj.fitnessbooking.domain.coursehistory.domain.CourseHistory;
-import com.lhj.fitnessbooking.domain.course.domain.DayOfWeek;
+import com.lhj.fitnessbooking.domain.gemini.service.GeminiService;
 import com.lhj.fitnessbooking.domain.instructor.domain.Instructor;
 import com.lhj.fitnessbooking.domain.instructor.repository.InstructorRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +19,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static com.lhj.fitnessbooking.domain.course.domain.DayOfWeek.MON;
-import static org.assertj.core.api.Assertions.*;
+import static com.lhj.fitnessbooking.domain.gemini.dto.MemberCondition.GOOD;
+import static com.lhj.fitnessbooking.domain.gemini.dto.MemberGoal.WEIGHT;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 class GeminiServiceTest {
@@ -28,7 +30,8 @@ class GeminiServiceTest {
     GeminiService geminiService;
 
     @Autowired InstructorRepository instructorRepository;
-    @Autowired CourseRepository courseRepository;
+    @Autowired
+    CourseRepository courseRepository;
     @Autowired CourseHistoryRepository courseHistoryRepository;
 
     @DisplayName("요가 수업 추천하기(1) - 오늘의 수업이 다 끝난 경우")
