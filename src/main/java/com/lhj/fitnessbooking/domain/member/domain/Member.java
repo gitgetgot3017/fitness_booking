@@ -31,8 +31,6 @@ public class Member {
 
     private LocalDate regDate;
 
-    private String refreshToken;
-
     public Member(String memberNum, String password, String name, String phone, boolean gender, MemberGrade grade, LocalDate regDate) {
         this.memberNum = memberNum;
         this.password = password;
@@ -41,9 +39,5 @@ public class Member {
         this.gender = gender;
         this.grade = grade;
         this.regDate = regDate;
-    }
-
-    public void updateRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
     }
 }

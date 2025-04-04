@@ -25,7 +25,7 @@ public class RedisConfig {
 
     // 스트링 자료구조용 - value가 Integer
     @Bean
-    public RedisTemplate<String, Integer> stringValueRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+    public RedisTemplate<String, Integer> integerValueRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, Integer> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());

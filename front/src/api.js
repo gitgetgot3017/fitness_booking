@@ -27,12 +27,16 @@ api.interceptors.response.use(
             if (error.response.status == 401) {
                 if (error.response.data.error === "ACCESS_TOKEN_EXPIRED") {
                     api.patch(
-                        "/api/refresh/token",
-                        {refreshToken: localStorage.getItem("refreshToken")},
+                        "/api/refresh/token", {
+                            accessToken: localStorage.getItem("accessToken"),
+                            refreshToken: localStorage.getItem("refreshToken")
+                        },
                         {headers: {"Content-Type": "application/json"}}
                     ).then((result) => {
                         localStorage.setItem("accessToken", result.data.accessToken);
-                        localStorage.setItem("refreshToken", result.data.refreshToken);
+                        if (result.data.refreshToken != null) {
+                            localStorage.setItem("refreshToken", result.data.refreshToken);
+                        }
                     }).catch((error) => {
                         console.error("토큰 갱신 요청 중 에러 발생:", error.response ? error.response.data : error.message);
                         if (error.response) {

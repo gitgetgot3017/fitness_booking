@@ -39,7 +39,7 @@ public class CourseService {
     private final ReservationRepository reservationRepository;
     private final SmsService smsService;
 
-    @Qualifier("stringValueRedisTemplate")
+    @Qualifier("integerValueRedisTemplate")
     private final RedisTemplate<String, Integer> integerRedisTemplate;
 
     @Qualifier("longValueRedisTemplate")
