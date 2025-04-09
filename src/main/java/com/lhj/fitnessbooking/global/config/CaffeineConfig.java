@@ -15,13 +15,25 @@ public class CaffeineConfig {
     @Bean
     CaffeineCacheManager cacheManager() {
 
-        CaffeineCacheManager cacheManager = new CaffeineCacheManager("course:seatCount");
-        cacheManager.setCaffeine(
-                Caffeine.newBuilder()
-                        .expireAfterWrite(3, TimeUnit.SECONDS)
-                        .maximumSize(100)
-                        .recordStats()
-        );
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager();
+        cacheManager.registerCustomCache("course:seatCount", seatCountCacheBuilder().build()); // 캐시명1 (키 이름 아님)
+        cacheManager.registerCustomCache("course:top3", topCourseCacheBuilder().build()); // 캐시명2 (키 이름 아님)
         return cacheManager;
+    }
+
+    @Bean
+    public Caffeine<Object, Object> seatCountCacheBuilder() {
+        return Caffeine.newBuilder()
+                .expireAfterWrite(3, TimeUnit.SECONDS)
+                .maximumSize(100)
+                .recordStats();
+    }
+
+    @Bean
+    public Caffeine<Object, Object> topCourseCacheBuilder() {
+        return Caffeine.newBuilder()
+                .expireAfterWrite(10, TimeUnit.MINUTES)
+                .maximumSize(100)
+                .recordStats();
     }
 }

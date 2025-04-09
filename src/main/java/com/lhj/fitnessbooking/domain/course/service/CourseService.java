@@ -5,6 +5,7 @@ import com.lhj.fitnessbooking.domain.course.domain.Course;
 import com.lhj.fitnessbooking.domain.course.dto.*;
 import com.lhj.fitnessbooking.domain.course.exception.*;
 import com.lhj.fitnessbooking.domain.course.repository.CourseRepository;
+import com.lhj.fitnessbooking.domain.course.repository.Top3CourseRepository;
 import com.lhj.fitnessbooking.domain.history.domain.History;
 import com.lhj.fitnessbooking.domain.history.repository.HistoryRepository;
 import com.lhj.fitnessbooking.domain.member.domain.Member;
@@ -23,7 +24,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.function.BiFunction;
 
 import static com.lhj.fitnessbooking.domain.history.domain.CourseStatus.CANCELED;
 import static com.lhj.fitnessbooking.domain.history.domain.CourseStatus.RESERVED;
@@ -37,6 +37,7 @@ public class CourseService {
     private final SubscriptionRepository subscriptionRepository;
     private final HistoryRepository historyRepository;
     private final CourseRepository courseRepository;
+    private final Top3CourseRepository top3CourseRepository;
     private final ReservationRepository reservationRepository;
     private final SmsService smsService;
 
@@ -276,8 +277,7 @@ public class CourseService {
         subscriptionRepository.increaseReservedCount(member);
 
         // 4.
-        String popularClassesKey = "class:popular";
-//        longRedisTemplate.opsForZSet().incrementScore(popularClassesKey, courseId, 1);
+        top3CourseRepository.increaseScore(courseId);
     }
 
     @Cacheable(value = "lecture:courseCount", key = "'course:' + #date + ':' + #courseId + ':count'")
@@ -322,8 +322,7 @@ public class CourseService {
 //        longRedisTemplate.opsForList().rightPush(courseWaitingKey, member.getId());
 
         // 3.
-        String popularClassesKey = "class:popular";
-//        longRedisTemplate.opsForZSet().incrementScore(popularClassesKey, courseId, 1.0);
+        top3CourseRepository.increaseScore(courseId);
     }
 
     /**
@@ -356,8 +355,7 @@ public class CourseService {
         reservationRepository.deleteReservations(date, course);
 
         // 5.
-        String popularClassesKey = "class:popular";
-//        longRedisTemplate.opsForZSet().incrementScore(popularClassesKey, courseId, -1);
+        top3CourseRepository.decreaseScore(courseId);
     }
 
     /**
@@ -372,8 +370,7 @@ public class CourseService {
         reservationRepository.deleteReservation(date, course, member);
 
         // 2.
-        String popularClassesKey = "class:popular";
-//        longRedisTemplate.opsForZSet().incrementScore(popularClassesKey, courseId, -1);
+        top3CourseRepository.decreaseScore(courseId);
     }
 
     public List<CourseHistoryDto> showCourseHistory(Member member, LocalDate date) {
@@ -398,8 +395,8 @@ public class CourseService {
         return courseHistoryDtoList;
     }
 
-//    public Set<Long> getPopularTop3Classes() {
-//
-//        return longRedisTemplate.opsForZSet().reverseRange("class:popular", 0, 2);
-//    }
+    @Cacheable(value = "course:top3")
+    public List<Long> getPopularTop3Classes() {
+        return top3CourseRepository.getPopularTop3CourseIds();
+    }
 }
