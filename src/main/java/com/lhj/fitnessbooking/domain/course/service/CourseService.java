@@ -227,13 +227,8 @@ public class CourseService {
         if (ifReserve.isPresent()) {
             errorResponse.put("alreadyWaitCourse", "이미 대기 신청을 하였습니다.");
         }
-    }
 
-    @Cacheable(value = "lecture:courseCount", key = "'course:' + #date + ':' + #courseId + ':count'")
-    public Integer getCourseCount(LocalDate date, Long courseId) {
-        return courseRepository.getCourseCount(date, courseId);
     }
-
     /**
      * 수강 취소하기 위한 조건
      * 1. 하루에 수업을 취소한 횟수가 2번 이하여야 한다.
@@ -265,17 +260,10 @@ public class CourseService {
         validateCourseReservationPossibility(member, date, courseId); // 추천 수업 예약을 통해 '예약하기' 버튼을 접하는 경우를 위함
 
         // 1.
-        String courseCountKey = "course:" + date + ":" + courseId + ":count";
-        courseCountCache.asMap().compute(courseCountKey, (k, v) -> {
-            int current = v == null ? courseRepository.getCourseCount(date, courseId) : v;
-            int updated = current + 1;
-
-            if (updated > COURSE_MAX_COUNT) {
-                throw new ReservationFailException("수강 인원 초과로 예약에 실패하셨습니다.");
-            }
-
-            return updated; // 증가된 값으로 저장
-        });
+        Integer courseCount = getCourseCount(date, courseId);
+        if (courseCount >= COURSE_MAX_COUNT) {
+            throw new ReservationFailException("수강 인원 초과로 예약에 실패하셨습니다.");
+        }
 
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotExistCourseException("존재하지 않는 수업입니다."));
         courseRepository.increaseCourseCount(date, course);
@@ -290,6 +278,11 @@ public class CourseService {
         // 4.
         String popularClassesKey = "class:popular";
 //        longRedisTemplate.opsForZSet().incrementScore(popularClassesKey, courseId, 1);
+    }
+
+    @Cacheable(value = "lecture:courseCount", key = "'course:' + #date + ':' + #courseId + ':count'")
+    public Integer getCourseCount(LocalDate date, Long courseId) {
+        return courseRepository.getCourseCount(date, courseId);
     }
 
     private void validateCourseReservationPossibility(Member member, LocalDate date, Long courseId) {
