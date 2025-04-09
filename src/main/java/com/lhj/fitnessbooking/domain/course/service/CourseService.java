@@ -1,5 +1,6 @@
 package com.lhj.fitnessbooking.domain.course.service;
 
+import com.github.benmanes.caffeine.cache.Cache;
 import com.lhj.fitnessbooking.domain.course.domain.Course;
 import com.lhj.fitnessbooking.domain.course.dto.*;
 import com.lhj.fitnessbooking.domain.course.exception.*;
@@ -13,8 +14,7 @@ import com.lhj.fitnessbooking.domain.reservation.repository.ReservationRepositor
 import com.lhj.fitnessbooking.domain.subscription.repository.SubscriptionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.function.BiFunction;
 
 import static com.lhj.fitnessbooking.domain.history.domain.CourseStatus.CANCELED;
 import static com.lhj.fitnessbooking.domain.history.domain.CourseStatus.RESERVED;
@@ -39,11 +40,7 @@ public class CourseService {
     private final ReservationRepository reservationRepository;
     private final SmsService smsService;
 
-    @Qualifier("integerValueRedisTemplate")
-    private final RedisTemplate<String, Integer> integerRedisTemplate;
-
-    @Qualifier("longValueRedisTemplate")
-    private final RedisTemplate<String, Long> longRedisTemplate;
+    private final Cache<String, Integer> courseCountCache;
 
     public static final int COURSE_MAX_COUNT = 6;
 
@@ -203,7 +200,7 @@ public class CourseService {
         }
 
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotExistCourseException("존재하지 않는 수업입니다."));
-        if (historyRepository.checkAlreadyRegistered(date, course, member).isPresent()) {
+        if (historyRepository.checkAlreadyRegistered(date, course, member)) {
             errorResponse.put("duplicateEnrollment", "이미 신청한 수업입니다.");
         }
 
@@ -211,29 +208,30 @@ public class CourseService {
             errorResponse.put("courseExpiration", "수강 횟수가 남아있지 않습니다.");
         }
 
-        String courseCountKey = "course:" + date + ":" + courseId + ":count";
-        Integer courseCount = integerRedisTemplate.opsForValue().get(courseCountKey);
-        if (courseCount == null) { // redis에서 조회 후 데이터가 없을 시 DB 조회
-            courseCount = courseRepository.getCourseCount(date, courseId);
-        }
+        Integer courseCount = getCourseCount(date, courseId);
         if (courseCount >= COURSE_MAX_COUNT) {
             errorResponse.put("classCapacityExceeded", "수강 정원을 초과하였습니다.");
         }
 
-        String courseWaitingKey = "course:" + date + ":" + courseId + ":waiting";
-        Long waitingSize = longRedisTemplate.opsForList().size(courseWaitingKey);
-        if (waitingSize == null) { // redis에서 조회 후 데이터가 없을 시 DB 조회
-            List<Reservation> reservations = reservationRepository.findByCourseDateAndCourse(date, course);
-            waitingSize = Long.valueOf(reservations.size());
-        }
-        if (waitingSize >= 6) {
-            errorResponse.put("reservationCapacityExceeded", "대기 정원을 초과하였습니다.");
-        }
+//        String courseWaitingKey = "course:" + date + ":" + courseId + ":waiting";
+//        Long waitingSize = longRedisTemplate.opsForList().size(courseWaitingKey);
+//        if (waitingSize == null) { // redis에서 조회 후 데이터가 없을 시 DB 조회
+//            List<Reservation> reservations = reservationRepository.findByCourseDateAndCourse(date, course);
+//            waitingSize = Long.valueOf(reservations.size());
+//        }
+//        if (waitingSize >= 6) {
+//            errorResponse.put("reservationCapacityExceeded", "대기 정원을 초과하였습니다.");
+//        }
 
         Optional<Reservation> ifReserve = reservationRepository.findByCourseDateAndCourseAndMember(date, course, member);
         if (ifReserve.isPresent()) {
             errorResponse.put("alreadyWaitCourse", "이미 대기 신청을 하였습니다.");
         }
+    }
+
+    @Cacheable(value = "lecture:courseCount", key = "'course:' + #date + ':' + #courseId + ':count'")
+    public Integer getCourseCount(LocalDate date, Long courseId) {
+        return courseRepository.getCourseCount(date, courseId);
     }
 
     /**
@@ -268,12 +266,16 @@ public class CourseService {
 
         // 1.
         String courseCountKey = "course:" + date + ":" + courseId + ":count";
-        Long courseCount = longRedisTemplate.opsForValue().increment(courseCountKey);
+        courseCountCache.asMap().compute(courseCountKey, (k, v) -> {
+            int current = v == null ? courseRepository.getCourseCount(date, courseId) : v;
+            int updated = current + 1;
 
-        if (courseCount > COURSE_MAX_COUNT) {
-            longRedisTemplate.opsForValue().decrement(courseCountKey);
-            throw new ReservationFailException("수강 인원 초과로 예약에 실패하셨습니다.");
-        }
+            if (updated > COURSE_MAX_COUNT) {
+                throw new ReservationFailException("수강 인원 초과로 예약에 실패하셨습니다.");
+            }
+
+            return updated; // 증가된 값으로 저장
+        });
 
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotExistCourseException("존재하지 않는 수업입니다."));
         courseRepository.increaseCourseCount(date, course);
@@ -287,7 +289,7 @@ public class CourseService {
 
         // 4.
         String popularClassesKey = "class:popular";
-        longRedisTemplate.opsForZSet().incrementScore(popularClassesKey, courseId, 1);
+//        longRedisTemplate.opsForZSet().incrementScore(popularClassesKey, courseId, 1);
     }
 
     private void validateCourseReservationPossibility(Member member, LocalDate date, Long courseId) {
@@ -298,7 +300,7 @@ public class CourseService {
         }
 
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotExistCourseException("존재하지 않는 수업입니다."));
-        if (historyRepository.checkAlreadyRegistered(date, course, member).isPresent()) {
+        if (historyRepository.checkAlreadyRegistered(date, course, member)) {
             throw new DuplicateEnrollmentException("이미 신청한 수업입니다.");
         }
 
@@ -324,11 +326,11 @@ public class CourseService {
 
         // 2.
         String courseWaitingKey = "course:" + date + ":" + courseId + ":waiting";
-        longRedisTemplate.opsForList().rightPush(courseWaitingKey, member.getId());
+//        longRedisTemplate.opsForList().rightPush(courseWaitingKey, member.getId());
 
         // 3.
         String popularClassesKey = "class:popular";
-        longRedisTemplate.opsForZSet().incrementScore(popularClassesKey, courseId, 1.0);
+//        longRedisTemplate.opsForZSet().incrementScore(popularClassesKey, courseId, 1.0);
     }
 
     /**
@@ -362,7 +364,7 @@ public class CourseService {
 
         // 5.
         String popularClassesKey = "class:popular";
-        longRedisTemplate.opsForZSet().incrementScore(popularClassesKey, courseId, -1);
+//        longRedisTemplate.opsForZSet().incrementScore(popularClassesKey, courseId, -1);
     }
 
     /**
@@ -378,7 +380,7 @@ public class CourseService {
 
         // 2.
         String popularClassesKey = "class:popular";
-        longRedisTemplate.opsForZSet().incrementScore(popularClassesKey, courseId, -1);
+//        longRedisTemplate.opsForZSet().incrementScore(popularClassesKey, courseId, -1);
     }
 
     public List<CourseHistoryDto> showCourseHistory(Member member, LocalDate date) {
@@ -403,8 +405,8 @@ public class CourseService {
         return courseHistoryDtoList;
     }
 
-    public Set<Long> getPopularTop3Classes() {
-
-        return longRedisTemplate.opsForZSet().reverseRange("class:popular", 0, 2);
-    }
+//    public Set<Long> getPopularTop3Classes() {
+//
+//        return longRedisTemplate.opsForZSet().reverseRange("class:popular", 0, 2);
+//    }
 }
