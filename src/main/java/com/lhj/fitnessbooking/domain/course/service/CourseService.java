@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.lhj.fitnessbooking.domain.history.domain.CourseStatus.CANCELED;
 import static com.lhj.fitnessbooking.domain.history.domain.CourseStatus.RESERVED;
@@ -41,7 +42,7 @@ public class CourseService {
     private final ReservationRepository reservationRepository;
     private final SmsService smsService;
 
-    private final Cache<String, Integer> courseCountCache;
+    private final Cache<String, List<Long>> courseWaitingCache;
 
     public static final int COURSE_MAX_COUNT = 6;
 
@@ -214,22 +215,26 @@ public class CourseService {
             errorResponse.put("classCapacityExceeded", "수강 정원을 초과하였습니다.");
         }
 
-//        String courseWaitingKey = "course:" + date + ":" + courseId + ":waiting";
-//        Long waitingSize = longRedisTemplate.opsForList().size(courseWaitingKey);
-//        if (waitingSize == null) { // redis에서 조회 후 데이터가 없을 시 DB 조회
-//            List<Reservation> reservations = reservationRepository.findByCourseDateAndCourse(date, course);
-//            waitingSize = Long.valueOf(reservations.size());
-//        }
-//        if (waitingSize >= 6) {
-//            errorResponse.put("reservationCapacityExceeded", "대기 정원을 초과하였습니다.");
-//        }
+        List<Long> waitList = getWaitList(date, course);
+        if (waitList.size() >= 6) {
+            errorResponse.put("reservationCapacityExceeded", "대기 정원을 초과하였습니다.");
+        }
 
         Optional<Reservation> ifReserve = reservationRepository.findByCourseDateAndCourseAndMember(date, course, member);
         if (ifReserve.isPresent()) {
             errorResponse.put("alreadyWaitCourse", "이미 대기 신청을 하였습니다.");
         }
-
     }
+
+    @Cacheable(value = "lecture:waitList", key = "'course:' + #date + ':' + #course.id + ':waiting'")
+    public List<Long> getWaitList(LocalDate date, Course course) {
+        List<Reservation> reservations = reservationRepository.findByCourseDateAndCourse(date, course);
+
+        return reservations.stream()
+                .map(r -> r.getMember().getId())
+                .collect(Collectors.toList());
+    }
+
     /**
      * 수강 취소하기 위한 조건
      * 1. 하루에 수업을 취소한 횟수가 2번 이하여야 한다.
@@ -319,7 +324,11 @@ public class CourseService {
 
         // 2.
         String courseWaitingKey = "course:" + date + ":" + courseId + ":waiting";
-//        longRedisTemplate.opsForList().rightPush(courseWaitingKey, member.getId());
+        courseWaitingCache.asMap().compute(courseWaitingKey, (k, v) -> {
+           List<Long> waitingList = (v == null) ? new ArrayList<>() : new ArrayList<>(v);
+           waitingList.add(member.getId());
+           return waitingList;
+        });
 
         // 3.
         top3CourseRepository.increaseScore(courseId);

@@ -17,14 +17,23 @@ public class CaffeineConfig {
 
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
         cacheManager.registerCustomCache("course:seatCount", seatCountCacheBuilder().build()); // 캐시명1 (키 이름 아님)
-        cacheManager.registerCustomCache("course:top3", topCourseCacheBuilder().build()); // 캐시명2 (키 이름 아님)
+        cacheManager.registerCustomCache("course:waiting", waitCourseListCacheBuilder().build()); // 캐시명2 (키 이름 아님)
+        cacheManager.registerCustomCache("course:top3", topCourseCacheBuilder().build()); // 캐시명3 (키 이름 아님)
         return cacheManager;
     }
 
     @Bean
     public Caffeine<Object, Object> seatCountCacheBuilder() {
         return Caffeine.newBuilder()
-                .expireAfterWrite(3, TimeUnit.SECONDS)
+                .expireAfterWrite(3, TimeUnit.SECONDS) // TODO: TTL 실험 필요
+                .maximumSize(100)
+                .recordStats();
+    }
+
+    @Bean
+    public Caffeine<Object, Object> waitCourseListCacheBuilder() {
+        return Caffeine.newBuilder()
+                .expireAfterWrite(1, TimeUnit.MINUTES) // TODO: TTL 실험 필요
                 .maximumSize(100)
                 .recordStats();
     }
@@ -33,7 +42,7 @@ public class CaffeineConfig {
     public Caffeine<Object, Object> topCourseCacheBuilder() {
         return Caffeine.newBuilder()
                 .expireAfterWrite(10, TimeUnit.MINUTES)
-                .maximumSize(100)
+                .maximumSize(1)
                 .recordStats();
     }
 }
