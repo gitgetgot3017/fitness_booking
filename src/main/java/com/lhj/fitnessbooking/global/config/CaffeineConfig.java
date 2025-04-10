@@ -2,6 +2,7 @@ package com.lhj.fitnessbooking.global.config;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
@@ -15,18 +16,18 @@ import java.util.List;
 public class CaffeineConfig {
 
     @Bean
-    CaffeineCacheManager cacheManager() {
+    CaffeineCacheManager cacheManager(@Value("${caffeine.ttl-seconds}") long ttlSeconds) {
 
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
-        cacheManager.registerCustomCache("course:seatCount", seatCountCacheBuilder().build()); // 캐시명1 (키 이름 아님)
+        cacheManager.registerCustomCache("course:seatCount", seatCountCacheBuilder(ttlSeconds).build()); // 캐시명1 (키 이름 아님)
         cacheManager.registerCustomCache("course:top3", topCourseCacheBuilder().build()); // 캐시명2 (키 이름 아님)
         return cacheManager;
     }
 
     @Bean
-    public Caffeine<Object, Object> seatCountCacheBuilder() {
+    public Caffeine<Object, Object> seatCountCacheBuilder(long ttlSeconds) {
         return Caffeine.newBuilder()
-                .expireAfterWrite(3, TimeUnit.SECONDS) // TODO: TTL 실험 필요
+                .expireAfterWrite(ttlSeconds, TimeUnit.SECONDS)
                 .maximumSize(100)
                 .recordStats();
     }
