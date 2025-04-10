@@ -5,7 +5,6 @@ import com.lhj.fitnessbooking.domain.course.dto.CourseHistoryTmp;
 import com.lhj.fitnessbooking.domain.history.domain.History;
 import com.lhj.fitnessbooking.domain.history.dto.CheckBefore4HourDto;
 import com.lhj.fitnessbooking.domain.member.domain.Member;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -72,8 +71,11 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
     )
     List<History> getReservedAndEnrolled(@Param("courseDate") LocalDate courseDate);
 
+    /**
+     * 컬럼의 존재 유무만 확인하는 용도
+     */
     @Query(
-            "select h " +
+            "select count(h) > 0 " +
             "from History h " +
             "where h.status = 'RESERVED' " +
             "and h.member = :member " +
@@ -82,5 +84,5 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
                         "where h.courseDate = :courseDate " +
                         "and h.course = :course)"
     )
-    Optional<History> checkAlreadyRegistered(@Param("courseDate") LocalDate courseDate, @Param("course") Course course, @Param("member") Member member);
+    boolean checkAlreadyRegistered(@Param("courseDate") LocalDate courseDate, @Param("course") Course course, @Param("member") Member member);
 }
