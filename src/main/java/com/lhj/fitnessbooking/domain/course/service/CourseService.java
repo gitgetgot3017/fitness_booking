@@ -226,7 +226,7 @@ public class CourseService {
         }
     }
 
-    @Cacheable(value = "lecture:waitList", key = "'course:' + #date + ':' + #course.id + ':waiting'")
+    @Cacheable(value = "course:waiting", key = "'course:' + #date + ':' + #course.id + ':waiting'")
     public List<Long> getWaitList(LocalDate date, Course course) {
         List<Reservation> reservations = reservationRepository.findByCourseDateAndCourse(date, course);
 
@@ -285,7 +285,7 @@ public class CourseService {
         top3CourseRepository.increaseScore(courseId);
     }
 
-    @Cacheable(value = "lecture:courseCount", key = "'course:' + #date + ':' + #courseId + ':count'")
+    @Cacheable(value = "course:seatCount", key = "'course:' + #date + ':' + #courseId + ':count'")
     public Integer getCourseCount(LocalDate date, Long courseId) {
         return courseRepository.getCourseCount(date, courseId);
     }
