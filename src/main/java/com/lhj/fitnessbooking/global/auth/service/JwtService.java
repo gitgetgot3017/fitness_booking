@@ -13,7 +13,6 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -26,8 +25,6 @@ import java.util.Map;
 public class JwtService {
 
     private final MemberRepository memberRepository;
-
-    private final RedisTemplate<String, String> stringRedisTemplate;
 
     @Value("${jwt.secret}")
     private String secretKeyString;
@@ -67,10 +64,10 @@ public class JwtService {
                 .orElseThrow(() -> new NotExistMemberException("해당 회원은 존재하지 않습니다."));
 
         // Redis에서 refresh token 조회 및 사용자가 전달한 것과 비교
-        String redisRefreshToken = stringRedisTemplate.opsForValue().get("RT:" + member.getId());
-        if (redisRefreshToken == null || !redisRefreshToken.equals(refreshToken)) {
-            throw new InvalidRefreshTokenException("refresh token이 유효하지 않습니다.");
-        }
+//        String redisRefreshToken = stringRedisTemplate.opsForValue().get("RT:" + member.getId());
+//        if (redisRefreshToken == null || !redisRefreshToken.equals(refreshToken)) {
+//            throw new InvalidRefreshTokenException("refresh token이 유효하지 않습니다.");
+//        }
 
         // 토큰 재발급
         return createJwt(makeClaims(member), false);
