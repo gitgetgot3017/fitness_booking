@@ -11,12 +11,15 @@ import com.lhj.fitnessbooking.domain.member.exception.NotExistMemberException;
 import com.lhj.fitnessbooking.domain.member.repository.MemberRepository;
 import com.lhj.fitnessbooking.domain.notification.service.NotificationService;
 import com.lhj.fitnessbooking.domain.subscription.repository.SubscriptionRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -58,11 +61,14 @@ public class CourseStartJob implements Job {
         History history = new History(member, courseDate, course, courseDate.getYear(), courseDate.getMonthValue(), LocalDateTime.now(), ENROLLED);
         historyRepository.save(history);
 
-        subscriptionRepository.changeCount(member);
-
-        CourseMainHeader subscription = subscriptionRepository.getSubscription(member, LocalDate.now()); // TODO: subscriptinoRepository의 subscription 가져오는 두 메서드 수정해야 함
-        if (subscription.getCompletedCount() + 3 >= subscription.getAvailableCount()) {
-            notificationService.sendData(subscription.getMemberName() + "(" + subscription.getMemberName() + ") 님의 이용권이" + (subscription.getAvailableCount() - subscription.getCompletedCount()) + "회 남았습니다.");
+        CourseMainHeader subscription = subscriptionRepository.getSubscription(member, LocalDate.now(), (Pageable) PageRequest.of(0, 1))
+                .stream()
+                .findFirst()
+                .orElse(null); // TODO: subscriptinoRepository의 subscription 가져오는 두 메서드 수정해야 함
+        if (subscription.getCompletedCount() + 4 >= subscription.getAvailableCount()) {
+            notificationService.sendData(subscription.getMemberName() + "(" + subscription.getMemberName() + ") 님의 이용권이" + (subscription.getAvailableCount() - subscription.getCompletedCount() - 1) + "회 남았습니다.");
         }
+
+        subscriptionRepository.changeCount(member);
     }
 }

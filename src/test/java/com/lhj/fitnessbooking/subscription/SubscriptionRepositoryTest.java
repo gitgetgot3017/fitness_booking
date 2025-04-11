@@ -11,7 +11,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 
@@ -50,7 +52,10 @@ class SubscriptionRepositoryTest {
         subscriptionRepository.save(subscription4);
 
         // when
-        CourseMainHeader courseMainHeader = subscriptionRepository.getSubscription(member, LocalDate.now());
+        CourseMainHeader courseMainHeader = subscriptionRepository.getSubscription(member, LocalDate.now(), (Pageable) PageRequest.of(0, 1))
+                .stream()
+                .findFirst()
+                .orElse(null);
 
         // then
         assertThat(courseMainHeader).isNotNull();
@@ -66,14 +71,20 @@ class SubscriptionRepositoryTest {
         Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
         saveSubscription(member, LocalDate.of(2024, 6, 18), LocalDate.of(2025, 2, 23), 1, 75, 77);
 
-        CourseMainHeader beforeSubscription = subscriptionRepository.getSubscription(member, LocalDate.of(2025, 2, 4));
+        CourseMainHeader beforeSubscription = subscriptionRepository.getSubscription(member, LocalDate.now(), (Pageable) PageRequest.of(0, 1))
+                .stream()
+                .findFirst()
+                .orElse(null);
         int reservedCount = beforeSubscription.getReservedCount();
 
         // when
         subscriptionRepository.increaseReservedCount(member);
 
         // then
-        CourseMainHeader afterSubscription = subscriptionRepository.getSubscription(member, LocalDate.of(2025, 2, 4));
+        CourseMainHeader afterSubscription = subscriptionRepository.getSubscription(member, LocalDate.now(), (Pageable) PageRequest.of(0, 1))
+                .stream()
+                .findFirst()
+                .orElse(null);
         assertThat(afterSubscription.getReservedCount()).isEqualTo(reservedCount + 1);
     }
 
@@ -85,14 +96,20 @@ class SubscriptionRepositoryTest {
         Member member = saveMember("2073", "060820", "이현지", "01062802073", false, LocalDate.of(2024, 6, 18));
         saveSubscription(member, LocalDate.of(2024, 6, 18), LocalDate.of(2025, 2, 23), 1, 75, 77);
 
-        CourseMainHeader beforeSubscription = subscriptionRepository.getSubscription(member, LocalDate.of(2025, 2, 4));
+        CourseMainHeader beforeSubscription = subscriptionRepository.getSubscription(member, LocalDate.now(), (Pageable) PageRequest.of(0, 1))
+                .stream()
+                .findFirst()
+                .orElse(null);
         int reservedCount = beforeSubscription.getReservedCount();
 
         // when
         subscriptionRepository.decreaseReservedCount(member);
 
         // then
-        CourseMainHeader afterSubscription = subscriptionRepository.getSubscription(member, LocalDate.of(2025, 2, 4));
+        CourseMainHeader afterSubscription = subscriptionRepository.getSubscription(member, LocalDate.now(), (Pageable) PageRequest.of(0, 1))
+                .stream()
+                .findFirst()
+                .orElse(null);
         assertThat(afterSubscription.getReservedCount()).isEqualTo(reservedCount - 1);
     }
 

@@ -23,6 +23,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -62,7 +64,10 @@ class CourseServiceTest {
         Long courseId = course.getId();
 
         saveSubscription(member, LocalDate.of(2024, 6, 18), LocalDate.of(2025, 2, 23), 2, 73, 77);
-        CourseMainHeader subscription = subscriptionRepository.getSubscription(member, courseDate);
+        CourseMainHeader subscription = subscriptionRepository.getSubscription(member, LocalDate.now(), (Pageable) PageRequest.of(0, 1))
+                .stream()
+                .findFirst()
+                .orElse(null);
         int reservedCount = subscription.getReservedCount();
 
         // when
@@ -76,7 +81,12 @@ class CourseServiceTest {
         assertThat(historyList).hasSize(1);
         assertThat(historyList.get(0).getStatus()).isSameAs(RESERVED);
 
-        assertThat(subscriptionRepository.getSubscription(member, courseDate).getReservedCount()).isEqualTo(reservedCount + 1);
+        assertThat(subscriptionRepository.getSubscription(member, LocalDate.now(), (Pageable) PageRequest.of(0, 1))
+                .stream()
+                .findFirst()
+                .orElse(null)
+                .getReservedCount())
+                .isEqualTo(reservedCount + 1);
     }
 
     @DisplayName("수강 예약하기: 정원 초과로 예약에 실패하는 경우")
@@ -129,7 +139,10 @@ class CourseServiceTest {
         Long courseId = course.getId();
 
         saveSubscription(member, LocalDate.of(2024, 6, 18), LocalDate.of(2025, 2, 23), 2, 73, 77);
-        CourseMainHeader subscription = subscriptionRepository.getSubscription(member, courseDate);
+        CourseMainHeader subscription = subscriptionRepository.getSubscription(member, LocalDate.now(), (Pageable) PageRequest.of(0, 1))
+                .stream()
+                .findFirst()
+                .orElse(null);
         int reservedCount = subscription.getReservedCount();
 
         // when
@@ -143,7 +156,12 @@ class CourseServiceTest {
         assertThat(historyList).hasSize(1);
         assertThat(historyList.get(0).getStatus()).isSameAs(CANCELED);
 
-        assertThat(subscriptionRepository.getSubscription(member, courseDate).getReservedCount()).isEqualTo(reservedCount - 1);
+        assertThat(subscriptionRepository.getSubscription(member, LocalDate.now(), (Pageable) PageRequest.of(0, 1))
+                .stream()
+                .findFirst()
+                .orElse(null)
+                .getReservedCount())
+                .isEqualTo(reservedCount - 1);
 
         List<Reservation> reservations = reservationRepository.findAll();
         assertThat(reservations).hasSize(0);

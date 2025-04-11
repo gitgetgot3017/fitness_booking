@@ -16,6 +16,7 @@ import com.lhj.fitnessbooking.domain.subscription.repository.SubscriptionReposit
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,7 +56,10 @@ public class CourseService {
         CourseMainHeader courseMainHeader = null;
         List<CourseInfoTmp> courses = null;
         try {
-            courseMainHeader = subscriptionRepository.getSubscription(member, LocalDate.now());
+            courseMainHeader = subscriptionRepository.getSubscription(member, LocalDate.now(), PageRequest.of(0, 1))
+                    .stream()
+                    .findFirst()
+                    .orElse(null);
 
             // 오늘의 수업을 조회하면 현재 시각 이후의 수업만 보여주고, 나머지 일자의 수업을 조회하면 전체 수업을 보여준다.
             LocalTime startTime = LocalTime.of(0, 0, 0);
@@ -115,7 +119,10 @@ public class CourseService {
 
         CourseMainHeader courseMainHeader;
         try {
-            courseMainHeader = subscriptionRepository.getSubscription(member, LocalDate.now());
+            courseMainHeader = subscriptionRepository.getSubscription(member, LocalDate.now(), PageRequest.of(0, 1))
+                    .stream()
+                    .findFirst()
+                    .orElse(null);
         } catch (NullPointerException e) {
             throw new CannotAccessException("비회원은 접근할 수 없습니다");
         }
@@ -302,7 +309,10 @@ public class CourseService {
             throw new DuplicateEnrollmentException("이미 신청한 수업입니다.");
         }
 
-        CourseMainHeader subscription = subscriptionRepository.getSubscription(member, LocalDate.now());
+        CourseMainHeader subscription = subscriptionRepository.getSubscription(member, LocalDate.now(), PageRequest.of(0, 1))
+                .stream()
+                .findFirst()
+                .orElse(null);
         if (subscription.getAvailableCount() - subscription.getCompletedCount() - subscription.getReservedCount() == 0) {
             throw new CourseExpirationException("수강 횟수가 남아있지 않습니다.");
         }
