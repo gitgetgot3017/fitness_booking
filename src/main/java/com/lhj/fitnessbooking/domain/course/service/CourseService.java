@@ -45,7 +45,7 @@ public class CourseService {
 
     private final Cache<String, List<Long>> courseWaitingCache;
 
-    public static final int COURSE_MAX_COUNT = 100;
+    public static final int COURSE_MAX_COUNT = 1000;
 
     /**
      * 수강권 만료의 이유로 수강권이 존재하지 않는 회원: 이용 내역만 보여준다. try 일부 -> finally
