@@ -13,9 +13,12 @@ import java.time.LocalDate;
 
 public interface SubscriptionRepository extends JpaRepository<Subscription, Long> {
 
-    @Query("select new com.lhj.fitnessbooking.domain.course.dto.CourseMainHeader(m.name, m.memberNum, s.name, min(s.startDate), s.endDate, s.reservedCount, s.completedCount, s.availableCount) " +
+    @Query(value = "select new com.lhj.fitnessbooking.domain.course.dto.CourseMainHeader(m.name, m.memberNum, s.name, s.startDate, s.endDate, s.reservedCount, s.completedCount, s.availableCount) " +
             "from Member m join Subscription s on m = s.member " +
-            "where s.member = :member and :curDate < s.endDate and s.completedCount < s.availableCount order by s.startDate")
+            "where s.member = :member and :curDate < s.endDate and s.completedCount < s.availableCount " +
+            "order by s.startDate " +
+            "limit 1",
+    nativeQuery = true)
     CourseMainHeader getSubscription(@Param("member") Member member, @Param("curDate") LocalDate curDate);
 
     @Modifying
